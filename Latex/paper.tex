@@ -1,0 +1,199 @@
+\documentclass[a4paper,10pt]{article}
+%\documentclass{svjour3}
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+%\usepackage{tcolorbox}
+\usepackage{subcaption}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+%\usepackage{calrsfs} % nice cal fonts
+\usepackage{enumerate} 
+%\usepackage[toc,page]{appendix}
+
+%\usepackage[auth-sc]{authblk}
+\usepackage{authblk}
+\renewcommand\Affilfont{\normalfont\small}
+
+\usepackage[round]{natbib}
+\bibpunct[, ]{(}{)}{;}{a}{}{,}
+\let\bibfont\relax
+\def\bibfont{\fontsize{8}{10}\selectfont}
+\setlength{\bibsep}{0pt}
+
+\usepackage[svgnames]{xcolor}
+\usepackage[pdftex]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    colorlinks,
+    linkcolor=Navy,
+    citecolor=Navy,
+    urlcolor=Navy
+}
+%\definecolor{highlightNEW}{named}{Navy} %To get all equation in black:
+\definecolor{highlightNEW}{named}{black}
+
+\usepackage{graphicx}
+\graphicspath{{fig/}}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% custom macros and definitions
+\newtheorem{theorem}{Theorem}[section] 
+%%\newtheorem{acknowledgement}[theorem]{Acknowledgement} 
+%%\newtheorem{algorithm}[theorem]{Algorithm} 
+%%\newtheorem{axiom}[theorem]{Axiom} 
+%%\newtheorem{case}[theorem]{Case} 
+%%\newtheorem{claim}[theorem]{Claim} 
+%%\newtheorem{conclusion}[theorem]{Conclusion} 
+%%\newtheorem{condition}[theorem]{Condition} 
+%%\newtheorem{conjecture}[theorem]{Conjecture} 
+\newtheorem{corollary}[theorem]{Corollary} 
+%%\newtheorem{criterion}[theorem]{Criterion} 
+%%\newtheorem{defi}[theorem]{Definition} 
+\newtheorem{example}[theorem]{Example} 
+%%\newtheorem{exercise}[theorem]{Exercise} 
+%%\newtheorem{hypothesis}[theorem]{Hypothesis} 
+\newtheorem{lemma}[theorem]{Lemma} 
+%%\newtheorem{notation}[theorem]{Notation} 
+%%\newtheorem{problem}[theorem]{Problem} 
+\newtheorem{proposition}[theorem]{Proposition} 
+%%\newtheorem{question}[theorem]{Question} 
+\newtheorem{remark}[theorem]{Remark} 
+%%\newtheorem{solution}[theorem]{Solution} 
+%%\newtheorem{summary}[theorem]{Summary} 
+%%\newtheorem{Rem}[theorem]{Remark}
+
+\newcommand{\TODO}[1]{\textbf{\color{red}TODO: {#1}}\PackageWarning{TODO:}{#1!}}
+\newcommand{\doi}[1]{DOI~\href{\detokenize{http://dx.doi.org/#1}}{\detokenize{#1}}}
+
+\renewcommand{\d}{\,\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\H}{\mathcal{H}}
+\newcommand{\K}{\mathfrak{K}}
+\newcommand{\N}{\mathbb{N}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Var}{\mathbb{V}ar}
+\newcommand{\1}{\mathbf{1}}
+
+\newcommand{\la}{\!\left\langle}
+\newcommand{\ra}{\right\rangle}
+\newcommand{\p}{\partial}
+
+%\newcommand*{\Cdot}{\raisebox{-0.25ex}{\scalebox{1.2}{\ensuremath{\cdot}}}}
+\newcommand*{\Cdot}[1][1.25]{%
+  \mathpalette{\CdotAux{#1}}\cdot%
+}
+\newdimen\CdotAxis
+\newcommand*{\CdotAux}[3]{%
+  {%
+    \settoheight\CdotAxis{$#2\vcenter{}$}%
+    \sbox0{%
+      \raisebox\CdotAxis{%
+        \scalebox{#1}{%
+          \raisebox{-\CdotAxis}{%
+            $\mathsurround=0pt #2#3$%
+          }%
+        }%
+      }%
+    }%
+    % Remove depth that arises from scaling.
+    \dp0=0pt %
+    % Decrease scaled height.
+    \sbox2{$#2\bullet$}%
+    \ifdim\ht2<\ht0 %
+      \ht0=\ht2 %
+    \fi
+    % Use the same width as the original \cdot.
+    \sbox2{$\mathsurround=0pt #2#3$}%
+    \hbox to \wd2{\hss\usebox{0}\hss}%
+  }%
+}
+\makeatletter
+\def\mathcolor#1#{\@mathcolor{#1}}
+\def\@mathcolor#1#2#3{%
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+\makeatother
+
+
+\newcommand{\NEW}[1]{\mathcolor{highlightNEW}{#1}}
+\let\oldalpha\alpha
+\renewcommand{\alpha}{\mathcolor{highlightNEW}{\oldalpha}}
+\newcommand{\ccode}[2]{\par
+        \vspace*{8pt}
+        {{\leftskip18pt\rightskip\leftskip
+        \noindent{\it #1}\/: #2\par}}\par}
+\newcommand{\keywords}[1]{\ccode{Keywords}{#1}}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+
+\title{\textcolor{Navy}{\textsc{Convexity adjustments with a bit of Malliavin}}}
+
+\author[1,2]{David Garcia-Lorite\thanks{Corresponding author, \email{dddd@caixabank.es}}}
+\author[3]{Ra\'{u}l Merino}
+
+\affil[1]{CaixaBank,....}
+\affil[2]{Facultat de Matem\`{a}tiques i Inform\`{a}tica, Universitat de Barcelona, \authorcr Gran Via 585, 08007 Barcelona, Spain,\vspace*{3pt}}
+\affil[3]{VidaCaixa S.A., Market Risk Management Unit, \authorcr C/Juan Gris, 2-8, 08014 Barcelona, Spain.}
+
+%\date{Received: date / Accepted: date}
+\date{\normalfont\small\today}
+
+% main document
+\begin{document}
+
+\maketitle
+\begin{abstract}
+AA
+\end{abstract}
+%\keywords{V--}
+%\ccode{MSC classification}{--}
+%\ccode{JEL classification}{--}
+
+%\TODO{Remove ToC in final version}
+%\tableofcontents
+%\clearpage
+
+\section{Introduction}
+Mathematical finance aims to find a methodology to price consistently all the instruments quoted in the market. When working with fixed income derivatives, a classic research topic is the introduction of a price adjustment to achieve this. This adjustment is called convexity adjustment. It is non-linear and depends on the interest rate model.  
+
+There are several reasons to include this type of adjustment. One of them is to incorporate futures on the yield curve construction. Futures and other fixed-income instruments are quoted differently. The firsts are linear against the yield, but the others are not. Therefore, the changes in value and yield of different contracts are different. This difference will depend on the volatility and correlation of the yield curve.
+
+But it is not the only one. The fixed-income market has several features changing the schedule of payments. For example, in a swap in arrears, the floating coupon fixing and payment are on the same date. Or in a CMS swap, the floating rate is linked to a rate longer than the floating length. Any customization of an interest rate product based on changing time, currency, margin, or collateral will require a convexity adjustment. Deep down, by making these changes, we are mixing the martingale measures. 
+
+Convexity adjustments have become popular again. Not only by the increase in volatility in the markets. In addition, as a consequence of the transition in risk-free rates from the IBOR (InterBank Offered Rates) indices to the ARR (Alternative Reference Rates) indices, also called RFR. Both indices try to represent the same thing, the risk-free rate, but they are fundamentally different. While the former represents the average rate at which Panel Banks believe they could borrow money, the latter is calculated backward based on transactions. Therefore, these new products need their corresponding convexity adjustment. 
+
+The first references on the convexity adjustment were \cite{RitchkenS}, \cite{Flesaker} and \cite{BrothertonIben}, published almost simultaneously. A convexity formula for averaging contracts was found in \cite{RitchkenS}. Flesaker derived a convexity adjustment for computing the expected Libor rate under the Ho-Lee model in a continuous and discrete setting in \cite{Flesaker}. \cite{BrothertonIben} used the Taylor expansion on the inverse function for calculating the convexity adjustment. In the following years, several improvements were made. For example, the convexity adjustment was extended to other payoffs in \cite{Hull06}. \cite{Hart} improved the Taylor expansion. \cite{KirikosNovak} derived the convexity adjustment for the Hull-White model. Afterwards, we can find papers that extend the convexity adjustment to different payoffs, see \cite{Benhamou00WC} or \cite{Hagan03}. Or by applying alternative techniques such as the change of measure in \cite{Pelsser}, a martingale approach in \cite{Benhamou00} or the effects of stochastic volatility in \cite{PiterbargRenedo} and \cite{HaganWoodward20}.
+
+In the present paper, we find an alternative way to calculate the convexity adjustment for a general interest rate model. The idea is to use the It\^o representation theorem. Unfortunately, the theorem does not give an insight into how to calculate the elements therein. Therefore, it is necessary to introduce basic concepts of Malliavin calculus to apply the Clark-Occone representation formula.
+
+
+The structure of the paper is as follows. In Section \ref{sec:Notation}, we give the basic preliminaries and our notation related to Interest Rates models. This notation will be used throughout the paper without being repeated in particular theorems unless we find it useful to do so in order to guide the reader through the results. In Section \ref{sec:Malliavin}, we make an introduction to Malliavin calculus. In Section \ref{sec:CA}, In Section \ref{sec:Numerical Results}, In Section \ref{sec:Conclusion}
+
+
+\section{Preliminaries and notation}\label{sec:Notation}
+
+\section{Malliavin}\label{sec:Malliavin}
+
+\section{Convexity Adjustment}\label{sec:CA}
+
+\section{Numerical Results}\label{sec:Numerical Results}
+
+\section{Conclusion}\label{sec:Conclusion}
+
+
+% TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
+\bibliographystyle{spbasic}
+\bibliography{references/references,references/references-books,references/references-own,references/references-online}
+%\bibliography{references-export}
+
+\end{document}
+
