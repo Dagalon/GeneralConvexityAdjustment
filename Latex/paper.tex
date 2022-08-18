@@ -49,7 +49,8 @@
 %%\newtheorem{claim}[theorem]{Claim} 
 %%\newtheorem{conclusion}[theorem]{Conclusion} 
 %%\newtheorem{condition}[theorem]{Condition} 
-%%\newtheorem{conjecture}[theorem]{Conjecture} 
+%%\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
 \newtheorem{corollary}[theorem]{Corollary} 
 %%\newtheorem{criterion}[theorem]{Criterion} 
 %%\newtheorem{defi}[theorem]{Definition} 
@@ -173,7 +174,7 @@ Convexity adjustments have become popular again. Not only by the increase in vol
 
 The first references on the convexity adjustment were \cite{RitchkenS}, \cite{Flesaker} and \cite{BrothertonIben}, published almost simultaneously. A convexity formula for averaging contracts was found in \cite{RitchkenS}. Flesaker derived a convexity adjustment for computing the expected Libor rate under the Ho-Lee model in a continuous and discrete setting in \cite{Flesaker}. \cite{BrothertonIben} used the Taylor expansion on the inverse function for calculating the convexity adjustment. In the following years, several improvements were made. For example, the convexity adjustment was extended to other payoffs in \cite{Hull06}. \cite{Hart} improved the Taylor expansion. \cite{KirikosNovak} derived the convexity adjustment for the Hull-White model. Afterwards, we can find papers that extend the convexity adjustment to different payoffs, see \cite{Benhamou00WC} or \cite{Hagan03}. Or by applying alternative techniques such as the change of measure in \cite{Pelsser}, a martingale approach in \cite{Benhamou00} or the effects of stochastic volatility in \cite{PiterbargRenedo} and \cite{HaganWoodward20}.
 
-In the present paper, we find an alternative way to calculate the convexity adjustment for a general interest rate model. The idea is to use the It\^o representation theorem. Unfortunately, the theorem does not give an insight into how to calculate the elements therein. Therefore, it is necessary to introduce basic concepts of Malliavin calculus to apply the Clark-Occone representation formula.
+In the present paper, we find an alternative way to calculate the convexity adjustment for a general interest rate model. The idea is to use the It\^o's representation theorem. Unfortunately, the theorem does not give an insight into how to calculate the elements therein. Therefore, it is necessary to introduce basic concepts of Malliavin calculus to apply the Clark-Ocone representation formula.
 
 
 The structure of the paper is as follows. In Section \ref{sec:Notation}, we give the basic preliminaries and our notation related to Interest Rates models. This notation will be used throughout the paper without being repeated in particular theorems unless we find it useful to do so in order to guide the reader through the results. In Section \ref{sec:Malliavin}, we make an introduction to Malliavin calculus. In Section \ref{sec:CA}, In Section \ref{sec:Numerical Results}, In Section \ref{sec:Conclusion}
@@ -181,7 +182,77 @@ The structure of the paper is as follows. In Section \ref{sec:Notation}, we give
 
 \section{Preliminaries and notation}\label{sec:Notation}
 
-\section{Malliavin}\label{sec:Malliavin}
+\section{Basic introduction to Malliavin calculus}\label{sec:Malliavin}
+Malliavin calculus is an infinite-dimensional calculus in a Gaussian space, that is, a stochastic calculus of variations. In other words, this is a theory that provides a way to calculate the derivatives of random variables defined in a Gaussian probability space with respect to the underlying noise. The initial objective of Malliavin was the study of the existence of densities of Wiener functionals such as solutions of stochastic differential equations. But, nowadays, it has become an important tool in stochastic analysis due to the increase in its applications. Some of these applications include stochastic calculus for fractional Brownian motion, central limit theorems for multiple stochastic integrals, and an extension of the Itô formula for anticipative processes, but especially mathematical finance. For example, we can apply Mallaivin calculus for computing hedging strategies, Greeks, or obtain price approximations. See, for example, \cite{AlosLorite} or \cite{Nualart} for more general content.\\
+
+In our case, we are interested in using the Malliavin calculus to apply the Clark–Ocone representation theorem. But, first of all, let's introduce some basic concepts.\\ 
+
+Now, we introduce the derivative operator in the Malliavin calculus sense and the divergence operator to establish the notation that we use in the remainder of the paper.\\
+
+Consider $W=\left\{W_{t}, t\in \left[0,T\right]\right\}$ a Brownian motion defined on a complete probability space $\left(\Omega, \mathcal{F}, \mathbb{P}\right)$. Let $H=L^{2}(\left[0,T\right])$ and denote by 
+\begin{eqnarray*}
+W_{t} := \int^{T}_{0} t_{s} \d W_{s},
+\end{eqnarray*}
+the It\^o integral of a deterministic function $h \in H$, also known as Wiener integral. Let $\mathcal{S}$ be the set of smooth random variables of the form
+\begin{eqnarray*}
+F=f\left(W_{t_{1}}, \ldots, W{t_{n}}\right)
+\end{eqnarray*}
+with $t_{1}, \ldots, t_{n} \in \left[0,T\right]$ and $f$ is infinitely differentiable bounded function.
+
+\medbreak
+
+The derivative of a random variable $F$, $D_{s}F$, is defined as the stochastic process given by
+\begin{eqnarray*}
+D_{s}F = \sum^{n}_{i=1} \frac{\partial f}{\partial x_{i}}\left(W_{t_{1}}, \ldots, W_{t_{n}}\right)1_{\left[0, t_{j}\right]}(s), \hspace{0.4cm} s \in \left[0,T\right].
+\end{eqnarray*}
+
+The iterated derivative operator of a random variable $F$ is defined by
+\begin{eqnarray*}
+D^{m}_{s_{1}, \ldots, s_{m}} F = D_{s_{1}} \cdots D_{s_{m}}F, \hspace{0.4cm} s_{1}, \ldots, s_{m} \in \left[0,T\right].
+\end{eqnarray*}
+
+\cite{Nualart} stated that these operators are closable from $L^{p}(\Omega)$ into $L^{p}(\Omega; L^{2}\left[0,T\right])$ for any $p\geq1$, and we denote by $\mathbb{D}^{n,p}$ the closure of $\mathcal{S}$ with respect to the norm
+\begin{eqnarray*}
+\left\|F\right\|_{n,p} := \left(E\left[F\right]^{p} + \sum^{n}_{i=1} E\left\|D^{i} F\right\|^{p}_{L^{2}\left(\left[0,T\right]^{i}\right)} \right)^{\frac{1}{p}}.
+\end{eqnarray*}
+
+\medbreak 
+
+We define $\delta$ as the adjoint of derivative operator $D$, also referred to as the Skorohod integral. The domain of $\delta$, denoted by $Dom\text{ }\delta$, is the set of elements $u \in L^{2}([0,T] \times \Omega)$ such that there exists $\delta(u) \in L^{2}(\Omega)$ satisfying the duality relation
+\begin{eqnarray*}
+E\left[\delta(u) F \right] = E\left[\int^{T}_{0} \left(D_{s} F\right) u_{s} \d s\right].
+\end{eqnarray*}
+
+The operator $\delta$ is an extension of the Itô integral in the sense that the set $L^{2}_{a}([0,T] \times \Omega)$ of square integrable and adapted processes is included in $Dom\text{ }\delta$ and the operator $\delta$ restricted to $L^{2}_{a}([0,T] \times \Omega)$ coincides with the Itô stochastic integral.
+
+\medbreak
+
+For any $u \in Dom\text{ }\delta$, we will use the following notation
+\begin{eqnarray*}
+\delta(u)=\int^{T}_{0}u_{s}\d W_{s}.
+\end{eqnarray*}
+
+\medbreak
+
+The representation of functionals of Brownian motion by stochastic integrals, also known as martingale representation, has been widely studied over the years. It states that if $F$ is a square-integrable random variable, there exists a unique adapted process $\varphi$ in $L^{2}(\Omega \times \left[0,T\right]; \mathbb{R}^{d})$ such that
+\begin{eqnarray*}
+F=E\left[F\right] + \sum^{n}_{i=1}\int^{T}_{0} \varphi^{i}_{s} dW^{i}_{s}.
+\end{eqnarray*}
+In other words, there exists a unique martingale representation or, more precisely, the integrand $\varphi$ in the representation exists and is unique in $L^{2}(\Omega \times \left[0,T\right]; \mathbb{R}^{d})$.
+
+\medbreak
+
+Unfortunately, it is not easy to find an analytic representation of the process $\varphi$. Here, the Malliavin calculus helps us to find a solution. When the random variable $F$ is Malliavin differentiable, the process $\varphi$ appearing in It\^o's representation theorem, is given by
+\begin{eqnarray*}
+\varphi^{i}=E\left[D^{W^{i}}_{t}F|\mathcal{F}^{W}_{s}\right].
+\end{eqnarray*}
+In fact,
+\begin{eqnarray}
+F=E\left[F\right] + \sum^{n}_{i=1}\int^{T}_{0} E\left[D^{W^{i}}_{t}F|\mathcal{F}^{W}_{s}\right] dW^{i}_{s}
+\end{eqnarray}
+is the Clark-Ocone representation formula. 
+
+ 
 
 \section{Convexity Adjustment}\label{sec:CA}
 
