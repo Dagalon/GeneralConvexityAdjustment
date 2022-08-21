@@ -247,7 +247,7 @@ Unfortunately, it is not easy to find an analytic representation of the process 
 \varphi^{i}=E\left[D^{W^{i}}_{t}F|\mathcal{F}^{W}_{s}\right].
 \end{eqnarray*}
 In fact,
-\begin{eqnarray}
+\begin{eqnarray}\label{clark-okone}
 F=E\left[F\right] + \sum^{n}_{i=1}\int^{T}_{0} E\left[D^{W^{i}}_{t}F|\mathcal{F}^{W}_{s}\right] dW^{i}_{s}
 \end{eqnarray}
 is the Clark-Ocone representation formula. 
@@ -255,6 +255,73 @@ is the Clark-Ocone representation formula.
  
 
 \section{Convexity Adjustment}\label{sec:CA}
+$\cdots$  tengo que pensar que poner aqui como intro
+\subsection{HJM framework}
+In order to compute the convexity adjustment, we need to assume some dynamic on the estimation curve and discount curve. In order to avoid problems with a stochastic basis between both curves, we will suppose a not stochastic basis i.e, we will suppose the next representation for the forward rate curve $f_{E}(t, T)$
+\begin{equation}\label{estimation_forward_rate_curve}
+f_{E}(t,T) = f_{ois}(t,T) + s(t,T).
+\end{equation}
+Where $s(t,T)= f_{E}(0,T) - f_{ois}(0,T)$ i.e we suppose the basis between curves that we get from the market in time $t=0$. On other hand, $f_ois(t, T)$ is the OIS forward rate curve and whose dynamic under the $\mathbb{Q}$-measure will be a single factor HJM dynamic i.e
+\begin{align}\label{ois_forward_rate_curve}
+df_{ois}(t,T) &= \sigma(t,T)\nu(t,T)dt + \sigma(t,T)dW^{\mathbb{Q}}_t \nonumber  \\
+f_{ois}(0,T) &= -\partial_T \log\left(P_{ois}(0,T)\right).
+\end{align}
+Where $\nu(t,T)=\int_{t}^{T}\sigma(t,s)ds$ and $\sigma(t, T)$ is a positive function for all $t,T > 0$ . In order to have a Markovian representation of the HJM model, It is usual to assume that volatility function in \ref{ois_forward_rate_curve} is separable, i.e
+\begin{equation}
+\sigma(t,T)= h(t)g(T).
+\end{equation}
+where g is a time-dependent positive function and h is a general non-negative process. It is easy to show (see Andreasen 2001), that in this case (\ref{ois_forward_rate_curve})
+\begin{equation}
+r_{ois}(t)=f_{ois}(t,t)= f_{ois}(0,t) + x_t,
+\end{equation}  
+where
+\begin{align}\label{short_rate_cheyette}
+dx_t &= (-k_t x_t + y_t)dt + \eta_t dW_t^{\mathbb{Q}}\\
+dy_t &= (\eta^{2}_t - 2 k_t y_t) dt,
+\end{align} 
+with 
+\begin{align*}
+\eta_t &= g(t)h(t,x_t,y_t)  \nonumber \\
+k_t &= - \frac{\partial_t g(t)}{g(t)}
+\end{align*}
+Then with a little bit of algebra and we use Itô formula we can show the next representation formula for $P_{ois}(t,T)$
+\begin{equation}
+P_{ois}(t,T) = \frac{P_{ois}(0,T)}{P_{ois}(0,t)} \exp\left(-G(t,T)x_t - \frac{1}{2} G^{2}(t,T) \right)
+\end{equation}
+with $G(t,T) = \int_{t}^{T} \exp\left(-\int_{t}^{u} k_s ds \right) du$.
+
+\subsection{FRAs Vs futures}
+The cashflows in FRAs and futures are computing under different measures and consequently we have to adjust the futures price quote to transform them to FRAs price quote. As usual, we will define the forward rate  in time $t_0$ between $t_1$ and $t_2$ under the forward curve $E$ as
+\begin{equation}\label{forward_rate}
+L_{E}(t_0, t_1, t_2) = \frac{\left(\frac{P_{E}(t_0,t_1)}{P_{E}(t_0,t_2)} - 1   \right)}{\delta_{t_1,t_2}},
+\end{equation} 
+Where $P_{E}(t,T)$ is the discount factor for the curve $E$ from t to T and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. We must observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the future rate   
+\begin{equation}\label{future}
+\hat{L}_{E}(t, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right), 
+\end{equation}
+where the measure $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. From (\ref{forward_rate}) and (\ref{future}), we can define the convexity adjusment the next way
+\begin{equation}
+CA(t, t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left(L_{E}(t_0, t_1, t_2) \right) =  \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right) - L_{E}(t_0, t_1, t_2)
+\end{equation}\label{convexity_adjustment_future}
+With view to get a general representation formula of the convexity adjustment for the futures, we will use (\ref{clark-okone}) to 
+$L_{E}(t_0,t_1,t_2)$ i.e
+
+\begin{equation}
+L_{E}(t_0,t_1,t_2) = \mathbb{E}^{\mathbb{Q}}_t\left(L_{E}(t_0,t_1,t_2)\right) + \int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s.
+\end{equation} 
+Now, if we take $\mathbb{E}^{\mathbb{Q}^{t2}}(\cdot)$ in the last equation, then we get
+\begin{equation}
+CA(t, t_0, t_1, t_2) = - \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s \right)
+\end{equation}
+Now under the framwork of the last section and if we apply Girsanov's theorem to switch to measure $\mathbb{Q}^{t_2}$, we get that
+\begin{equation}
+CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) \nu(s,t_2) ds \right)
+\end{equation}
+where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}).
+
+\subsection{OIS futures}
+
+\subsection{CMSs}
 
 \section{Numerical Results}\label{sec:Numerical Results}
 
