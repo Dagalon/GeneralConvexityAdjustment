@@ -322,7 +322,7 @@ From (\ref{ois_forward_rate_curve}) and since $f_{ois}(t,T)$ is a $\mathbb{Q}^{T
 dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,T) dt. 
 \end{equation*}
 Therefore, if we apply Girsanov's theorem to switch to measure $\mathbb{Q}^{t_2}$, we get that
-\begin{equation}\label{ca_future}
+\begin{equation}\label{ca_general_future}
 CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) \nu(s,t_2) ds \right)
 \end{equation}
 where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Now, from the definition of $L_{E}(t,T)$ we have that
@@ -357,28 +357,61 @@ Therefore,
 \mathbb{E}_s\left( D_s L_{E}(t_0,t_1,t_2) \right) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) - G(t_0,t_1)\right)\beta(s,t_0, x_0, \hat{y}_s)
 \end{equation}
 where $\hat{y}_s = y_0 + \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0) du$.
-Now, from (\ref{ca_future}) and (\ref{approximation_clarkocone}) we have the next approximation for the convexity adjustmet for future
+Now, from (\ref{ca_general_future}) and (\ref{approximation_clarkocone}) we have the next approximation for the convexity adjustmet for future
 
 \hspace{1cm}
 \fboxsep1em
-\fbox{\parbox{310pt}
+\fbox{\parbox{350pt}
 {
-\begin{equation}
-CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) - G(t_0,t_1)\right) \int_{0}^{t_0}  \beta(s,t_0, x_0, \hat{y}_s) ds. 
+\begin{equation}\label{ca_approximation_futures}
+CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) - G(t_0,t_1)\right) \int_{0}^{t_0}  \beta(s,t_0, x_0, \hat{y}_s) \nu(s,t_2) ds. 
 \end{equation}
 }}
 \begin{example}
-Hull-White model
+Let us to set 
+\begin{align*}
+g(T) &= \exp(-kT) \\
+h(t) &= \sigma
+\end{align*}
 \end{example}
+With this parametrization, the Cheyette model is equiavalent to Hull-White model. It is easy to show that under this parametrization, the convexity adjustment (\ref{ca_approximation_futures}) is
+\begin{align*}
+CA(t,t_0,t_1) & \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(\exp(-k(t_1 - t_0)) - \exp(-k(t_1 - t_0)) \right) \sigma^{2} \exp(-k t_0)  \int_{0}^{t_0} \frac{\left(\exp(- k s) - \exp(- k t_2)   \right)}{k} ds.   
+\end{align*}
+In the next figure, we can check the accuracy of the last formula versus montecarlo. The parameters that we have used are $\sigma=0.05$, $k=0.003$ and flat curve with level $r=0.01$.
 
-\begin{example}
-Ho-Lee model
-\end{example}
+$\cdots$
+
 \subsection{OIS futures}
+In this we will derive the covexity adjustment for overnight-indexed swap (OIS) under. We will define for $t_0 < t_1$
+\begin{align*}
+R(t_0,t_1) &= \frac{\mathbb{E}_t^{Q}\left(\exp\left(\int_{t_0}^{t_1}r_{ois,u} du\right)\right) - 1}{t_1 - t_0} \\
+R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t_1}r_{ois,u} du}{t_1 - t_0}.
+\end{align*}
+We must observe, that both $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$  are not predictible and they are only observable in $t_1$. However, since
+$R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$ are flows that will be payed in $t_1$, we can considerer the expected value under the measure $\mathbb{Q}^{t_1}$ that will observable during whole period $[t_0, t_1]$. Let us define the next $\mathbb{Q}^{t_1}$ martingales  
+\begin{align*} 
+\bar{R}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R(t_0,t_1)  \right) \\
+\bar{R}_{avg}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R_{avg}(t_0,t_1)  \right).
+\end{align*}
+We must do several obeservations. The first observation is that
+\begin{align*}
+F(t,t_0,t_1)=\mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_0} r_{ois,u} du \right) R(t_0,t_1) \right) &= \frac{P_{ois}(t,t_0)- P_{ois}(t,t_1)}{t_1 - t_0}, \quad t \in [0,t_0] \\
+F(t,t_0,t_1)=\mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_0} r_{ois,u} du \right) R(t_0,t_1) \right) &= \frac{1}{t_1 - t_0} \left(\frac{\left( \exp\left(\int_{t}^{t_1}r_{ois,u} du\right)\right)}{P_{ois}(t_0,t)}-1\right), \quad  t \in  [t_0, t_1].
+\end{align*}
+The can define the convexity adjustment for $ R(t_0,t_1)$ the next way
+\begin{equation}\label{R_ois_ca}
+CA_{ois}(t,t_0,t_1) = F(t,t_0,t_1) - \bar{R}(t,t_0,t_1) 
+\end{equation}
+The second observation, we must do is that
+\begin{equation*}
+F_{avg}(t,t_0,t_1) = \mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_0} r_{ois,u} du \right) R_{avg}(t_0,t_1) \right) =  
+\end{equation*}
+
+
+\subsection{FRAs in arrears}
 
 \subsection{CMSs}
-
-\section{Numerical Results}\label{sec:Numerical Results}
 
 \section{Conclusion}\label{sec:Conclusion}
 
