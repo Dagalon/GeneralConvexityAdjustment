@@ -18,4 +18,8 @@
       <OutputPath>bin\Release\x86\</OutputPath>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\..\..\Projects\JetBrains\Net\C#\QLNet\QLNet\src\QLNet\QLNet.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -2,3 +2,11 @@ ConvexityAdjustment-Lib/.idea/*
 ConvexityAdjustment-Lib/.vs/*
 ConvexityAdjustment-Lib/ConvexityAdjustment-Lib/bin/*
 ConvexityAdjustment-Lib/ConvexityAdjustment-Lib/obj/*
+ConvexityAdjustment-Lib/ConvexityAdjusmentUnitTests/bin/*
+ConvexityAdjustment-Lib/ConvexityAdjusmentUnitTests/obj/*
+Latex/paper.aux
+Latex/paper.log
+Latex/paper.out
+Latex/paper.pdf
+Latex/paper.synctex.gz
+ConvexityAdjustment-Lib/ConvexityAdjustment-Lib.sln.DotSettings.user
