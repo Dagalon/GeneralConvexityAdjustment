@@ -26,9 +26,33 @@ namespace ConvexityAdjustment_Lib
             double alpha = (h01 * df01) / (df00 * (h02 * df02) * delta12) * ( df02 * g02 - df01 * g01);
 
             return alpha * m * integral;
+        }
 
+        
+        public static double GetExpectedIntegralRt(double k, double sigma, double t0, double t1)
+        {
+
+            var alpha = 0.5 * sigma*sigma / k;
+            var part1 = t1 - t0;
+            var part2 = 0.5 * (Math.Exp(-2.0 * k * t0) - Math.Exp(-2.0 * k * t1)) / k;
+            var part3 = (1.0 - Math.Exp(- k * (t1 - t0))) / k;
+            var part4 = (Math.Exp(-k * (t0 + t1)) - Math.Exp(-2.0 * k * t1)) / k;
+
+            return alpha * (part1 - part2 - part3 + part4);
 
         }
+        
+        public static double GetVarianceIntegralRt(double k, double sigma, double t0, double t1)
+        {
+            var alpha = sigma * sigma;
+            var part1 = t1 - t0;
+            var part2 = 0.5 * (1.0 - Math.Exp(-2.0 * k * (t1 - t0))) / k;
+            var part3 = (1.0 - Math.Exp(-k * (t1 - t0))) / k;
+
+            return alpha * (part1 + part2 - 2.0 * part3);
+        }
+
+      
 
 
     }

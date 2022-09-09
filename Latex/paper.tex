@@ -396,12 +396,12 @@ R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t_1}r_{ois,u} du}{t_1 - t_0}.
 We must observe, that both $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$  are not predictible and they are only observable in $t_1$. However, since
 $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$ are flows that will be payed in $t_1$, we can considerer the expected value under the measure $\mathbb{Q}^{t_1}$ that will observable during whole period $[t_0, t_1]$. Let us define the next $\mathbb{Q}^{t_1}$ martingales  
 \begin{align*} 
-\bar{R}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R(t_0,t_1)  \right) \\
-\bar{R}_{avg}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R_{avg}(t_0,t_1)  \right).
+\bar{R}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left( R(t_0,t_1)  \right) \\
+\bar{R}_{avg}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left( R_{avg}(t_0,t_1)  \right).
 \end{align*}
 We must do several obeservations. The first observation is that
 \begin{align*}
-F(t,t_0,t_1)=\mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_0} r_{ois,u} du \right) R(t_0,t_1) \right) &= \frac{P_{ois}(t,t_0)- P_{ois}(t,t_1)}{t_1 - t_0}, \quad t \in [0,t_0] \\
+F(t,t_0,t_1)=\mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_0} r_{ois,u} du \right) R(t_0,t_1) \right) &= \frac{\frac{P_{ois}(t,t_0)}{P_{ois}(t,t_1)} - 1}{t_1 - t_0}, \quad t \in [0,t_0] \\
 F(t,t_0,t_1)=\mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_0} r_{ois,u} du \right) R(t_0,t_1) \right) &= \frac{1}{t_1 - t_0} \left(\frac{\left( \exp\left(\int_{t}^{t_1}r_{ois,u} du\right)\right)}{P_{ois}(t_0,t)}-1\right), \quad  t \in  [t_0, t_1].
 \end{align*}
 The can define the convexity adjustment for $ R(t_0,t_1)$ the next way
@@ -416,26 +416,40 @@ Then, we have two convexity effects, one of them is the convexity of $\log(1+x)$
 \begin{equation}\label{log_approximation}
 \frac{\log(1 + (t_1 - t_0)(x +\epsilon))}{(t_1 - t_0)} \approx \log(1 + (t_1 - t_0)x) + \frac{1}{1 + (t_1 - t_0)x}   \epsilon - \frac{1}{(1 + (t_1 - t_0)x)^{2}} \epsilon^{2}
 \end{equation}
-to get the convexity adjustment for $R_{avg}(t_0,t_1)$. Now, if we use (\ref{clark-okone}) and (\ref{malliavin_derive_x}, we have the next representation for $R(t_0,t_1)$ 
+to get the convexity adjustment for $R_{avg}(t_0,t_1)$. Now, if we use (\ref{clark-okone}) and (\ref{malliavin_derive_x}), we have the next representation for $R(t_0,t_1)$ 
 \begin{align*}
 R(t_0,t_1) &=   \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \int_{0}^{t_1}\mathbb{E}^{\mathbb{Q}}_s\left(D_s R(t_0,t_1) \right) dW^{\mathbb{Q}}_s \\
-&= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \int_{0}^{t_1}\mathbb{E}^{\mathbb{Q}}_s\left(\int_{\max(s,t_0)}^{t1} D_s x_u du \right) dW^{\mathbb{Q}}_s \\
-&= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) du  dW^{\mathbb{Q}}_s\\
-&\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) du  dW^{\mathbb{Q}}_s
+&= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \frac{1}{t_1- t_0} \int_{0}^{t_1}\mathbb{E}^{\mathbb{Q}}_s\left(\int_{\max(s,t_0)}^{t1} D_s x_u du \right) dW^{\mathbb{Q}}_s \\
+&= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) du  dW^{\mathbb{Q}}_s\\
+&\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) +  \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) du  dW^{\mathbb{Q}}_s
 \end{align*}
-Then, if we use Girsanov's theorem we have that
+Then, if we use Girsanov's theorem and we apply $\mathbb{E}^{\mathbb{Q}^{t_1}}(\cdot)$ we get
 \begin{align*}
-F(0,t_0,t_1) &\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) - \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) \nu(s,t_1)  du ds \\
-&\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) - \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du ds  
+F(0,t_0,t_1) &\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) - \frac{1}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \mathbb{E}^{\mathbb{Q}^{t_1}}\left(\mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right)  \right) \nu(s,t_1)  du ds \\
+&\approx  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) -  \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du ds  
 \end{align*}
 And therefore
 \begin{equation}\label{convexity_ois_future}
- \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) \approx F(0,t_0,t_1) + \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du ds.
+ \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) \approx F(0,t_0,t_1) + \frac{1}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s)  \nu(s,t_1)  du ds.
 \end{equation}
-Now, if we use (\ref{log_approximation}) with 
+
+\begin{example}
+The same way that in the example (\ref{example_ca_future}), we will suppose a Hull-White model with constan mean reversion $k$ and constant volatility $\sigma$. It is easy to show in the case of the Hull-White model
+
+\begin{align*}
+\eta_s &= \sigma \exp(-ks)\\
+\beta(s,u, x_0, \hat{y}_s) &= \sigma \exp(-ku) \\
+\nu(s,t_1) &= \sigma \frac{\exp(-ks) - \exp(-kt_1)}{k}
+\end{align*}
+ Therefore, from the last equalities and (\ref{convexity_ois_future}), we have that
+\begin{equation}
+ \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) \approx F(0,t_0,t_1) + \frac{\sigma^{2}}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \exp(-ku)   \frac{\exp(-ks) - \exp(-kt_1)}{k} du ds
+\end{equation}
+\end{example}
+Now, in order to compute the convexity adjustmen for the average case, we  wil use (\ref{log_approximation}) with 
 \begin{align*}
 x &= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right)\\
-\epsilon &= \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du  dW^{\mathbb{Q}}_s
+\epsilon &=  \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du  dW^{\mathbb{Q}}_s
 \end{align*} 
 we can calculate the adjusment for $R_{avg}(t_0,t1)$
 \begin{align*}
@@ -443,9 +457,7 @@ we can calculate the adjusment for $R_{avg}(t_0,t1)$
 &-\frac{1}{2(1 + (t_1 - t_0)\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right))^{2}} \int_{0}^{t_1}\left(\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s)  du\right)^{2} ds
 \end{align*}
 
-\begin{example}
-The same way that in the example (\ref{example_ca_future}), we will suppose a Hull-White model with constan mean reversion $k$ and constant volatility $\sigma$. Then
-\end{example}
+
 
 \subsection{FRAs in arrears}
 
