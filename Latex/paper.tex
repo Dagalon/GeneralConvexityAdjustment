@@ -442,9 +442,14 @@ The same way that in the example (\ref{example_ca_future}), we will suppose a Hu
 \nu(s,t_1) &= \sigma \frac{\exp(-ks) - \exp(-kt_1)}{k}
 \end{align*}
  Therefore, from the last equalities and (\ref{convexity_ois_future}), we have that
-\begin{equation}
- \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) \approx F(0,t_0,t_1) + \frac{\sigma^{2}}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \exp(-ku)   \frac{\exp(-ks) - \exp(-kt_1)}{k} du ds
-\end{equation}
+\begin{align*}
+ \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) &\approx F(0,t_0,t_1) + \frac{\sigma^{2}}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \exp(-ku)   \frac{\exp(-ks) - \exp(-kt_1)}{k} du ds \\
+ &\approx  F(0,t_0,t_1) + \frac{\sigma^{2}}{k^{2}(t_1- t_0)}   \int_{0}^{t_1} (\exp(-ks) - \exp(-kt_1))(\exp(-k\max(s,t_0)) - \exp(-kt_1))) ds \\
+ &\approx  F(0,t_0,t_1) + \frac{\sigma^{2}}{k^{2}(t_1- t_0)}   \int_{0}^{t_0} (\exp(-ks) - \exp(-kt_1))(\exp(-kt_0) - \exp(-kt_1))) ds  \\
+ &+ \frac{\sigma^{2}}{k^{2}(t_1- t_0)}   \int_{t_0}^{t_1} (\exp(-ks) - \exp(-kt_1))^{2} ds
+\end{align*}
+It is easy to show with a little bit of algebra that
+(tengo que terminarlo)
 \end{example}
 Now, in order to compute the convexity adjustmen for the average case, we  wil use (\ref{log_approximation}) with 
 \begin{align*}
