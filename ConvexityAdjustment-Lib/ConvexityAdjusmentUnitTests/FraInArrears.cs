@@ -1,20 +1,21 @@
+﻿using ConvexityAdjustment_Lib;
 using NUnit.Framework;
 using ql = QLNet;
 
 namespace ConvexityAdjustmentUnitTests
 {
-    public class ConvexityFutureFras
+    public class ConvexityFraInArrears
     {
         [Test]
-        public void HullWhiteFraVsFutureConvexity()
+        public void HullWhiteFraInArrears()
         {
             
             // settings
             var calendar = new ql.TARGET();
             
             // Hull-White parameters
-            double k = 0.0003;
-            double sigma = 0.0115;
+            double k = 0.0007;
+            double sigma = 0.01;
             // double spreadBasis = 0.001;
 
             // Curves
@@ -31,8 +32,6 @@ namespace ConvexityAdjustmentUnitTests
             // MC
             int numberOfSimulations = 2000000;
             ulong seed = 123545;
-            // double deltaTime = 0.01;
-            // int timeSteps = (int)(length / deltaTime);
             int timeSteps = 1;
             var numberOfMonths = 48;
 
@@ -43,16 +42,14 @@ namespace ConvexityAdjustmentUnitTests
             for (var j = 1; j < numberOfMonths + 1; j++)
             {
                 // Product
-                var t0 = calendar.advance(startDate, j, ql.TimeUnit.Months);
                 var t1 = calendar.advance(startDate, j, ql.TimeUnit.Months);
                 var t2 = calendar.advance(t1, 12, ql.TimeUnit.Months);
                  
                 // Delta times
-                double delta00 = dc.yearFraction(startDate, t0);
                 double delta01 = dc.yearFraction(startDate, t1);
                 double delta02 = dc.yearFraction(startDate, t2);
 
-                List<double> mandatoryPoints = new List<double> { delta00};
+                List<double> mandatoryPoints = new List<double> { delta01};
                 double length = dc.yearFraction(startDate, t2);
                 
                 var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
@@ -60,9 +57,12 @@ namespace ConvexityAdjustmentUnitTests
                     new ql.PseudoRandom().make_sequence_generator(timeSteps, seed);
 
                 ql.PathGenerator<ql.IRNG> generator = new ql.PathGenerator<ql.IRNG>(process, length, timeSteps, rsg, true, mandatoryPoints);
-                double f0t = curve.currentLink().forwardRate(delta00, delta00, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
-                double expat = (1.0 - Math.Exp(-k * delta00)) / k ;
-                double mt = (sigma * sigma) / (2.0 * k) * (expat - Math.Exp(-k * delta00) * expat); 
+                double f0t = curve.currentLink().forwardRate(delta01, delta01, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
+                double expat = (1.0 - Math.Exp(-k * delta01)) / k ;
+                double mt = (sigma * sigma) / (2.0 * k) * (expat - Math.Exp(-k * delta01) * expat);
+                // Adjustment forward measure
+                double adjFwdMeasure =
+                    -(sigma * sigma / k) * (HullWhite.Beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
                 
                 // Path generator
                 int i;
@@ -75,10 +75,9 @@ namespace ConvexityAdjustmentUnitTests
                 {
                     ql.Sample<ql.IPath> sample = generator.next();
                     var path = (ql.Path)sample.value;
-                    var rt0 = path[path.length() - 1] + mt + f0t;
-                    var df01 = model.discountBond(delta00, delta01, rt0);
-                    var df02 = model.discountBond(delta00, delta02, rt0);
-                    var libor = ((df01 / df02) - 1.0) / (delta02 - delta01);
+                    var rt0 = path[path.length() - 1] + mt + f0t + adjFwdMeasure;
+                    var df12 = model.discountBond(delta01, delta02, rt0);
+                    var libor = (1.0 / df12 - 1.0) / (delta02 - delta01);
                     mean += (libor / numberOfSimulations);
                     meanXt0 += path[path.length() - 1] / numberOfSimulations;
                     varXt0 += (path[path.length() - 1] * path[path.length() - 1]) / numberOfSimulations;
@@ -87,18 +86,18 @@ namespace ConvexityAdjustmentUnitTests
                 
                 
                 // Convexity future
-                var varAnalyticXt = sigma * sigma * (1 - Math.Exp(-2.0 * k * delta00)) / (2.0 * k);
-                var mcFuturePrice = mean;
+                var varAnalyticXt = sigma * sigma * (1 - Math.Exp(-2.0 * k * delta01)) / (2.0 * k);
+                var mcFraInArrears = mean;
                 var stdMc = Math.Sqrt(momentOrderTwoMean - mean * mean);
                 var intervalConfidence = new double[]
                     { mean - stdMc / Math.Sqrt(numberOfSimulations), mean + stdMc / Math.Sqrt(numberOfSimulations) };
-                var convexityMc = mcFuturePrice - curve.currentLink()
+                var convexityMc = mcFraInArrears - curve.currentLink()
                     .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
                 var convexityMalliavin =
-                    ConvexityAdjustment_Lib.HullWhite.ConvexityFuture(curve, k, sigma, delta00, delta01, delta02, 0.0);
+                    ConvexityAdjustment_Lib.HullWhite.ConvexityFraInArrears(curve, k, sigma, delta01, delta02, 0.0);
                 
                 // outputs
-                t0s.Add(delta00);
+                t0s.Add(delta01);
                 caMc.Add(convexityMc);
                 caMalliavin.Add(convexityMalliavin);
             }

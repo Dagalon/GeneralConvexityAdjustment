@@ -4,6 +4,26 @@ namespace ConvexityAdjustment_Lib
 {
     public static class HullWhite
     {
+
+        public static double ConvexityFraInArrears(ql.Handle<ql.YieldTermStructure> curve, double k, double sigma,
+            double t1, double t2,
+            double basisSpread)
+        {
+            // df, year fracs, basis,....
+            double df01 = curve.currentLink().discount(t1, true);
+            double df02 = curve.currentLink().discount(t2, true);
+            double delta12 = (t2 - t1);
+            double h01 = Math.Exp(-basisSpread * t1);
+            double h02 = Math.Exp(-basisSpread * t2);
+            double df12 = (df02 * h02) / (df01 * h01);
+
+            double m = sigma * sigma / (delta12 * df12 * k);
+            double integral = Beta(t1, 2.0 * t1, k) - Beta(t2, t1 + t2, k);
+
+            return m * integral;
+
+        }
+
         public static double ConvexityFuture(ql.Handle<ql.YieldTermStructure> curve,  double k, double sigma, double t0, double t1, double t2,
             double basisSpread)
         {
@@ -21,7 +41,7 @@ namespace ConvexityAdjustment_Lib
             double g01 = (1.0 - Math.Exp(-k * delta01)) / k;
             double g02 = (1.0 - Math.Exp(-k * delta02)) / k;
             
-            double m = sigma * sigma * Math.Exp(-k * t0);
+            double m = Beta(0.0, delta12, k) * sigma * sigma * Math.Exp(-k * t0);
             double integral = (1.0 - Math.Exp(-k * t0)) / (k * k) - t0 * Math.Exp(-k * t2) / k;
             double alpha = (h01 * df01) / (df00 * (h02 * df02) * delta12) * ( df02 * g02 - df01 * g01);
 
@@ -52,8 +72,16 @@ namespace ConvexityAdjustment_Lib
             return alpha * (part1 + part2 - 2.0 * part3);
         }
 
-      
+        public static double Beta(double t0, double t1, double alpha)
+        {
+            double delta = t1 - t0;
+            if (ql.Utils.close(alpha * delta, 0.0))
+            {
+                return Math.Exp(-alpha * t0) * delta;
+            }
 
+            return (Math.Exp(-alpha * t0) - Math.Exp(-alpha * t1)) / alpha;
+        }
 
     }
 }

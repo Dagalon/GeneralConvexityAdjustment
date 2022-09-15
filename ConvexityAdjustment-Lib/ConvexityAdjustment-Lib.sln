@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvexityAdjustment-Lib", "ConvexityAdjustment-Lib\ConvexityAdjustment-Lib.csproj", "{1255337F-F438-4D55-BF21-BCF2A6CD37FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "..\..\QLNet\src\QLNet\QLNet.csproj", "{99BBACBB-A190-4D4C-8C06-023DF040AB7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "D:\Projects\JetBrains\Net\C#\QLNet\QLNet\src\QLNet\QLNet.csproj", "{99BBACBB-A190-4D4C-8C06-023DF040AB7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvexityAdjusmentUnitTests", "ConvexityAdjusmentUnitTests\ConvexityAdjusmentUnitTests.csproj", "{8195EA9E-C7BA-4164-A598-79211D11A603}"
 EndProject
