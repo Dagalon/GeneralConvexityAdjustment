@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using ql = QLNet;
 
-namespace ConvexityAdjusmentUnitTests
+namespace ConvexityAdjustmentUnitTests
 {
     public class ConvexityFutureFras
     {

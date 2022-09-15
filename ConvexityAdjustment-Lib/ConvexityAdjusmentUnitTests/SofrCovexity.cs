@@ -2,7 +2,7 @@
 using ql = QLNet;
 using NUnit.Framework;
 
-namespace ConvexityAdjusmentUnitTests
+namespace ConvexityAdjustmentUnitTests
 {
     public class ConvexityAdjustmentSofr
     {
