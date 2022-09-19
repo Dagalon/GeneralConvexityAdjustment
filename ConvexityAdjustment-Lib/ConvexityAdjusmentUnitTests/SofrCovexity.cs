@@ -14,8 +14,8 @@ namespace ConvexityAdjustmentUnitTests
             var calendar = new ql.TARGET();
             
             // Hull-White parameters
-            double k = 0.0003;
-            double sigma = 0.0115;
+            double k = 0.0001;
+            double sigma = 0.01;
             // double spreadBasis = 0.001;
 
             // Curves

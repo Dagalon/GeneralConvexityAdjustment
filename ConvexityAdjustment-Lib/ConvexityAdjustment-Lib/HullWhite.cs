@@ -60,8 +60,8 @@ namespace ConvexityAdjustment_Lib
             double df2 = curve.link.discount(t2, true);
             double m = 0.5 * Math.Pow(sigma / k, 2.0);
             double expected = -Math.Log(df2 / df1) + m * (delta12 - 2.0 * b1 + b2);
-            double i1 = m * (delta12 * Math.Exp(-2.0 * k * t1) + Math.Exp(-2.0 * k * delta12) * b2 - 2.0 * Math.Exp(-k*t2) * b1);
-            double i2 = m * Math.Pow(1.0 - Math.Exp(-k * delta12), 2.0) * b2;
+            double i1 = m * ( t1 * Math.Exp(- 2.0 * k * t1) + Math.Exp( - 2.0 * k * t2) * t1  - 2.0 * Math.Exp( - k * (t1 + t2)) * t1);
+            double i2 = m * (b2 + Math.Exp(-2.0 * k * t2) * delta12 - 2.0 * Beta(t1+t2, 2.0*t2, k));
 
             return (Math.Exp(expected + i1 + i2) - 1.0) / delta12;
         }
@@ -81,12 +81,13 @@ namespace ConvexityAdjustment_Lib
         
         public static double GetVarianceIntegralRt(double k, double sigma, double t0, double t1)
         {
-            var alpha = sigma * sigma;
-            var part1 = t1 - t0;
-            var part2 = 0.5 * (1.0 - Math.Exp(-2.0 * k * (t1 - t0))) / k;
-            var part3 = (1.0 - Math.Exp(-k * (t1 - t0))) / k;
 
-            return alpha * (part1 + part2 - 2.0 * part3);
+            double m = Math.Pow(sigma / k, 2.0);
+            double delta = t1 - t0;
+            double i1 = m * (Beta(0.0, t0, 2.0 * k) + Beta(delta, t1, 2.0 * k) - Beta(t1 - t0, t1 + t0, k));
+            double i2 = m * (delta + Beta(0.0,delta, 2.0 * k) - 2.0 * Beta(0.0, delta, k));
+
+            return i1 + i2;
         }
         
         public static double Beta(double t0, double t1, double alpha)

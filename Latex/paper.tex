@@ -482,17 +482,28 @@ The same way that in the example (\ref{example_ca_future}), we will suppose a Hu
 \eta_s &= \sigma \exp(-ks)\\
 \beta(s,u, x_0, \hat{y}_s) &= \sigma \exp(-ku) \\
 \nu(s,t_1) &= \sigma \frac{\exp(-ks) - \exp(-kt_1)}{k}\\
-\Gamma(s,t_0,t_1) &= \frac{\exp(-ks)\sigma}{k}\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-t_0))\right)\\
+\Gamma(s,t_0,t_1) &= \frac{\sigma \exp(-ks)}{k}\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-s))\right)\\
 \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) + \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{k}  \right).
 \end{align*}
 Therefore we have that
 \begin{align*}
-\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k\delta_{t_0,t_1})\right)^{2} ds \\
-&= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
+\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
+&= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
 &+ \frac{\sigma^{2}}{2k^{2}} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
-&= \frac{\sigma^{2}}{2k^{2}} \left(\delta_{t_0,t_1}+ \exp(-2k\delta_{t_0,t_1}) \frac{\exp(-2kt_0)- \exp(-2kt_1)}{2k} - 2\exp(-kt_1) \frac{\exp(-kt_0)- \exp(-kt_1)}{k}  \right) \\
+&= \frac{\sigma^{2}}{2k^{2}} \left(\delta_{t_0,t_1} \exp(-kt_0) + \exp(-2kt_1) \frac{\exp(-2kt_0)- \exp(-2kt_1)}{2k}\right)\\  
+&- \frac{\sigma^{2}}{k^{2}} \frac{\exp(-k(t_1-t_0))- \exp(-k(t_1+t_0))}{k}   \\
 &+ \frac{\sigma^{2}}{2k^{2}} \left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}\right)
 \end{align*}
+Then if we substitute the last equality in (\ref{convexity_ois_future}) we get the convexity adjustment for OIS future. The next figure, show accuracy of (\ref{convexity_ois_future}) in the case of Hull-White
+
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.3]{Figures/convexity_ois.jpg}
+		\caption{Convexity Mc Vs Convexity Malliavin}
+	\end{center}
+\end{figure} 
+
  
 \end{example}
 
