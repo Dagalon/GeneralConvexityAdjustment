@@ -4,7 +4,8 @@ namespace ConvexityAdjustment_Lib
 {
     public static class HullWhite
     {
-
+        
+        #region Convexity
         public static double ConvexityFraInArrears(ql.Handle<ql.YieldTermStructure> curve, double k, double sigma,
             double t1, double t2,
             double basisSpread)
@@ -48,17 +49,33 @@ namespace ConvexityAdjustment_Lib
             return alpha * m * integral;
         }
 
+        public static double ConvexityOis(ql.Handle<ql.YieldTermStructure> curve, double k, double sigma, double t1,
+            double t2)
+        {
+            double b1 = Beta(t1, t2, k);
+            double b2 = Beta(t1, t2, 2.0 * k);
+            double delta12 = t2 - t1;
+
+            double df1 = curve.link.discount(t1, true);
+            double df2 = curve.link.discount(t2, true);
+            double m = 0.5 * Math.Pow(sigma / k, 2.0);
+            double expected = -Math.Log(df2 / df1) + m * (delta12 - 2.0 * b1 + b2);
+            double i1 = m * (delta12 * Math.Exp(-2.0 * k * t1) + Math.Exp(-2.0 * k * delta12) * b2 - 2.0 * Math.Exp(-k*t2) * b1);
+            double i2 = m * Math.Pow(1.0 - Math.Exp(-k * delta12), 2.0) * b2;
+
+            return (Math.Exp(expected + i1 + i2) - 1.0) / delta12;
+        }
+
+        #endregion
+
+        #region Tools
         
         public static double GetExpectedIntegralRt(double k, double sigma, double t0, double t1)
         {
 
-            var alpha = 0.5 * sigma*sigma / k;
-            var part1 = t1 - t0;
-            var part2 = 0.5 * (Math.Exp(-2.0 * k * t0) - Math.Exp(-2.0 * k * t1)) / k;
-            var part3 = (1.0 - Math.Exp(- k * (t1 - t0))) / k;
-            var part4 = (Math.Exp(-k * (t0 + t1)) - Math.Exp(-2.0 * k * t1)) / k;
-
-            return alpha * (part1 - part2 - part3 + part4);
+            var m = 0.5 * Math.Pow(sigma / k, 2.0);
+            var delta = t1 - t0;
+            return m * (delta - 2.0 * Beta(t0, t1, k) + Beta(t0, t1, 2.0 * k));
 
         }
         
@@ -71,7 +88,7 @@ namespace ConvexityAdjustment_Lib
 
             return alpha * (part1 + part2 - 2.0 * part3);
         }
-
+        
         public static double Beta(double t0, double t1, double alpha)
         {
             double delta = t1 - t0;
@@ -82,6 +99,8 @@ namespace ConvexityAdjustment_Lib
 
             return (Math.Exp(-alpha * t0) - Math.Exp(-alpha * t1)) / alpha;
         }
+        
+        #endregion
 
     }
 }

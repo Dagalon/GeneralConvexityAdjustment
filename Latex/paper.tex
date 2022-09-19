@@ -410,7 +410,7 @@ In the next figure, we can check the accuracy of the last formula versus monteca
 \subsection{OIS futures}
 In this we will derive the covexity adjustment for overnight-indexed swap (OIS) under. We will define for $t_0 < t_1$
 \begin{align*}
-R(t_0,t_1) &= \frac{\mathbb{E}_t^{Q}\left(\exp\left(\int_{t_0}^{t_1}r_{ois,u} du\right)\right) - 1}{t_1 - t_0} \\
+R(t_0,t_1) &= \frac{\exp\left(\int_{t_0}^{t_1}r_{ois,u} du \right) - 1}{t_1 - t_0} \\
 R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t_1}r_{ois,u} du}{t_1 - t_0}.
 \end{align*}
 We must observe, that both $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$  are not predictible and they are only observable in $t_1$. However, since
@@ -429,58 +429,72 @@ The can define the convexity adjustment for $ R(t_0,t_1)$ the next way
 CA_{ois}(t,t_0,t_1) = F(t,t_0,t_1) - \bar{R}(t,t_0,t_1) 
 \end{equation}
 The second observation, is that under the dyam we must do is that
+\begin{equation}\label{R_ois_avg}
+\mathbb{E}_{t}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) = \mathbb{E}_t^{\mathbb{Q}}\left( \frac{\log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right)}{\delta_{t_0,t_1}} \right)  
+\end{equation}
+In order to compute $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1\right)$, we will define
 \begin{equation*}
-\mathbb{E}_{t}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) = \mathbb{E}_t^{\mathbb{Q}}\left( \frac{\log\left(1+(t_1 - t_0)R(t_0,t_1) \right)}{t_1 - t_0} \right).  
+I(t_0,t_1) = \int_{t_0}^{t_1} r_s ds
 \end{equation*}
-Then, we have two convexity effects, one of them is the convexity of $\log(1+x)$ and the other comes from $R(t_0,t_1)$. Therefore, we need only to compute convexity adjusment for $R(t_0,t_1)$ and apply 
-\begin{equation}\label{log_approximation}
-\frac{\log(1 + (t_1 - t_0)(x +\epsilon))}{(t_1 - t_0)} \approx \log(1 + (t_1 - t_0)x) + \frac{1}{1 + (t_1 - t_0)x}   \epsilon - \frac{1}{(1 + (t_1 - t_0)x)^{2}} \epsilon^{2}
-\end{equation}
-to get the convexity adjustment for $R_{avg}(t_0,t_1)$. Now, if we use (\ref{clark-okone}) and (\ref{malliavin_derive_x}), we have the next representation for $R(t_0,t_1)$ 
+then for $t < t_0$ from (\ref{clark-okone}) and (\ref{malliavin_derive_x}), we have the next representation for $I(t_0,t_1)$
+\begin{align}\label{apprx_I_t0_t1}
+I(t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left(\beta(s,u,x_s,y_s) M(s,u) \right) du dW_s^{\mathbb{Q}} \nonumber \\
+&\approx \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,x_0,\hat{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
+&= \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1} g(s)h(s,x_0,\hat{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
+\end{align}
+Therefore, we can get the next approximation
 \begin{align*}
-R(t_0,t_1) &=   \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \int_{0}^{t_1}\mathbb{E}^{\mathbb{Q}}_s\left(D_s R(t_0,t_1) \right) dW^{\mathbb{Q}}_s \\
-&= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \frac{1}{t_1- t_0} \int_{0}^{t_1}\mathbb{E}^{\mathbb{Q}}_s\left(\int_{\max(s,t_0)}^{t1} D_s x_u du \right) dW^{\mathbb{Q}}_s \\
-&= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) + \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) du  dW^{\mathbb{Q}}_s\\
-&\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) +  \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1} \mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right) du  dW^{\mathbb{Q}}_s
+1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}^{t_1}}\left(R(t_0,t_1)\right) &= \mathbb{E}^{\mathbb{Q}^{t_1}}\left( \exp(I(t_0,t_1)) \right)\\
+&= \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)  \mathbb{E}^{\mathbb{Q}^{t_1}}\left(\exp\left(\int_{0}^{t_1} \Gamma(s,t_0,t_1)dW_s^{\mathbb{Q}}\right)\right)
 \end{align*}
-Then, if we use Girsanov's theorem and we apply $\mathbb{E}^{\mathbb{Q}^{t_1}}(\cdot)$ we get
-\begin{align*}
-F(0,t_0,t_1) &\approx \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) - \frac{1}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \mathbb{E}^{\mathbb{Q}^{t_1}}\left(\mathbb{E}^{\mathbb{Q}}_s\left(\beta(s,u, x_s, y_s)M(s,u)  \right)  \right) \nu(s,t_1)  du ds \\
-&\approx  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) -  \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du ds  
-\end{align*}
-And therefore
+where $\Gamma(s,t_0,t_1)= g(s)h(s,x_0,\hat{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$. Now, from the Girsanov's theorem we get that
+\begin{equation*}
+1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(\int_{0}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right)
+\end{equation*}
+Therefore we have that
 \begin{equation}\label{convexity_ois_future}
- \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) \approx F(0,t_0,t_1) + \frac{1}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s)  \nu(s,t_1)  du ds.
+\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \frac{\exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(\int_{0}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
 \end{equation}
+We must note, that from (\ref{apprx_I_t0_t1}) and (\ref{R_ois_avg}) we can get an approximation for $R_{avg}(t_0,t_1)$
+\begin{equation*}
+R_{avg}(t_0,t_1) = \frac{\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} + \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
+\end{equation*}
+Therefore, since $\log(1+x)\approx x$ we have that
+\begin{equation*}
+R_{avg}(t_0,t_1) \approx  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) + \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}.
+\end{equation*}
+
+\begin{remark}
+We must observe that for the case $t_0 < t < t_1$ we can compute the convexity adjusment in a similar way when $t < t_0$, but in this case we have to define
+\begin{equation*}
+I(t,t_1)=\int_{t}^{t_1} r_s ds
+\end{equation*}
+and 
+\begin{align*}
+R(t_0,t_1) &= \frac{\frac{\exp(\int_{t}^{t_1} r_{ois,s} ds )}{P_{ois}(t_0,t)} - 1}{t_1 - t_0} \\
+R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t} r_{ois,s} ds}{t_1-t_0} +  \frac{\int_{t}^{t_1} r_{ois,s} ds}{t_1-t_0}.   
+\end{align*}
+\end{remark}
 
 \begin{example}
-The same way that in the example (\ref{example_ca_future}), we will suppose a Hull-White model with constan mean reversion $k$ and constant volatility $\sigma$. It is easy to show in the case of the Hull-White model
-
+The same way that in the example (\ref{example_ca_future}), we will suppose a Hull-White model with constan mean reversion $k=0.003$ and volatility $\sigma=0.01$. It is easy to show in the case of the Hull-White model
 \begin{align*}
 \eta_s &= \sigma \exp(-ks)\\
 \beta(s,u, x_0, \hat{y}_s) &= \sigma \exp(-ku) \\
-\nu(s,t_1) &= \sigma \frac{\exp(-ks) - \exp(-kt_1)}{k}
+\nu(s,t_1) &= \sigma \frac{\exp(-ks) - \exp(-kt_1)}{k}\\
+\Gamma(s,t_0,t_1) &= \frac{\exp(-ks)\sigma}{k}\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-t_0))\right)\\
+\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) + \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{k}  \right).
 \end{align*}
- Therefore, from the last equalities and (\ref{convexity_ois_future}), we have that
+Therefore we have that
 \begin{align*}
- \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right) &\approx F(0,t_0,t_1) + \frac{\sigma^{2}}{t_1- t_0}   \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \exp(-ku)   \frac{\exp(-ks) - \exp(-kt_1)}{k} du ds \\
- &\approx  F(0,t_0,t_1) + \frac{\sigma^{2}}{k^{2}(t_1- t_0)}   \int_{0}^{t_1} (\exp(-ks) - \exp(-kt_1))(\exp(-k\max(s,t_0)) - \exp(-kt_1))) ds \\
- &\approx  F(0,t_0,t_1) + \frac{\sigma^{2}}{k^{2}(t_1- t_0)}   \int_{0}^{t_0} (\exp(-ks) - \exp(-kt_1))(\exp(-kt_0) - \exp(-kt_1))) ds  \\
- &+ \frac{\sigma^{2}}{k^{2}(t_1- t_0)}   \int_{t_0}^{t_1} (\exp(-ks) - \exp(-kt_1))^{2} ds
+\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k\delta_{t_0,t_1})\right)^{2} ds \\
+&= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
+&+ \frac{\sigma^{2}}{2k^{2}} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
+&= \frac{\sigma^{2}}{2k^{2}} \left(\delta_{t_0,t_1}+ \exp(-2k\delta_{t_0,t_1}) \frac{\exp(-2kt_0)- \exp(-2kt_1)}{2k} - 2\exp(-kt_1) \frac{\exp(-kt_0)- \exp(-kt_1)}{k}  \right) \\
+&+ \frac{\sigma^{2}}{2k^{2}} \left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}\right)
 \end{align*}
-It is easy to show with a little bit of algebra that
-(tengo que terminarlo)
+ 
 \end{example}
-Now, in order to compute the convexity adjustmen for the average case, we  wil use (\ref{log_approximation}) with 
-\begin{align*}
-x &= \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1) \right)\\
-\epsilon &=  \frac{1}{t_1- t_0}  \int_{0}^{t_1}\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s) \nu(s,t_1)  du  dW^{\mathbb{Q}}_s
-\end{align*} 
-we can calculate the adjusment for $R_{avg}(t_0,t1)$
-\begin{align*}
-\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) &\approx \frac{\log\left(1+(t_1 - t_0)\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right)\right)}{t_1 - t_0} \\
-&-\frac{1}{2(1 + (t_1 - t_0)\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right))^{2}} \int_{0}^{t_1}\left(\int_{\max(s,t_0)}^{t1}  \beta(s,u, x_0, \hat{y}_s)  du\right)^{2} ds
-\end{align*}
 
 
 

@@ -87,12 +87,17 @@ namespace ConvexityAdjustmentUnitTests
                 var intervalConfidence = new double[]
                     { mean - stdMc / Math.Sqrt(numberOfSimulations), mean + stdMc / Math.Sqrt(numberOfSimulations) };
                 
-                var convexityMc = mcFuturePrice - curve.currentLink()
+                var forward =  curve.currentLink()
                     .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
+
+                var convexityMc = mcFuturePrice - forward;
+
+                var convexityMalliavin = HullWhite.ConvexityOis(curve, k, sigma, delta01, delta02) - forward;
                 
                 // outputs
                 t0s.Add(delta00);
                 caMc.Add(convexityMc);
+                caMalliavin.Add(convexityMalliavin);
             }
            
         }
