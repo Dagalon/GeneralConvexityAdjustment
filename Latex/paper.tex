@@ -213,7 +213,7 @@ In order to have a Markovian representation of the HJM, we will assume that the 
 \begin{equation}
 \sigma(t,T)= h(t)g(T).
 \end{equation}
-with $g$ a positive time-dependent function a $h$ a non-negative process. This version of the HJM is also known as the Cheyette model, \cite{Cheyette}. It is easy to show (see \cite{Andreasen01}), that in this case (\ref{ois_forward_rate_curve})
+with $g$ a positive time-dependent function and $h$ a non-negative process. This version of the HJM is also known as the Cheyette model, \cite{Cheyette}. It is easy to show (see \cite{Andreasen01}), that in this case (\ref{ois_forward_rate_curve})
 \begin{equation}
 r_{ois}(t)=f_{ois}(t,t)= f_{ois}(0,t) + x_t,
 \end{equation}  
@@ -321,7 +321,7 @@ where $P_{E}(t,T)$ is the discount factor for the curve $E$ from t to T and $\de
 \begin{equation}\label{future}
 \hat{L}_{E}(t,t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right), 
 \end{equation}
-where the measure $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. From (\ref{forward_rate}) and (\ref{future}), we will define the convexity adjusment as
+where the measure $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. From (\ref{forward_rate}) and (\ref{future}), we will define the convexity adjustment as
 \begin{equation*}
 CA(t, t_0, t_1, t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left(L_{E}(t_0, t_1, t_2) \right)
 \end{equation*}
@@ -329,9 +329,9 @@ With view to get a general representation formula of the convexity adjustment fo
 $L_{E}(t_0,t_1,t_2)$ i.e
 
 \begin{equation}
-L_{E}(t_0,t_1,t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) + \int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s
+L_{E}(t_0,t_1,t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) + \int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s.
 \end{equation} 
-therefore, if we take $\mathbb{E}^{\mathbb{Q}^{t2}}(\cdot)$ in the last equation, then we get
+Therefore, if we take $\mathbb{E}^{\mathbb{Q}^{t2}}(\cdot)$ in the last equation, then we get
 \begin{equation*}
 CA(t, t_0, t_1, t_2) = - \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s \right).
 \end{equation*}
