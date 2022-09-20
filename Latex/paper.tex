@@ -452,17 +452,33 @@ where $\Gamma(s,t_0,t_1)= g(s)h(s,x_0,\hat{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp
 1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(\int_{0}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right)
 \end{equation*}
 Therefore we have that
+
+\hspace{2cm}
+\fboxsep1em
+\fbox{\parbox{335pt}
+{
 \begin{equation}\label{convexity_ois_future}
 \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \frac{\exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(\int_{0}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
 \end{equation}
+}}
+
 We must note, that from (\ref{apprx_I_t0_t1}) and (\ref{R_ois_avg}) we can get an approximation for $R_{avg}(t_0,t_1)$
-\begin{equation*}
-R_{avg}(t_0,t_1) = \frac{\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} + \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
-\end{equation*}
+
+\hspace{2cm}
+\fboxsep1em
+\fbox{\parbox{335pt}
+{
+\begin{equation}\label{convexity_avg_ois_future}
+R_{avg}(t_0,t_1) = \frac{\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
+\end{equation}
+}}
+
 Therefore, since $\log(1+x)\approx x$ we have that
+
 \begin{equation*}
-R_{avg}(t_0,t_1) \approx  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) + \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}.
+R_{avg}(t_0,t_1) \approx  \mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) - \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}.
 \end{equation*}
+
 
 \begin{remark}
 We must observe that for the case $t_0 < t < t_1$ we can compute the convexity adjusment in a similar way when $t < t_0$, but in this case we have to define
@@ -490,9 +506,8 @@ Therefore we have that
 \frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
 &= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
 &+ \frac{\sigma^{2}}{2k^{2}} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
-&= \frac{\sigma^{2}}{2k^{2}} \left(\delta_{t_0,t_1} \exp(-kt_0) + \exp(-2kt_1) \frac{\exp(-2kt_0)- \exp(-2kt_1)}{2k}\right)\\  
-&- \frac{\sigma^{2}}{k^{2}} \frac{\exp(-k(t_1-t_0))- \exp(-k(t_1+t_0))}{k}   \\
-&+ \frac{\sigma^{2}}{2k^{2}} \left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}\right)
+&= \frac{\sigma^{2}t_0}{2k^{2}} \left( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \right)\\  
+&+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k} + \exp(-2kt_1)\delta_{t_0,t_1} - 2\frac{\exp(-k(t_0 + t_1)) - \exp(-kt_1)}{k}  \right)
 \end{align*}
 Then if we substitute the last equality in (\ref{convexity_ois_future}) we get the convexity adjustment for OIS future. The next figure, show accuracy of (\ref{convexity_ois_future}) in the case of Hull-White
 

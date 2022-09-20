@@ -39,7 +39,9 @@ namespace ConvexityAdjustmentUnitTests
 
             List<double> t0s = new List<double>();
             List<double> caMc = new List<double>();
+            List<double> caAvgMc = new List<double>();
             List<double> caMalliavin = new List<double>();
+            List<double> caAvgMalliavin = new List<double>();
 
             for (var j = 1; j < numberOfMonths + 1; j++)
             {
@@ -64,6 +66,7 @@ namespace ConvexityAdjustmentUnitTests
                 // Path generator
                 int i;
                 var mean = 0.0;
+                var avgMean = 0.0;
                 var meanXt0 = 0.0;
                 var momentOrderTwoMean = 0.0;
 
@@ -75,7 +78,9 @@ namespace ConvexityAdjustmentUnitTests
                 {
                     var it0Tot1 = mu + std * zk.value[i] + r0t;
                     var libor = (Math.Exp(it0Tot1) - 1.0) / (delta02 - delta01);
+                    var avgLibor = it0Tot1 / (delta02 - delta01);
                     mean += (libor / numberOfSimulations);
+                    avgMean += (avgLibor / numberOfSimulations);
                     meanXt0 += it0Tot1 / numberOfSimulations;
                     momentOrderTwoMean += (libor * libor) / numberOfSimulations;
                 }
@@ -88,16 +93,20 @@ namespace ConvexityAdjustmentUnitTests
                     { mean - stdMc / Math.Sqrt(numberOfSimulations), mean + stdMc / Math.Sqrt(numberOfSimulations) };
                 
                 var forward =  curve.currentLink()
-                    .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
+                    .forwardRate(delta01, delta02, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
 
                 var convexityMc = mcFuturePrice - forward;
-
+                var convexityAvgMc = avgMean - forward;
+                
                 var convexityMalliavin = HullWhite.ConvexityOis(curve, k, sigma, delta01, delta02) - forward;
+                var convexityAvgMalliavin = HullWhite.ConvexityAvgOis(curve, k, sigma, delta01, delta02) - forward;
                 
                 // outputs
                 t0s.Add(delta00);
                 caMc.Add(convexityMc);
+                caAvgMc.Add(convexityAvgMc);
                 caMalliavin.Add(convexityMalliavin);
+                caAvgMalliavin.Add(convexityAvgMalliavin);
             }
            
         }
