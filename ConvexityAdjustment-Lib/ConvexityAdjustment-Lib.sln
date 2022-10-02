@@ -2,9 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvexityAdjustment-Lib", "ConvexityAdjustment-Lib\ConvexityAdjustment-Lib.csproj", "{1255337F-F438-4D55-BF21-BCF2A6CD37FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "D:\Projects\JetBrains\Net\C#\QLNet\QLNet\src\QLNet\QLNet.csproj", "{99BBACBB-A190-4D4C-8C06-023DF040AB7E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvexityAdjusmentUnitTests", "ConvexityAdjusmentUnitTests\ConvexityAdjusmentUnitTests.csproj", "{8195EA9E-C7BA-4164-A598-79211D11A603}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "..\..\QLNet\src\QLNet\QLNet.csproj", "{6D44AE34-C6FE-4799-8936-DB3168B43556}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,18 +40,6 @@ Global
 		{E20A852A-EC9B-492D-B917-860CF2582DC6}.Release|x86.Build.0 = Release|x86
 		{E20A852A-EC9B-492D-B917-860CF2582DC6}.Release|x64.ActiveCfg = Release|x64
 		{E20A852A-EC9B-492D-B917-860CF2582DC6}.Release|x64.Build.0 = Release|x64
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Debug|x86.Build.0 = Debug|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Debug|x64.Build.0 = Debug|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Release|x86.ActiveCfg = Release|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Release|x86.Build.0 = Release|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Release|x64.ActiveCfg = Release|Any CPU
-		{99BBACBB-A190-4D4C-8C06-023DF040AB7E}.Release|x64.Build.0 = Release|Any CPU
 		{8195EA9E-C7BA-4164-A598-79211D11A603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8195EA9E-C7BA-4164-A598-79211D11A603}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8195EA9E-C7BA-4164-A598-79211D11A603}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -64,5 +52,17 @@ Global
 		{8195EA9E-C7BA-4164-A598-79211D11A603}.Release|x86.Build.0 = Release|Any CPU
 		{8195EA9E-C7BA-4164-A598-79211D11A603}.Release|x64.ActiveCfg = Release|Any CPU
 		{8195EA9E-C7BA-4164-A598-79211D11A603}.Release|x64.Build.0 = Release|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Release|x86.Build.0 = Release|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D44AE34-C6FE-4799-8936-DB3168B43556}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

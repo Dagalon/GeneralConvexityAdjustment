@@ -120,7 +120,13 @@ namespace ConvexityAdjustment_Lib
 
             return (Math.Exp(-alpha * t0) - Math.Exp(-alpha * t1)) / alpha;
         }
-        
+
+        public static double HjmAdjustment(double t0, double t1, double k, double sigma)
+        {
+            double m = 0.5 * sigma * sigma / k;
+            return m * (Beta(0, t1 - t0, k) - Beta(t1 - t0, t1 + t0, k));
+        }
+
         #endregion
 
     }

@@ -1,5 +1,4 @@
-﻿using ConvexityAdjustment_Lib;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using ql = QLNet;
 
 namespace ConvexityAdjustmentUnitTests
@@ -60,9 +59,10 @@ namespace ConvexityAdjustmentUnitTests
                 double f0t = curve.currentLink().forwardRate(delta01, delta01, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
                 double expat = (1.0 - Math.Exp(-k * delta01)) / k ;
                 double mt = (sigma * sigma) / (2.0 * k) * (expat - Math.Exp(-k * delta01) * expat);
+                
                 // Adjustment forward measure
                 double adjFwdMeasure =
-                    -(sigma * sigma / k) * (HullWhite.Beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
+                    -(sigma * sigma / k) * (ConvexityAdjustment_Lib.HullWhite.Beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
                 
                 // Path generator
                 int i;

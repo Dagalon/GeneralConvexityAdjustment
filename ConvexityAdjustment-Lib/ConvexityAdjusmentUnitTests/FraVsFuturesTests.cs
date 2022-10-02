@@ -14,11 +14,11 @@ namespace ConvexityAdjustmentUnitTests
             
             // Hull-White parameters
             double k = 0.0003;
-            double sigma = 0.0115;
-            // double spreadBasis = 0.001;
+            double sigma = 0.015;
+            double spreadBasis = 0.001;
 
             // Curves
-            double flatRate = 0.01;
+            double flatRate = 0.025;
             ql.Quote quoteRate = new ql.SimpleQuote(flatRate);
             ql.DayCounter dc = new ql.Actual365Fixed();
             ql.Date startDate = ql.Settings.evaluationDate();
@@ -76,8 +76,8 @@ namespace ConvexityAdjustmentUnitTests
                     ql.Sample<ql.IPath> sample = generator.next();
                     var path = (ql.Path)sample.value;
                     var rt0 = path[path.length() - 1] + mt + f0t;
-                    var df01 = model.discountBond(delta00, delta01, rt0);
-                    var df02 = model.discountBond(delta00, delta02, rt0);
+                    var df01 = model.discountBond(delta00, delta01, rt0) * Math.Exp(- spreadBasis * (delta01 - delta00));
+                    var df02 = model.discountBond(delta00, delta02, rt0) *  Math.Exp(- spreadBasis * (delta02 - delta00));
                     var libor = ((df01 / df02) - 1.0) / (delta02 - delta01);
                     mean += (libor / numberOfSimulations);
                     meanXt0 += path[path.length() - 1] / numberOfSimulations;
@@ -93,9 +93,9 @@ namespace ConvexityAdjustmentUnitTests
                 var intervalConfidence = new double[]
                     { mean - stdMc / Math.Sqrt(numberOfSimulations), mean + stdMc / Math.Sqrt(numberOfSimulations) };
                 var convexityMc = mcFuturePrice - curve.currentLink()
-                    .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
+                    .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate() - spreadBasis;
                 var convexityMalliavin =
-                    ConvexityAdjustment_Lib.HullWhite.ConvexityFuture(curve, k, sigma, delta00, delta01, delta02, 0.0);
+                    ConvexityAdjustment_Lib.HullWhite.ConvexityFuture(curve, k, sigma, delta00, delta01, delta02, spreadBasis);
                 
                 // outputs
                 t0s.Add(delta00);
