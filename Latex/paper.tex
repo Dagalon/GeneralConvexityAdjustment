@@ -619,9 +619,9 @@ Now if we apply the adjoint of the Malliavin derivative (see Elisa-David) we get
 
 \begin{align}
 CA_{CMS}(T_a,T_b) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) ds \right) \nonumber \\
-&\approx  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0))  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right)
+&\approx  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0))  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right) \nonumber \\
+& \approx \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
 \end{align}
-
 
 
 \section{Conclusion}\label{sec:Conclusion}
