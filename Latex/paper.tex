@@ -414,7 +414,7 @@ R(t_0,t_1) &= \frac{\exp\left(\int_{t_0}^{t_1}r_{ois,u} du \right) - 1}{t_1 - t_
 R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t_1}r_{ois,u} du}{t_1 - t_0}.
 \end{align*}
 We must observe, that both $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$  are not predictible and they are only observable in $t_1$. However, since
-$R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$ are flows that will be payed in $t_1$, we can considerer the expected value under the measure $\mathbb{Q}^{t_1}$ that will observable during whole period $[t_0, t_1]$. Let us define the next $\mathbb{Q}^{t_1}$ martingales  
+$R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$ are flows that will be payed in $t_1$, we can considerer the expected value under the measure $\mathbb{Q}^{t_1}$ that will observable during whole period $[t_0, t_1]$. Let us define the next $\mathbb{Q}$ martingales  
 \begin{align*} 
 \bar{R}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left( R(t_0,t_1)  \right) \\
 \bar{R}_{avg}(t,t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left( R_{avg}(t_0,t_1)  \right).
@@ -581,9 +581,46 @@ We have checked the last approximation using MC method to compute the value of a
 \subsection{CMSs}
 We will define the swap rate from $T_a$ to $T_b$ at time $t$
 \begin{equation*}
-S_{a,b} = \frac{\sum_{i=1}^{n_f}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,T_a,T_b)}
+S_{a,b} = \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,T_a,T_b)}
 \end{equation*}
 where
+\begin{align*}
+01(t,T_a,T_b) = \sum_{j=1}^{n_f} \delta_{t^{f}_{i-1}, t^{f}_i} P_{ois}(t,t^{f}_{j}) \\
+T_a=T^{E}_0 < T^{E}_i< \cdots < T^{E}_{n_E}=T_b \quad i=0,\cdots,n_E&  \\
+T_a=T^{f}_0 < T^{f}_j< \cdots < T^{f}_{n_f}=T_b \quad j=0,\cdots,n_f&
+\end{align*}
+We suppose, that we have a flow in $T_a < T_p < T_b$ with value $S_{a,b}(T_a)$. Then, the present value of this flow
+\begin{equation*}
+P_{ois}(0,T_a)\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) = 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{P_{ois}(T_a,T_p)}{01(T_a,T_a,T_b) }\right) 
+\end{equation*}
+therefore, we have that
+\begin{align}\label{cms_expedted_value}
+\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) &=  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{M(T_a)}{M(0)}\right) \nonumber \\
+& = S_{a,b}(0) + \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \left(\frac{M(0, T_p)}{M(T_a, T_p)} - 1\right) \right)  
+\end{align} 
+where $M(t)= \frac{01(t,T_a,T_b)}{P_{ois}(t,T_p)} $. From (\ref{cms_expedted_value}), we will define the convexity adjusment for a CMS the next way
+\begin{equation}\label{cms_convexity}
+CA_{CMS}(T_a,T_b) = \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \left(\frac{M(0, T_p)}{M(T_a, T_p)} - 1\right) \right). 
+\end{equation}
+In order to reduce the complexity to explain the movement od the forward curve, it is a common pratice to asumme that
+\begin{equation*}
+M(t) = f(S_{a,b}(t))
+\end{equation*}
+where $f(\cdot)$ is known as mapping function. There is a extensive literature how to define this function (see Piterbarg Volume III). Then under this assumption and applying Clark-Ocone to $f(S_{a,b}(t))$ we get
+\begin{align*}
+f(S_{a,b}(T_a)) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a)\right) + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( D_s (f(S_{a,b}(T_a))) \right) dW^{01(a,b)}_{s} \\
+&= 1 + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s}. 
+\end{align*}
+Therefore, we have that
+\begin{equation*}
+CA_{CMS}(T_a,T_b) = \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right).
+\end{equation*}
+Now if we apply the adjoint of the Malliavin derivative (see Elisa-David) we get
+
+\begin{align}
+CA_{CMS}(T_a,T_b) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) ds \right) \nonumber \\
+&\approx  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0))  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right)
+\end{align}
 
 
 
