@@ -623,6 +623,33 @@ CA_{CMS}(T_a,T_b) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \par
 & \approx \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
 \end{align}
 
+\begin{remark}\label{drift_01_spot_measure}
+Before to continue, we must to calculate the Girsanov's measure change from $\mathbb{Q}$ to $\mathbb{Q}^{01(a,b)}$. In order to achieve this target, we will use a continuous version of $01(t,T_a,T_b)$ i.e
+\begin{equation*}
+01^{c}(t,T_a,T_b) = \int_{T_a}^{T_b} P_{ois}(t,u) du.
+\end{equation*}
+It is easy to see that if we define $z_t=\frac{01^{c}(t,T_a,T_b)}{\beta_t}$ and apply Itô's formula we get
+\begin{equation*}
+dW^{01(a,b)}_t = dW^{\mathbb{Q}}_t + \lambda_{t}dt 
+\end{equation*}
+where $\lambda_t = \frac{\int_{T_a}^{T_b} P_{ois}(t,u) \nu(t,u) du}{01^{c}(t,T_a,T_b)}$. Then we can do the next approximation for $\lambda_t$
+\begin{equation*}
+\hat{\lambda}_t \approx \frac{\int_{T_a}^{T_b} P_{ois}(t,u,x_0,\hat{y}_t) \nu(t,u) du}{01^{c}(t,T_a,T_b,x_0,\hat{y}_t)} 
+\end{equation*}
+\end{remark}
+Now, if we apply (\ref{drift_01_spot_measure}) we get that 
+\begin{equation*}
+\mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( D_s x_{T_a} \right) \approx \beta(s,T_a,x_0,\hat{y}_{s}) \exp\left(\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_s,y_s) du \right)
+\end{equation*}
+Therefore we have the next approximation for $CA_{CMS}(T_a,T_b)$
+
+\fboxsep1em
+\fbox{\parbox{465pt}
+{
+\begin{equation*}
+\int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta^{2}(s,T_a,x_0,\hat{y}_{s})  \exp\left(\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_s,y_s) du \right)  ds
+\end{equation*}
+}}
 
 \section{Conclusion}\label{sec:Conclusion}
 
