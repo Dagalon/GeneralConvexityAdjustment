@@ -492,7 +492,7 @@ R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t} r_{ois,s} ds}{t_1-t_0} +  \frac{\int_{t
 \end{align*}
 \end{remark}
 
-\begin{example}
+\begin{example}\label{example_convexity_hw_ois}
 The same way that in the example (\ref{example_ca_future}), we will suppose a Hull-White model with constan mean reversion $k=0.003$ and volatility $\sigma=0.01$. It is easy to show in the case of the Hull-White model
 \begin{align*}
 \eta_s &= \sigma \exp(-ks)\\
@@ -590,37 +590,29 @@ T_a=T^{E}_0 < T^{E}_i< \cdots < T^{E}_{n_E}=T_b \quad i=0,\cdots,n_E&  \\
 T_a=T^{f}_0 < T^{f}_j< \cdots < T^{f}_{n_f}=T_b \quad j=0,\cdots,n_f&
 \end{align*}
 We suppose, that we have a flow in $T_a < T_p < T_b$ with value $S_{a,b}(T_a)$. Then, the present value of this flow
-\begin{equation*}
-P_{ois}(0,T_a)\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) = 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{P_{ois}(T_a,T_p)}{01(T_a,T_a,T_b) }\right) 
-\end{equation*}
-therefore, we have that
 \begin{align}\label{cms_expedted_value}
-\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) &=  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{M(T_a)}{M(0)}\right) \nonumber \\
-& = S_{a,b}(0) + \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \left(\frac{M(0, T_p)}{M(T_a, T_p)} - 1\right) \right)  
-\end{align} 
-where $M(t)= \frac{01(t,T_a,T_b)}{P_{ois}(t,T_p)} $. From (\ref{cms_expedted_value}), we will define the convexity adjusment for a CMS the next way
-\begin{equation}\label{cms_convexity}
-CA_{CMS}(T_a,T_b) = \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \left(\frac{M(0, T_p)}{M(T_a, T_p)} - 1\right) \right). 
-\end{equation}
-In order to reduce the complexity to explain the movement od the forward curve, it is a common pratice to asumme that
+P_{ois}(0,T_a)\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) &= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{P_{ois}(T_a,T_p)}{01(T_a,T_a,T_b) }\right) \nonumber \\
+&= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) M(T_a,T_p)\right)
+\end{align}
+where $M(t, T_p)= \frac{P_{ois}(t,T_p) }{01(t,T_a,T_b)} $. In order to reduce the complexity to explain the movement od the forward curve, it is a common pratice to asumme that
 \begin{equation*}
 M(t) = f(S_{a,b}(t))
 \end{equation*}
-where $f(\cdot)$ is known as mapping function. There is a extensive literature how to define this function (see Piterbarg Volume III). Then under this assumption and applying Clark-Ocone to $f(S_{a,b}(t))$ we get
+where $f(\cdot)$ is known as mapping function. There is a extensive literature how to define this function (see Piterbarg Volume III), in later we will see some particular examples. Under the last assumption and applying Clark-Ocone to $f(S_{a,b}(t))$ we get
 \begin{align*}
-f(S_{a,b}(T_a)) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a)\right) + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( D_s (f(S_{a,b}(T_a))) \right) dW^{01(a,b)}_{s} \\
-&= 1 + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s}. 
+f(S_{a,b}(T_a)) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(f(S_{a,b}(T_a))\right) + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( D_s (f(S_{a,b}(T_a))) \right) dW^{01(a,b)}_{s} \\
+&= \frac{P_{ois}(0,T_p) }{01(0,T_a,T_b)} + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s}. 
 \end{align*}
-Therefore, we have that
+Therefore, we can define the convexity adjustment for a CMS the next way
 \begin{equation*}
-CA_{CMS}(T_a,T_b) = \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right).
+CA_{CMS}(T_a,T_b) = 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right).
 \end{equation*}
 Now if we apply the adjoint of the Malliavin derivative (see Elisa-David) we get
 
 \begin{align}
-CA_{CMS}(T_a,T_b) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) ds \right) \nonumber \\
-&\approx  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0))  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right) \nonumber \\
-& \approx \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
+CA_{CMS}(T_a,T_b) &= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a)) \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \right) ds \right) \nonumber \\
+&\approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0))  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right) \nonumber \\
+& \approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
 \end{align}
 
 \begin{remark}\label{drift_01_spot_measure}
@@ -639,17 +631,31 @@ where $\lambda_t = \frac{\int_{T_a}^{T_b} P_{ois}(t,u) \nu(t,u) du}{01^{c}(t,T_a
 \end{remark}
 Now, if we apply (\ref{drift_01_spot_measure}) we get that 
 \begin{equation*}
-\mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( D_s x_{T_a} \right) \approx \beta(s,T_a,x_0,\hat{y}_{s}) \exp\left(\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_s,y_s) du \right)
+\mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( D_s x_{T_a} \right) \approx \beta(s,T_a,x_0,\hat{y}_{s}) \exp\left(-\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right)
 \end{equation*}
-Therefore we have the next approximation for $CA_{CMS}(T_a,T_b)$
+Therefore we have the next for the convexity adjustment
 
 \fboxsep1em
-\fbox{\parbox{465pt}
+\fbox{\parbox{435pt}
 {
-\begin{equation*}
-\int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta^{2}(s,T_a,x_0,\hat{y}_{s})  \exp\left(\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_s,y_s) du \right)  ds
-\end{equation*}
+
+\begin{equation}\label{cms_adjustment}
+CA_{CMS}(T_a,T_b) \approx 01(0,T_a,T_b) \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta^{2}(s,T_a,x_0,\hat{y}_{u}) \Omega(s, T_a)    ds
+\end{equation}
+with 
+$$\Omega(s, T_a) = \exp\left(-\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right) 
+$$
 }}
+\begin{example}
+In ghe case of a Hull-White model, we showed in the example  (\ref{example_convexity_hw_ois}) that 
+$$
+\partial_x \beta(u,t_0,x_0,\hat{y}_u)=0
+$$
+\end{example}
+Therefore (\ref{cms_adjustment}) is reduced to
+$$
+01(0,T_a,T_b) \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta^{2}(s,T_a,x_0,\hat{y}_{u}) ds
+$$
 
 \section{Conclusion}\label{sec:Conclusion}
 
