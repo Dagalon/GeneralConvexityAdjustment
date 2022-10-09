@@ -29,8 +29,6 @@ namespace ConvexityAdjustmentUnitTests
             ql.OrnsteinUhlenbeckProcess process = new ql.OrnsteinUhlenbeckProcess(k, sigma, 0.0, 0.0);
             ql.HullWhite model = new ql.HullWhite(discountCurve, k, sigma);
             
-            // Dynamics curve
-            ql.Handle<ql.YieldTermStructure> hullWhiteDiscountCurve = new ql.Handle<ql.YieldTermStructure>(new ql.ShortRate1FYieldStructure<ql.HullWhite>(model));
             
             // Swap product
             var floatingPeriod = new ql.Period(ql.Frequency.Semiannual);
@@ -88,7 +86,8 @@ namespace ConvexityAdjustmentUnitTests
                     var tP = calendar.advance(datesToCompute[j - 1], payPeriod,
                         ql.BusinessDayConvention.ModifiedFollowing);
                     
-                    // Curves
+                    // Dynamics curve
+                    ql.Handle<ql.YieldTermStructure> hullWhiteDiscountCurve = new ql.Handle<ql.YieldTermStructure>(new ql.ShortRate1FYieldStructure<ql.HullWhite>(datesToCompute[j - 1], dc, calendar, model));
                     var dt = dc.yearFraction(startDate, datesToCompute[j - 1]);
                     ((ql.ShortRate1FYieldStructure<ql.HullWhite>)hullWhiteDiscountCurve.link).updateState(dt, ri);
                     
