@@ -1,5 +1,5 @@
 ﻿using ql = QLNet;
-
+    
 namespace ConvexityAdjustment_Lib
 {
     public static class HullWhite
@@ -124,7 +124,7 @@ namespace ConvexityAdjustment_Lib
         public static double HjmAdjustment(double t0, double t1, double k, double sigma)
         {
             double m = 0.5 * sigma * sigma / k;
-            return m * (Beta(0, t1 - t0, k) - Beta(t1 - t0, t1 + t0, k));
+            return m * (Beta(0, t1 - t0, k) - Beta(t1 + t0, 2.0 * t1, k));
         }
 
         #endregion
