@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvexityAdjustment-Lib", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvexityAdjusmentUnitTests", "ConvexityAdjusmentUnitTests\ConvexityAdjusmentUnitTests.csproj", "{8195EA9E-C7BA-4164-A598-79211D11A603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "D:\Projects\JetBrains\Net\C#\QLNet\QLNet\src\QLNet\QLNet.csproj", "{6D44AE34-C6FE-4799-8936-DB3168B43556}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "D:\GitHubRepository\C#\QLNet\src\QLNet\QLNet.csproj", "{6D44AE34-C6FE-4799-8936-DB3168B43556}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

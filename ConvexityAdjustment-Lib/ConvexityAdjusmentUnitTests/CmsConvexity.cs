@@ -29,15 +29,14 @@ namespace ConvexityAdjustmentUnitTests
             ql.OrnsteinUhlenbeckProcess process = new ql.OrnsteinUhlenbeckProcess(k, sigma, 0.0, 0.0);
             ql.HullWhite model = new ql.HullWhite(discountCurve, k, sigma);
             
-            
             // Swap product
             var floatingPeriod = new ql.Period(ql.Frequency.Semiannual);
             var payPeriod = new ql.Period(ql.Frequency.Annual);
             var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
 
             // Convexity test
-            var periodToCompute = new ql.Period(1, ql.TimeUnit.Years);
-            int numberOftimes = 25;
+            var periodToCompute = new ql.Period(6, ql.TimeUnit.Months);
+            int numberOftimes = 50;
             
             List<ql.Date> datesToCompute = new List<ql.Date>(){calendar.advance(startDate, periodToCompute)};
             List<double> deltaTimes = new List<double>(){dc.yearFraction(startDate, datesToCompute[0])};
@@ -55,14 +54,8 @@ namespace ConvexityAdjustmentUnitTests
             // MC
             int numberOfSimulations = 500000;
             ulong seed = 123545;
-            int timeSteps = deltaTimes.Count;
+            // int timeSteps = deltaTimes.Count;
             
-            // Path Generator
-            var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
-                    ql.InverseCumulativeNormal>)
-                new ql.PseudoRandom().make_sequence_generator(timeSteps, seed);
-            
-            ql.PathGenerator<ql.IRNG> generator = new ql.PathGenerator<ql.IRNG>(process, deltaTimes.Last(), timeSteps, rsg, true, deltaTimes);
             
             // outputs
             var rateCmsMc = new Dictionary<int, double>();
@@ -72,7 +65,6 @@ namespace ConvexityAdjustmentUnitTests
             var rateCmsForward = new List<double>();
             
             // Test
-            // Swap rate at t=0
             for (int j = 0; j < numberOftimes; j++)
             {
                 
@@ -97,45 +89,51 @@ namespace ConvexityAdjustmentUnitTests
                 rateCmsForward.Add(payoffDiscount);
             }
 
-            for (int i = 0; i < numberOfSimulations; i++)
+            for (int j = 0; j < numberOftimes; j++)
             {
-                ql.Sample<ql.IPath> sample = generator.next();
-                var path = (ql.Path)sample.value;
+                // Path Generator
+                var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
+                        ql.InverseCumulativeNormal>)
+                    new ql.PseudoRandom().make_sequence_generator(1, seed);
+            
+                ql.PathGenerator<ql.IRNG> generator = new ql.PathGenerator<ql.IRNG>(process, deltaTimes[j], 1, rsg, false);
 
-                for (int j = 0; j < numberOftimes; j++)
+                var endDate = calendar.advance(datesToCompute[j], tenorSwap,
+                    ql.BusinessDayConvention.ModifiedFollowing);
+                
+                // Pay date
+                var tP = calendar.advance(datesToCompute[j], payPeriod,
+                    ql.BusinessDayConvention.ModifiedFollowing);
+                
+                // Dynamics curve
+                ql.Handle<ql.YieldTermStructure> hullWhiteDiscountCurve = new ql.Handle<ql.YieldTermStructure>(new ql.ShortRate1FYieldStructure<ql.HullWhite>(datesToCompute[j], dc, calendar, model));
+                
+                // Pricing Engines
+                var discountEngineHullWhite = new ql.DiscountingSwapEngine(hullWhiteDiscountCurve, null, datesToCompute[j], datesToCompute[j]);
+                
+                ql.Handle<ql.YieldTermStructure> forwardCurve =new ql.Handle<ql.YieldTermStructure>(
+                   new ql.ForwardSpreadedTermStructure(hullWhiteDiscountCurve,  new ql.Handle<ql.Quote>(quoteSpread)));
+                
+                var index = new ql.Euribor6M(forwardCurve);
+                
+                var swap = new ql.MakeVanillaSwap(floatingPeriod, index, 0.0)
+                    .withEffectiveDate(datesToCompute[j])
+                    .withFloatingLegTenor(index.tenor())
+                    .withFixedLegTenor(new ql.Period(1, ql.TimeUnit.Years))
+                    .withTerminationDate(endDate)
+                    .withPricingEngine(discountEngineHullWhite).value();
+                
+                for (int i = 0; i < numberOfSimulations; i++)
                 {
-                    var ri = path[j + 1] + hjmAdjustment[j] + f0ts[j];
+                    ql.Sample<ql.IPath> sample = generator.next();
+                    var path = (ql.Path)sample.value;
                     
-                    var endDate = calendar.advance(datesToCompute[j], tenorSwap,
-                        ql.BusinessDayConvention.ModifiedFollowing);
+                    var ri = path[1] + hjmAdjustment[j] + f0ts[j];
                     
-                    // Pay date
-                    var tP = calendar.advance(datesToCompute[j], payPeriod,
-                        ql.BusinessDayConvention.ModifiedFollowing);
+                    ((ql.ShortRate1FYieldStructure<ql.HullWhite>)hullWhiteDiscountCurve.link).updateState(deltaTimes[j], ri);
                     
-                    // Dynamics curve
-                    ql.Handle<ql.YieldTermStructure> hullWhiteDiscountCurve = new ql.Handle<ql.YieldTermStructure>(new ql.ShortRate1FYieldStructure<ql.HullWhite>(datesToCompute[j], dc, calendar, model));
-                    var dt = dc.yearFraction(startDate, datesToCompute[j]);
-                    ((ql.ShortRate1FYieldStructure<ql.HullWhite>)hullWhiteDiscountCurve.link).updateState(dt, ri);
+                    double payoffMc = discountCurve.link.discount(deltaTimes[j]) * swap.fairRate();
                     
-                    // Pricing Engines
-                    var discountEngineHullWhite = new ql.DiscountingSwapEngine(hullWhiteDiscountCurve, null, datesToCompute[j], datesToCompute[j]);
-                   
-                    ql.Handle<ql.YieldTermStructure> forwardCurve =new ql.Handle<ql.YieldTermStructure>(
-                       new ql.ForwardSpreadedTermStructure(hullWhiteDiscountCurve,  new ql.Handle<ql.Quote>(quoteSpread)));
-                    
-                    var index = new ql.Euribor6M(forwardCurve);
-                   
-                    var swap = new ql.MakeVanillaSwap(floatingPeriod, index, 0.0)
-                        .withEffectiveDate(datesToCompute[j])
-                        .withFloatingLegTenor(index.tenor())
-                        .withFixedLegTenor(new ql.Period(1, ql.TimeUnit.Years))
-                        .withTerminationDate(endDate)
-                        .withPricingEngine(discountEngineHullWhite).value();
-
-                    double payoffMc = discountCurve.link.discount(dt) * swap.fairRate();
-                   
-
                     if (rateCmsMc.ContainsKey(datesToCompute[j].serialNumber()))
                     {
                         rateCmsMc[datesToCompute[j].serialNumber()] += payoffMc / numberOfSimulations;
@@ -146,7 +144,6 @@ namespace ConvexityAdjustmentUnitTests
                         rateCmsMc.Add(datesToCompute[j].serialNumber(), payoffMc / numberOfSimulations);
                         momentOrderTwo.Add(datesToCompute[j].serialNumber(), payoffMc * payoffMc / numberOfSimulations);
                     }
-                    
                 }
             }
 
