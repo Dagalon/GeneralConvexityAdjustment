@@ -10,7 +10,7 @@ namespace ConvexityAdjustmentUnitTests
         {
             // settings
             var calendar = new ql.TARGET();
-            ql.DayCounter dc = new ql.Actual365Fixed();
+            ql.DayCounter dc = new ql.Actual360();
             ql.Date startDate =  calendar.adjust(ql.Settings.evaluationDate());
             
             // Hull-White parameters
@@ -30,9 +30,8 @@ namespace ConvexityAdjustmentUnitTests
             ql.HullWhite model = new ql.HullWhite(discountCurve, k, sigma);
             
             // Swap product
-            var floatingPeriod = new ql.Period(ql.Frequency.Semiannual);
             var payPeriod = new ql.Period(ql.Frequency.Annual);
-            var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
+            var tenorSwap = new ql.Period(1, ql.TimeUnit.Years);
 
             // Convexity test
             var periodToCompute = new ql.Period(6, ql.TimeUnit.Months);
@@ -47,7 +46,7 @@ namespace ConvexityAdjustmentUnitTests
             {
                 datesToCompute.Add(calendar.advance(datesToCompute[i-1], periodToCompute));
                 deltaTimes.Add(dc.yearFraction(startDate, datesToCompute[i]));
-                f0ts.Add(discountCurve.link.forwardRate(deltaTimes[i], deltaTimes[i], ql.Compounding.Simple, ql.Frequency.NoFrequency).rate());
+                f0ts.Add(discountCurve.link.forwardRate(deltaTimes[i], deltaTimes[i], ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate());
                 hjmAdjustment.Add(ConvexityAdjustment_Lib.HullWhite.HjmAdjustment(deltaTimes[i-1], deltaTimes[i], k, sigma));
             }
             
@@ -84,6 +83,13 @@ namespace ConvexityAdjustmentUnitTests
                     .withPricingEngine(discountEngine)
                     .withFixedLegRule(ql.DateGeneration.Rule.Forward)
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward).value();
+
+                var annuity = model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], staticSwap.fixedSchedule(),
+                    staticSwap.fixedDayCount());
+
+                var swapDerivative = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
+                    staticSwap.floatingSchedule(), staticForwardCurve, staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
+                    staticSwap.fixedDayCount());
                         
                         
                 double payoffDiscount = discountCurve.link.discount(datesToCompute[j]) * staticSwap.fairRate();
@@ -126,12 +132,7 @@ namespace ConvexityAdjustmentUnitTests
                     .withFixedLegRule(ql.DateGeneration.Rule.Forward)
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward).value();
 
-                var annuity = model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], swap.fixedSchedule(),
-                    swap.fixedDayCount());
-
-                var swapDerivative = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
-                    swap.floatingSchedule(), forwardCurve, swap.fixedSchedule(), swap.floatingDayCount(),
-                    swap.fixedDayCount());
+                
                 
                 for (int i = 0; i < numberOfSimulations; i++)
                 {
