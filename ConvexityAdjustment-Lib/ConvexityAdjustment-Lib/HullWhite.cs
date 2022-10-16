@@ -126,7 +126,7 @@ namespace ConvexityAdjustment_Lib
             double m = 0.5 * sigma * sigma / k;
             return m * (Beta(0, t1 - t0, k) - Beta(t1 + t0, 2.0 * t1, k));
         }
-
+        
         #endregion
 
     }

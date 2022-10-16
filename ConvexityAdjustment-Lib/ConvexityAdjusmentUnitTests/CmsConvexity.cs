@@ -11,7 +11,7 @@ namespace ConvexityAdjustmentUnitTests
             // settings
             var calendar = new ql.TARGET();
             ql.DayCounter dc = new ql.Actual365Fixed();
-            ql.Date startDate = ql.Settings.evaluationDate();
+            ql.Date startDate =  calendar.adjust(ql.Settings.evaluationDate());
             
             // Hull-White parameters
             double k = 0.0007;
@@ -77,12 +77,13 @@ namespace ConvexityAdjustmentUnitTests
                         
                 var discountEngine = new ql.DiscountingSwapEngine(discountCurve, null, startDate, startDate);
                         
-                var staticSwap = new ql.MakeVanillaSwap(floatingPeriod, staticIndex, 0.0)
+                var staticSwap = new ql.MakeVanillaSwap(tenorSwap, staticIndex, 0.0)
                     .withEffectiveDate(datesToCompute[j])
                     .withFloatingLegTenor(staticIndex.tenor())
                     .withFixedLegTenor(new ql.Period(1, ql.TimeUnit.Years))
-                    .withTerminationDate(endDate)
-                    .withPricingEngine(discountEngine).value();
+                    .withPricingEngine(discountEngine)
+                    .withFixedLegRule(ql.DateGeneration.Rule.Forward)
+                    .withFloatingLegRule(ql.DateGeneration.Rule.Forward).value();
                         
                         
                 double payoffDiscount = discountCurve.link.discount(datesToCompute[j]) * staticSwap.fairRate();
@@ -116,12 +117,21 @@ namespace ConvexityAdjustmentUnitTests
                 
                 var index = new ql.Euribor6M(forwardCurve);
                 
-                var swap = new ql.MakeVanillaSwap(floatingPeriod, index, 0.0)
+                var swap = new ql.MakeVanillaSwap(tenorSwap, index, 0.0)
+                    .withSettlementDays(0)
                     .withEffectiveDate(datesToCompute[j])
                     .withFloatingLegTenor(index.tenor())
                     .withFixedLegTenor(new ql.Period(1, ql.TimeUnit.Years))
-                    .withTerminationDate(endDate)
-                    .withPricingEngine(discountEngineHullWhite).value();
+                    .withPricingEngine(discountEngineHullWhite) 
+                    .withFixedLegRule(ql.DateGeneration.Rule.Forward)
+                    .withFloatingLegRule(ql.DateGeneration.Rule.Forward).value();
+
+                var annuity = model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], swap.fixedSchedule(),
+                    swap.fixedDayCount());
+
+                var swapDerivative = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
+                    swap.floatingSchedule(), forwardCurve, swap.fixedSchedule(), swap.floatingDayCount(),
+                    swap.fixedDayCount());
                 
                 for (int i = 0; i < numberOfSimulations; i++)
                 {
