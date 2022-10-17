@@ -95,7 +95,7 @@ namespace ConvexityAdjustmentUnitTests
                 var convexityMc = mcFuturePrice - curve.currentLink()
                     .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate() - spreadBasis;
                 var convexityMalliavin =
-                    ConvexityAdjustment_Lib.HullWhite.ConvexityFuture(curve, k, sigma, delta00, delta01, delta02, spreadBasis);
+                    ConvexityAdjustment_Lib.HullWhite.convexityFuture(curve, k, sigma, delta00, delta01, delta02, spreadBasis);
                 
                 // outputs
                 t0s.Add(delta00);

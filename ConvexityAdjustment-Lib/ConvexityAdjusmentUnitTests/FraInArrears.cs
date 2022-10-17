@@ -62,7 +62,7 @@ namespace ConvexityAdjustmentUnitTests
                 
                 // Adjustment forward measure
                 double adjFwdMeasure =
-                    -(sigma * sigma / k) * (ConvexityAdjustment_Lib.HullWhite.Beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
+                    -(sigma * sigma / k) * (ConvexityAdjustment_Lib.HullWhite.beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
                 
                 // Path generator
                 int i;
@@ -94,7 +94,7 @@ namespace ConvexityAdjustmentUnitTests
                 var convexityMc = mcFraInArrears - curve.currentLink()
                     .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
                 var convexityMalliavin =
-                    ConvexityAdjustment_Lib.HullWhite.ConvexityFraInArrears(curve, k, sigma, delta01, delta02, 0.0);
+                    ConvexityAdjustment_Lib.HullWhite.convexityFraInArrears(curve, k, sigma, delta01, delta02, 0.0);
                 
                 // outputs
                 t0s.Add(delta01);

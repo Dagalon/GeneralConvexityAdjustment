@@ -71,8 +71,8 @@ namespace ConvexityAdjustmentUnitTests
                 var momentOrderTwoMean = 0.0;
 
                 var zk = rsg.nextSequence();
-                var mu = HullWhite.GetExpectedIntegralRt(k, sigma, delta01, delta02);
-                var std = Math.Sqrt(HullWhite.GetVarianceIntegralRt(k, sigma, delta01, delta02));
+                var mu = HullWhite.getExpectedIntegralRt(k, sigma, delta01, delta02);
+                var std = Math.Sqrt(HullWhite.getVarianceIntegralRt(k, sigma, delta01, delta02));
                 
                 for (i = 0; i < numberOfSimulations; i++)
                 {
@@ -98,8 +98,8 @@ namespace ConvexityAdjustmentUnitTests
                 var convexityMc = mcFuturePrice - forward;
                 var convexityAvgMc = avgMean - forward;
                 
-                var convexityMalliavin = HullWhite.ConvexityOis(curve, k, sigma, delta01, delta02) - forward;
-                var convexityAvgMalliavin = HullWhite.ConvexityAvgOis(curve, k, sigma, delta01, delta02) - forward;
+                var convexityMalliavin = HullWhite.convexityOis(curve, k, sigma, delta01, delta02) - forward;
+                var convexityAvgMalliavin = HullWhite.convexityAvgOis(curve, k, sigma, delta01, delta02) - forward;
                 
                 // outputs
                 t0s.Add(delta00);

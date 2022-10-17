@@ -31,45 +31,45 @@ namespace ConvexityAdjustmentUnitTests
             
             // Swap product
             var payPeriod = new ql.Period(ql.Frequency.Annual);
-            var tenorSwap = new ql.Period(1, ql.TimeUnit.Years);
+            var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
 
             // Convexity test
             var periodToCompute = new ql.Period(6, ql.TimeUnit.Months);
             int numberOftimes = 50;
             
-            List<ql.Date> datesToCompute = new List<ql.Date>(){calendar.advance(startDate, periodToCompute)};
-            List<double> deltaTimes = new List<double>(){dc.yearFraction(startDate, datesToCompute[0])};
-            List<double> f0ts = new List<double>(){discountCurve.link.forwardRate(deltaTimes[0], deltaTimes[0], ql.Compounding.Simple, ql.Frequency.NoFrequency).rate()};
-            List<double> hjmAdjustment = new List<double>(){ConvexityAdjustment_Lib.HullWhite.HjmAdjustment(0, deltaTimes[0], k, sigma)};
-            
+            List<ql.Date> datesToCompute = new List<ql.Date>{calendar.advance(startDate, periodToCompute)};
+            List<double> deltaTimes = new List<double>{dc.yearFraction(startDate, datesToCompute[0])};
+            List<double> f0ts = new List<double>{discountCurve.link.forwardRate(deltaTimes[0], deltaTimes[0], ql.Compounding.Simple, ql.Frequency.NoFrequency).rate()};
+            List<double> hjmAdjustment = new List<double>{ConvexityAdjustment_Lib.HullWhite.hjmAdjustment(0, deltaTimes[0], k, sigma)};
+            var drift = new List<double>{ConvexityAdjustment_Lib.HullWhite.forwardMeasureAdjustment(deltaTimes[0], k, sigma)};
+
             for (int i = 1; i < numberOftimes; i++)
             {
                 datesToCompute.Add(calendar.advance(datesToCompute[i-1], periodToCompute));
                 deltaTimes.Add(dc.yearFraction(startDate, datesToCompute[i]));
                 f0ts.Add(discountCurve.link.forwardRate(deltaTimes[i], deltaTimes[i], ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate());
-                hjmAdjustment.Add(ConvexityAdjustment_Lib.HullWhite.HjmAdjustment(deltaTimes[i-1], deltaTimes[i], k, sigma));
+                hjmAdjustment.Add(ConvexityAdjustment_Lib.HullWhite.hjmAdjustment(deltaTimes[i-1], deltaTimes[i], k, sigma));
+                drift.Add(ConvexityAdjustment_Lib.HullWhite.forwardMeasureAdjustment(deltaTimes[i], k, sigma));
             }
             
             // MC
             int numberOfSimulations = 500000;
             ulong seed = 123545;
-            // int timeSteps = deltaTimes.Count;
-            
             
             // outputs
             var rateCmsMc = new Dictionary<int, double>();
-            var convexityAdjustment = new List<double>();
+            var convexityAdjustmentMc = new List<double>();
+            var convexityAdjustmentAnalytic = new List<double>();
             var std = new List<double>();
             var momentOrderTwo = new Dictionary<int, double>();
             var rateCmsForward = new List<double>();
-            
+            var annuity = new List<Tuple<double,double>>();
+            var partialSwap = new List<double>();
+         
             // Test
             for (int j = 0; j < numberOftimes; j++)
             {
-                
-                var endDate = calendar.advance(datesToCompute[j], tenorSwap,
-                    ql.BusinessDayConvention.ModifiedFollowing);
-
+              
                 ql.Handle<ql.YieldTermStructure> staticForwardCurve =new ql.Handle<ql.YieldTermStructure>(
                     new ql.ForwardSpreadedTermStructure(discountCurve,  new ql.Handle<ql.Quote>(quoteSpread)));
                 var staticIndex = new ql.Euribor6M(staticForwardCurve);
@@ -84,13 +84,14 @@ namespace ConvexityAdjustmentUnitTests
                     .withFixedLegRule(ql.DateGeneration.Rule.Forward)
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward).value();
 
-                var annuity = model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], staticSwap.fixedSchedule(),
-                    staticSwap.fixedDayCount());
+                annuity.Add(model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], staticSwap.fixedSchedule(),
+                    staticSwap.fixedDayCount()));
 
                 var swapDerivative = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
                     staticSwap.floatingSchedule(), staticForwardCurve, staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
-                        
+                
+                partialSwap.Add(swapDerivative);
                         
                 double payoffDiscount = discountCurve.link.discount(datesToCompute[j]) * staticSwap.fairRate();
                 rateCmsForward.Add(payoffDiscount);
@@ -123,27 +124,28 @@ namespace ConvexityAdjustmentUnitTests
                 
                 var index = new ql.Euribor6M(forwardCurve);
                 
-                var swap = new ql.MakeVanillaSwap(tenorSwap, index, 0.0)
+                var swap = new ql.MakeVanillaSwap(tenorSwap, index, 1.0)
                     .withSettlementDays(0)
                     .withEffectiveDate(datesToCompute[j])
                     .withFloatingLegTenor(index.tenor())
                     .withFixedLegTenor(new ql.Period(1, ql.TimeUnit.Years))
                     .withPricingEngine(discountEngineHullWhite) 
                     .withFixedLegRule(ql.DateGeneration.Rule.Forward)
-                    .withFloatingLegRule(ql.DateGeneration.Rule.Forward).value();
+                    .withFloatingLegRule(ql.DateGeneration.Rule.Forward)
+                    .value();
 
-                
                 
                 for (int i = 0; i < numberOfSimulations; i++)
                 {
                     ql.Sample<ql.IPath> sample = generator.next();
                     var path = (ql.Path)sample.value;
                     
-                    var ri = path[1] + hjmAdjustment[j] + f0ts[j];
+                    var ri = path[1] + hjmAdjustment[j] + f0ts[j] - drift[j];
                     
                     ((ql.ShortRate1FYieldStructure<ql.HullWhite>)hullWhiteDiscountCurve.link).updateState(deltaTimes[j], ri);
-                    
-                    double payoffMc = discountCurve.link.discount(deltaTimes[j]) * swap.fairRate();
+
+                    double pTaTp = hullWhiteDiscountCurve.link.discount(tP);
+                    double payoffMc = discountCurve.link.discount(datesToCompute[j]) * swap.fairRate() * pTaTp;
                     
                     if (rateCmsMc.ContainsKey(datesToCompute[j].serialNumber()))
                     {
@@ -156,17 +158,20 @@ namespace ConvexityAdjustmentUnitTests
                         momentOrderTwo.Add(datesToCompute[j].serialNumber(), payoffMc * payoffMc / numberOfSimulations);
                     }
                 }
+                
+                // Analytic convexity adjustment
+                double ca = ConvexityAdjustment_Lib.HullWhite.convexityCms(discountCurve, startDate, datesToCompute[j],
+                    swap.maturityDate(), tP, partialSwap[j], annuity[j].Item1, annuity[j].Item2, dc, k, sigma);
+                
+                convexityAdjustmentAnalytic.Add(ca);
             }
 
             for (int i = 0; i < numberOftimes; i++)
             {
-                convexityAdjustment.Add(rateCmsMc[datesToCompute[i].serialNumber()] - rateCmsForward[i]);
+                convexityAdjustmentMc.Add(rateCmsMc[datesToCompute[i].serialNumber()] - rateCmsForward[i]);
                 std.Add( (Math.Sqrt(momentOrderTwo[datesToCompute[i].serialNumber()] - Math.Pow(rateCmsMc[datesToCompute[i].serialNumber()] ,2.0)))/ Math.Sqrt(numberOfSimulations));
             }
 
         }
-        
-       
-        
     }
 }
