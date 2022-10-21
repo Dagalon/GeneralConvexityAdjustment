@@ -76,7 +76,6 @@ namespace ConvexityAdjustment_Lib
             double df1 = curve.link.discount(t1, true);
             double df2 = curve.link.discount(t2, true);
             double m = 0.5 * Math.Pow(sigma / k, 2.0);
-            double expected = -Math.Log(df2 / df1) + m * (delta12 - 2.0 * b1 + b2);
             double i1 = m * ( t1 * Math.Exp(- 2.0 * k * t1) + Math.Exp( - 2.0 * k * t2) * t1  - 2.0 * Math.Exp( - k * (t1 + t2)) * t1);
             double i2 = m * (b2 + Math.Exp(-2.0 * k * t2) * delta12 - 2.0 * beta(t1+t2, 2.0*t2, k));
 
@@ -91,14 +90,12 @@ namespace ConvexityAdjustment_Lib
         {
             var d0 = dc.yearFraction(valueDate, ta);
             var dtp = dc.yearFraction(valueDate, tp);
-            var dfOis = discountCurve.link.discount(tp) / discountCurve.link.discount(ta);
+            var dfOis = discountCurve.link.discount(tp);
             var m = sigma * sigma * beta(0.0, d0, 2.0 * k);
 
             return -dfOis * (beta(d0, dtp, k) + partialAnnuity / annuity) * partialSwap * m; 
             
         }
-
-        
 
         #endregion
 
