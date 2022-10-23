@@ -86,14 +86,14 @@ namespace ConvexityAdjustment_Lib
         }
 
         public static double convexityCms(ql.Handle<ql.YieldTermStructure> discountCurve,  ql.Date valueDate, ql.Date ta, ql.Date tb, ql.Date tp, double partialSwap, double annuity,
-            double partialAnnuity, ql.DayCounter dc, double k, double sigma)
+            double partialOisAnnuity, double partialVanillaSwap, ql.DayCounter dc, double k, double sigma)
         {
             var d0 = dc.yearFraction(valueDate, ta);
             var dtp = dc.yearFraction(valueDate, tp);
             var dfOis = discountCurve.link.discount(tp);
             var m = sigma * sigma * beta(0.0, d0, 2.0 * k);
 
-            return -dfOis * (beta(d0, dtp, k) + partialAnnuity / annuity) * partialSwap * m; 
+            return -dfOis * (beta(d0, dtp, k) + partialOisAnnuity / annuity) * partialSwap * m; 
             
         }
 
@@ -132,10 +132,10 @@ namespace ConvexityAdjustment_Lib
             return (Math.Exp(-alpha * t0) - Math.Exp(-alpha * t1)) / alpha;
         }
 
-        public static double hjmAdjustment(double t0, double t1, double k, double sigma)
+        public static double hjmAdjustment(double t, double k, double sigma)
         {
             double m = 0.5 * sigma * sigma / k;
-            return m * (beta(0, t1 - t0, k) - beta(t1 + t0, 2.0 * t1, k));
+            return m * (beta(0, t, k) - beta(t, 2.0 * t, k));
         }
 
         public static double forwardMeasureAdjustment(double dtP, double k, double sigma)
