@@ -581,7 +581,7 @@ We have checked the last approximation using MC method to compute the value of a
 \subsection{CMSs}
 We will define the swap rate from $T_a$ to $T_b$ at time $t$
 \begin{equation*}
-S_{a,b} = \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,T_a,T_b)}
+S_{a,b}(t) = \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,T_a,T_b)}
 \end{equation*}
 where
 \begin{align*}
@@ -589,6 +589,11 @@ where
 T_a=T^{E}_0 < T^{E}_i< \cdots < T^{E}_{n_E}=T_b \quad i=0,\cdots,n_E&  \\
 T_a=T^{f}_0 < T^{f}_j< \cdots < T^{f}_{n_f}=T_b \quad j=0,\cdots,n_f&
 \end{align*}
+The same way, let us define
+\begin{equation*}
+S^{ois}_{a,b}(t) = \frac{P_{ois}(t,T^{E}_a) - P_{ois}(t,T^{E}_b)}{01(t,T_a,T_b)}. 
+\end{equation*}
+
 We suppose, that we have a flow in $T_a < T_p < T_b$ with value $S_{a,b}(T_a)$. Then, the present value of this flow
 \begin{align}\label{cms_expedted_value}
 P_{ois}(0,T_a)\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) &= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{P_{ois}(T_a,T_p)}{01(T_a,T_a,T_b) }\right) \nonumber \\
@@ -596,25 +601,26 @@ P_{ois}(0,T_a)\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p)
 \end{align}
 where $M(t, T_p)= \frac{P_{ois}(t,T_p) }{01(t,T_a,T_b)} $. In order to reduce the complexity to explain the movement od the forward curve, it is a common pratice to asumme that
 \begin{equation*}
-M(t) = f(S_{a,b}(t))
+M(t) = f(S^{ois}_{a,b}(t))
 \end{equation*}
 where $f(\cdot)$ is known as mapping function. There is a extensive literature how to define this function (see Piterbarg Volume III), in later we will see some particular examples. Under the last assumption and applying Clark-Ocone to $f(S_{a,b}(t))$ we get
 \begin{align*}
-f(S_{a,b}(T_a)) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(f(S_{a,b}(T_a, x_s, y_s)\right) + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( D_s (f(S_{a,b}(T_a, x_s, y_s)) \right) dW^{01(a,b)}_{s} \\
-&= \frac{P_{ois}(0,T_p) }{01(0,T_a,T_b)} + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a, x_s, y_s) \partial_{x}S_{a,b}(T_a, x_s, y_s) D_s x_{T_a} \right) dW^{01(a,b)}_{s}. 
+f(S^{ois}_{a,b}(T_a)) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(f(S^{ois}_{a,b}(T_a)\right) + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( D_s (f(S^{ois}_{a,b}(T_a)) \right) dW^{01(a,b)}_{s} \\
+&= \frac{P_{ois}(0,T_p) }{01(0,T_a,T_b)} + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S^{ois}_{a,b}(T_a) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s}. 
 \end{align*}
 Therefore, we can define the convexity adjustment for a CMS the next way
 \begin{align*}
 CA_{CMS}(T_a,T_b) = \\
-01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a, x_s, y_s) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S_{a,b}(T_a, x_s, y_s)) \partial_{x}S_{a,b}(T_a, x_s, y_s) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right).
+01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right)
 \end{align*}
-Now if we apply the adjoint of the Malliavin derivative (see Elisa-David) we get
+Now if we apply the adjoint operator of the Malliavin derivative (see Elisa-David) we get
 
-\begin{align}
-CA_{CMS}(T_a,T_b) &= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_s, y_s) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S_{a,b}(T_a, x_s, y_s)) \partial_{x}S_{a,b}(T_a, x_s, y_s) D_s x_{T_a} \right) ds \right) \nonumber \\
-&\approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(T_a, x_0, y_0)\right)^{2} f^{\prime}(S_{a,b}(T_a, x_0, y_0)  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right) \nonumber \\
-& \approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(T_a, x_0, y_0)\right)^{2} f^{\prime}(S_{a,b}(T_a, x_0, y_0) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
-\end{align}
+\begin{align*}
+&CA_{CMS}(T_a,T_b)  \\
+&=01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) ds \right) \nonumber \\
+&\approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_0, y_0) \partial_{x}S^{ois}_{a,b}(T_a, x_0, y_0) f^{\prime}(S^{ois}_{a,b}(T_a, x_0, y_0)  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right) \nonumber \\
+& \approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_0, y_0) \partial_{x}S^{ois}_{a,b}(T_a, x_0, y_0) f^{\prime}(S^{ois}_{a,b}(T_a, x_0, y_0) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
+\end{align*}
 
 \begin{remark}\label{drift_01_spot_measure}
 Before to continue, we must to calculate the Girsanov's measure change from $\mathbb{Q}$ to $\mathbb{Q}^{01(a,b)}$. In order to achieve this target, we will use a continuous version of $01(t,T_a,T_b)$ i.e
@@ -632,7 +638,7 @@ where $\lambda_t = \frac{\int_{T_a}^{T_b} P_{ois}(t,u) \nu(t,u) du}{01^{c}(t,T_a
 \end{remark}
 Now, if we apply (\ref{drift_01_spot_measure}) we get that 
 \begin{equation*}
-\mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( D_s x_{T_a} \right) \approx \beta(s,T_a,x_0,\hat{y}_{s}) \exp\left(-\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right)
+\mathbb{E}_s^{\mathbb{Q}^{01(a,b)}}\left( D_s x_{T_a} \right) \approx \beta(s,T_a,x_0,\hat{y}_{s}) \exp\left(-\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right)
 \end{equation*}
 Therefore we have the next for the convexity adjustment
 
@@ -640,11 +646,12 @@ Therefore we have the next for the convexity adjustment
 \fbox{\parbox{435pt}
 {
 
-\begin{equation}\label{cms_adjustment}
-CA_{CMS}(T_a,T_b) \approx 01(0,T_a,T_b) \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(T_a, x_0, y_0)\right)^{2} f^{\prime}(S_{a,b}(T_a, x_0, y_0)) \beta^{2}(s,T_a,x_0,\hat{y}_{u}) \Omega(s, T_a)    ds
-\end{equation}
+\begin{align}\label{cms_adjustment}
+&CA_{CMS}(T_a,T_b) \nonumber \\
+&\approx 01(0,T_a,T_b) \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_0, y_0) \partial_{x}S^{ois}_{a,b}(T_a, x_0, y_0)  f^{\prime}(S^{ois}_{a,b}(T_a, x_0, y_0)) \beta^{2}(s,T_a,x_0,\hat{y}_{s}) \Omega(s, T_a)    ds
+\end{align}
 with 
-$$\Omega(s, T_a) = \exp\left(-\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right) 
+$$\Omega(s, T_a) = \exp\left(-2\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right) 
 $$
 }}
 \begin{example}
@@ -654,22 +661,29 @@ $$
 $$
 \end{example}
 Therefore (\ref{cms_adjustment}) is reduced to
-$$
-01(0,T_a,T_b) \int_{0}^{T_a} \left(\partial_{x}S_{a,b}(0)\right)^{2} f^{\prime}(S_{a,b}(0)) \beta^{2}(s,T_a,x_0,\hat{y}_{u}) ds
-$$
-A common practice in market, it is suppose that $f(x)=\alpha x + \beta$ (TSR model). It is easy to show using (\ref{bond_ois}) and that 
+\begin{equation}\label{cms_general_convexity}
+01(0,T_a,T_b) \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a,x_0,y_0) \partial_{x}S^{ois}_{a,b}(T_a,x_0,y_0) f^{\prime}(S^{ois}_{a,b}(T_a,x_0,y_0)) \beta^{2}(s,T_a,x_0,\hat{y}_{s}) ds
+\end{equation}
+A common practice in market, it is suppose that $f(x)=\alpha x + \beta$ (TSR model). We must to impose two equations in order to get $\alpha$ and $\beta$. The first equation follows straightforward from the definition of $M(t,T_p)$. Since, $M(t,T_p)$ is a $01(a,b)-$martingale we must have that
 \begin{equation*}
-\mathbb{E}^{01(a,b)}\left(\alpha S_{a,b}(T_a) + \beta \right) = \frac{P_{ois}(0,T_p)}{01(0,T_a,T_b)}
+\mathbb{E}^{01(a,b)}\left(\alpha S^{ois}_{a,b}(T_a) + \beta \right) = \frac{P_{ois}(0,T_p)}{01(0,T_a,T_b)}.
 \end{equation*}
-we have that
+Therefore
+\begin{equation*}
+\beta = \frac{P_ois(0,T_p)}{01(0,T_a,T_b,x_0,y_0)} - \alpha S^{ois}_{a,b}(0,x_0,y_0).
+\end{equation*}
+Under a separable HJM dynamic we must have that
+\begin{equation*}
+\alpha \partial_{x} S^{ois}_{a,b}(T_a,x_0,y_0) = - M(0,T_p)\left(G(T_a,T_p)+\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right).
+\end{equation*}
+Then
+\begin{equation*}
+\alpha = -\frac{M(T_a,T_p)\left(G(T_a,T_p)+\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right)}{\partial_{x} S^{ois}_{a,b}(T_a,x_0,y_0)}.
+\end{equation*}
+Then from the last equalities, we can approximate the convexity adjustment of a CMS rate as
 \begin{align*}
-\alpha &= - \frac{\frac{P_ois(T_a,T_p,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)} \left(G(T_a,T_p) +\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right)}{\partial_x S_{a,b}(T_a,T_a,T_b,x_{T_a},y_{T_a})} \\
-\beta &= \frac{P_ois(0,T_p)}{01(0,T_a,T_b,x_0,y_0)} - \alpha S_{a,b}(T_a,T_a,T_b,x_0,y_0)
-\end{align*}
-Therefore, we can approximate the convexity adjustment of a CMS rate as
-\begin{align*}
-CA_{CMS}(T_a,T_b) \approx \\
-- P_{ois}(T_a,T_p,x_0,y_0) \left(G(T_a,T_p) +\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right) \partial_{x}S_{a,b}(T_a,x_0,y_0) \int_{0}^{T_a}  \beta^{2}(s,T_a,x_0,\hat{y}_{u}) ds
+CA_{CMS}(T_a,T_b)\\
+\approx - P_{ois}(0,T_p,x_0,y_0) \left(G(T_a,T_p) +\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right) \partial_{x}S_{a,b}(0,x_0,y_0) \int_{0}^{T_a}  \beta^{2}(s,T_a,x_0,\hat{y}_{u}) ds
 \end{align*}
 In the next figure, we can see the convexity adjustment for a CMS where the tenor for the underlying swap is 5Y using the last approximation and Monte Carlo method
 
