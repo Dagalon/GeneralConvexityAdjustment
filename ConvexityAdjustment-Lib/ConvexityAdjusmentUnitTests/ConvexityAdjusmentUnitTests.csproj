@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\..\..\Projects\JetBrains\Net\C#\QLNet\src\QLNet\QLNet.csproj" />
       <ProjectReference Include="..\ConvexityAdjustment-Lib\ConvexityAdjustment-Lib.csproj" />
     </ItemGroup>
 

@@ -20,7 +20,7 @@ namespace ConvexityAdjustmentUnitTests
 
             // Curves
             double discountFlatRate = 0.015;
-            double basisSpread = 0.01;
+            double basisSpread = 0.0;
             ql.Quote quoteDiscountRate = new ql.SimpleQuote(discountFlatRate);
             ql.Quote quoteSpread = new ql.SimpleQuote(basisSpread);
             
@@ -35,7 +35,7 @@ namespace ConvexityAdjustmentUnitTests
             var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
 
             // Convexity test
-            var periodToCompute = new ql.Period(20, ql.TimeUnit.Years);
+            var periodToCompute = new ql.Period(1, ql.TimeUnit.Years);
             int numberOftimes = 1;
 
             List<ql.Date> datesToCompute = new List<ql.Date>{calendar.advance(startDate, periodToCompute)};
@@ -67,6 +67,8 @@ namespace ConvexityAdjustmentUnitTests
             var annuity = new List<Tuple<double,double>>();
             var partialOisSwap = new List<double>();
             var partialVanillaSwap = new List<double>();
+            var swapRates = new List<double>();
+            var swapOisRates = new List<double>();
             
             // Test
             for (int j = 0; j < numberOftimes; j++)
@@ -99,6 +101,14 @@ namespace ConvexityAdjustmentUnitTests
                 
                 partialOisSwap.Add(swapOisDerivative);
                 partialVanillaSwap.Add(swapVanillaDerivative);
+                swapRates.Add(staticSwap.fairRate());
+                
+                // ois swap rate
+                var tb =  calendar.advance(datesToCompute[j], tenorSwap,
+                    ql.BusinessDayConvention.ModifiedFollowing);
+                var dfta = discountCurve.link.discount(datesToCompute[j]);
+                var oisSwapRate = (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(tb)) / (dfta * annuity[j].Item1); 
+                swapOisRates.Add(oisSwapRate);
                 
                 var payDate = calendar.advance(datesToCompute[j], payPeriod,
                     ql.BusinessDayConvention.ModifiedFollowing);
@@ -176,9 +186,10 @@ namespace ConvexityAdjustmentUnitTests
                 var errorRi = rtaMc - f0ts[j] / discountCurve.link.discount(tP);
                 
                 // Analytic convexity adjustment
+                var dfta = discountCurve.link.discount(datesToCompute[j]);
                 double ca = ConvexityAdjustment_Lib.HullWhite.convexityCms(discountCurve, startDate, datesToCompute[j],
                     swap.maturityDate(), tP, annuity[j].Item1, annuity[j].Item2, partialVanillaSwap[j], 
-                    dc, k, sigma);
+                    partialOisSwap[j], swapRates[j], swapOisRates[j], dc, k, sigma);
                 
                 convexityAdjustmentAnalytic.Add(ca);
             }

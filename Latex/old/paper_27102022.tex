@@ -613,43 +613,56 @@ Therefore, we can define the convexity adjustment for a CMS the next way
 CA_{CMS}(T_a,T_b) = \\
 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right)
 \end{align*}
-Now if we use again the Clark-Ocone representation, but in this case for $S_{a,b}(T_a)$, we can do the next approximation
+Now if we apply the adjoint operator of the Malliavin derivative (see Elisa-David) we get
+
 \begin{align*}
-CA_{CMS}(T_a,T_b) &\approx 01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \left( S^{ois}_{a,b}(T_a) - S^{ois}_{a,b}(0)\right)\right) \\
-&= 01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S^{ois}_{a,b}(T_a)S_{a,b}(T_a) -  S_{a,b}(0) S^{ois}_{a,b}(0)\right)
+&CA_{CMS}(T_a,T_b)  \\
+&=01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a) D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) ds \right) \nonumber \\
+&\approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_0, y_0) \partial_{x}S^{ois}_{a,b}(T_a, x_0, y_0) f^{\prime}(S^{ois}_{a,b}(T_a, x_0, y_0)  D_s x_{T_a} \mathbb{E}_s^{01(a,b)}\left(D_s x_{T_a} \right) ds \right) \nonumber \\
+& \approx 01(0,T_a,T_b)  \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left( \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_0, y_0) \partial_{x}S^{ois}_{a,b}(T_a, x_0, y_0) f^{\prime}(S^{ois}_{a,b}(T_a, x_0, y_0) \beta(s,T_a,x_0,\hat{y}_{s})  D_s x_{T_a}  ds \right)
 \end{align*}
-Where we have used that $S_{a,b}(t)$ and $S^{ois}_{a,b}(T_a)$ are $01(a,b)$-martingale. Also, if we use Itô formula we get that
-\begin{align*}
-dS^{ois}_{a,b}(t,x_t,y_t) &= \partial_{x}S^{ois}_{a,b}(t,x_t,y_t)\eta(t,x_t,y_t)dW^{01(a,b)}  \\
-dS_{a,b}(t,x_t,y_t) &= \partial_{x}S_{a,b}(t,x_t,y_t)\eta(t,x_t,y_t)dW^{01(a,b)} 
-\end{align*}
-with initial condition respectivaly $S^{ois}_{a,b}(0)$ and $S_{a,b}(0)$. Then we have that
-\begin{align*}
-\mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S^{ois}_{a,b}(T_a)S_{a,b}(T_a) \right) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(\int_0^{T_a} \partial_{x}S_{a,b}(u,x_u,y_u) \partial_{x}S^{ois}_{a,b}(u,x_u,y_u)  \eta^{2}(u,x_u,y_u)
-du \right)  + S_{a,b}(0) S^{ois}_{a,b}(0) \\
-&\approx  \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0)\int_0^{T_a} \eta^{2}(u,x_0,\hat{y}_u) + S_{a,b}(0) S^{ois}_{a,b}(0).
-du
-\end{align*}
-Therefore, if se use the last equality we can approximate $CA_{CMS}(T_a,T_b)$ the next way
+
+\begin{remark}\label{drift_01_spot_measure}
+Before to continue, we must to calculate the Girsanov's measure change from $\mathbb{Q}$ to $\mathbb{Q}^{01(a,b)}$. In order to achieve this target, we will use a continuous version of $01(t,T_a,T_b)$ i.e
+\begin{equation*}
+01^{c}(t,T_a,T_b) = \int_{T_a}^{T_b} P_{ois}(t,u) du.
+\end{equation*}
+It is easy to see that if we define $z_t=\frac{01^{c}(t,T_a,T_b)}{\beta_t}$ and apply Itô's formula we get
+\begin{equation*}
+dW^{01(a,b)}_t = dW^{\mathbb{Q}}_t + \lambda_{t}dt 
+\end{equation*}
+where $\lambda_t = \frac{\int_{T_a}^{T_b} P_{ois}(t,u) \nu(t,u) du}{01^{c}(t,T_a,T_b)}$. Then we can do the next approximation for $\lambda_t$
+\begin{equation*}
+\hat{\lambda}_t \approx \frac{\int_{T_a}^{T_b} P_{ois}(t,u,x_0,\hat{y}_t) \nu(t,u) du}{01^{c}(t,T_a,T_b,x_0,\hat{y}_t)} 
+\end{equation*}
+\end{remark}
+Now, if we apply (\ref{drift_01_spot_measure}) we get that 
+\begin{equation*}
+\mathbb{E}_s^{\mathbb{Q}^{01(a,b)}}\left( D_s x_{T_a} \right) \approx \beta(s,T_a,x_0,\hat{y}_{s}) \exp\left(-\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right)
+\end{equation*}
+Therefore we have the next for the convexity adjustment
 
 \fboxsep1em
 \fbox{\parbox{435pt}
 {
-\begin{equation}\label{cms_adjustment}
-CA_{CMS}(T_a,T_b) \approx 01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0)\int_0^{T_a} \eta^{2}(u,x_0,\hat{y}_u) du
-\end{equation}
+
+\begin{align}\label{cms_adjustment}
+&CA_{CMS}(T_a,T_b) \nonumber \\
+&\approx 01(0,T_a,T_b) \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a, x_0, y_0) \partial_{x}S^{ois}_{a,b}(T_a, x_0, y_0)  f^{\prime}(S^{ois}_{a,b}(T_a, x_0, y_0)) \beta^{2}(s,T_a,x_0,\hat{y}_{s}) \Omega(s, T_a)    ds
+\end{align}
+with 
+$$\Omega(s, T_a) = \exp\left(-2\int_{s}^{T_a} \frac{\int_{T_a}^{T_b} P_{ois}(u,u^{\prime},x_0,\hat{y}_u) \nu(t,u^{\prime}) du^{\prime}}{01^{c}(u,T_a,T_b,x_0,\hat{y}_u)} \partial_x \beta(u,t_0,x_0,\hat{y}_u) du \right) 
+$$
 }}
-
-
 \begin{example}
 In ghe case of a Hull-White model, we showed in the example  (\ref{example_convexity_hw_ois}) that 
 $$
-\eta(t,x_t, y_t) = \sigma\exp(-kt)
+\partial_x \beta(u,t_0,x_0,\hat{y}_u)=0
 $$
 \end{example}
 Therefore (\ref{cms_adjustment}) is reduced to
-\begin{equation}\label{hullwhite_cms_convexity}
-01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \partial_{x}S_{a,b}(T_a) \partial_{x}S^{ois}_{a,b}(T_a) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k} 
+\begin{equation}\label{cms_general_convexity}
+01(0,T_a,T_b) \int_{0}^{T_a} \partial_{x}S_{a,b}(T_a,x_0,y_0) \partial_{x}S^{ois}_{a,b}(T_a,x_0,y_0) f^{\prime}(S^{ois}_{a,b}(T_a,x_0,y_0)) \beta^{2}(s,T_a,x_0,\hat{y}_{s}) ds
 \end{equation}
 A common practice in market, it is suppose that $f(x)=\alpha x + \beta$ (TSR model). We must to impose two equations in order to get $\alpha$ and $\beta$. The first equation follows straightforward from the definition of $M(t,T_p)$. Since, $M(t,T_p)$ is a $01(a,b)-$martingale we must have that
 \begin{equation*}
@@ -657,21 +670,20 @@ A common practice in market, it is suppose that $f(x)=\alpha x + \beta$ (TSR mod
 \end{equation*}
 Therefore
 \begin{equation*}
-\beta = \frac{P_{ois}(0,T_p)}{01(0,T_a,T_b,x_0,y_0)} - \alpha S^{ois}_{a,b}(0,x_0,y_0).
+\beta = \frac{P_ois(0,T_p)}{01(0,T_a,T_b,x_0,y_0)} - \alpha S^{ois}_{a,b}(0,x_0,y_0).
 \end{equation*}
 Under a separable HJM dynamic we must have that
 \begin{equation*}
-\alpha \partial_{x} S^{ois}_{a,b}(0) = - M(0,T_p)\left(G(T_a,T_p)+\frac{\partial_x 01(0,T_a,T_b)}{01(0,T_a,T_b)}\right).
+\alpha \partial_{x} S^{ois}_{a,b}(T_a,x_0,y_0) = - M(0,T_p)\left(G(T_a,T_p)+\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right).
 \end{equation*}
 Then
 \begin{equation*}
-\alpha = -\frac{M(0,T_p)\left(G(T_a,T_p)+\frac{\partial_x 01(0,T_a,T_b)}{01(0,T_a,T_b)}\right)}{\partial_{x} S^{ois}_{a,b}(0)}.
+\alpha = -\frac{M(T_a,T_p)\left(G(T_a,T_p)+\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right)}{\partial_{x} S^{ois}_{a,b}(T_a,x_0,y_0)}.
 \end{equation*}
 Then from the last equalities, we can approximate the convexity adjustment of a CMS rate as
 \begin{align*}
-CA_{CMS}(T_a,T_b) \\ 
-\approx 01(0,T_a,T_b) \alpha \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}  \\   
-= - P_{ois}(0,T_p) \left(G(T_a,T_p)+\frac{\partial_x 01(0,T_a,T_b)}{01(0,T_a,T_b)}\right) \partial_{x}S_{a,b}(0)  \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}
+CA_{CMS}(T_a,T_b)\\
+\approx - P_{ois}(0,T_p,x_0,y_0) \left(G(T_a,T_p) +\frac{\partial_x 01(T_a,T_a,T_b,x_0,y_0)}{01(T_a,T_a,T_b,x_0,y_0)}\right) \partial_{x}S_{a,b}(0,x_0,y_0) \int_{0}^{T_a}  \beta^{2}(s,T_a,x_0,\hat{y}_{u}) ds
 \end{align*}
 In the next figure, we can see the convexity adjustment for a CMS where the tenor for the underlying swap is 5Y using the last approximation and Monte Carlo method
 
