@@ -337,7 +337,7 @@ CA(t, t_0, t_1, t_2) = - \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathb
 \end{equation*}
 From (\ref{ois_forward_rate_curve}) and since $f_{ois}(t,T)$ is a $\mathbb{Q}^{T}$ martingale, we have that
 \begin{equation*}
-dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,T) dt. 
+dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,T_2) dt. 
 \end{equation*}
 Therefore, if we apply Girsanov's theorem to switch to measure $\mathbb{Q}^{t_2}$, we get that
 \begin{equation}\label{ca_general_future}
@@ -355,36 +355,26 @@ therefore
 \begin{equation}\label{malliavin_derive_L}
 D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}. 
 \end{equation}
-From (\ref{short_rate_cheyette}) y we define $\beta(s,t, x, y) = \exp\left(-\int_{s}^{t} k_{u} \right) \eta(s, x, y)$ we have that
-\begin{equation}\label{malliavin_derive_x}
-D_s x_{t_0} = \beta(s,t_0, x_s, y_s)M(s,t_0)
-\end{equation}
-where $M(s,t_0)=\exp\left(-\frac{\int_{s}^{t_0} \left(\partial_x \beta(u,t_0,x_s,y_s)\right)^{2} du}{2} + \int_{s}^{t_0} \partial_x \beta(u,t_0,x_s,y_s) dW^{\mathbb{Q}}_u \right)$. 
-Then, we have that
+Now from (\ref{approximation_D_s_x_t}) with $T_a=t_0$ and $\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x,y)$ we have that
 \begin{align*}
-D_s L_{E}(t_0,t_1,t_2) &= \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} \beta(s,t_0, x_s, y_s)M(s,t_0) \nonumber \\
-\approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)} \right)\beta(s,t_0, x_s, y_s)M(s,t_0).
+D_s L_{E}(t_0,t_1,t_2) &\approx \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} \beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0) \nonumber \\
+\approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)} \right)\beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0)
 \end{align*}
-It is a common practice, freeze the state variables of the model to achieve some approximations. We can approximate $x_s$ and $y_s$ the next way
-\begin{align*}
-x_s &\approx x_0 \nonumber \\
-y_s &\approx y_0 + \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0) du
-\end{align*}
-Therefore, 
+and therefore
 \begin{equation}\label{approximation_clarkocone}
-\mathbb{E}_s\left( D_s L_{E}(t_0,t_1,t_2) \right) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right)\beta(s,t_0, x_0, \hat{y}_s)
+\mathbb{E}_s\left( D_s L_{E}(t_0,t_1,t_2) \right) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right)\beta(t,t_0,x_0,\bar{y}_s)\bar{M}(s,t_0)
 \end{equation}
-where $\hat{y}_s = y_0 + \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0) du$.
 Now, from (\ref{ca_general_future}) and (\ref{approximation_clarkocone}) we have the next approximation for the convexity adjustmet for future
-
 \hspace{1cm}
 \fboxsep1em
 \fbox{\parbox{435pt}
 {
-\begin{equation}\label{ca_approximation_futures}
-CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) \int_{0}^{t_0}  \beta(s,t_0, x_0, \hat{y}_s) \nu(s,t_2) ds. 
-\end{equation}
+\begin{align}\label{ca_approximation_futures}
+CA(t,t_0,t_1)& \nonumber \\ 
+\approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) \int_{0}^{t_0} \beta(s,t_0,x_0,\hat{y}_s) \nu(s,t_2) ds. 
+\end{align}
 }}
+
 \begin{example}\label{example_ca_future}
 Let us to set 
 \begin{align*}
@@ -436,9 +426,9 @@ In order to compute $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1\right)$, we will def
 \begin{equation*}
 I(t_0,t_1) = \int_{t_0}^{t_1} r_s ds
 \end{equation*}
-then for $t < t_0$ from (\ref{clark-okone}) and (\ref{malliavin_derive_x}), we have the next representation for $I(t_0,t_1)$
+then for $t < t_0$ from (\ref{clark-okone}) and (\ref{approximation_D_s_x_t}), we have the next representation for $I(t_0,t_1)$
 \begin{align}\label{apprx_I_t0_t1}
-I(t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left(\beta(s,u,x_s,y_s) M(s,u) \right) du dW_s^{\mathbb{Q}} \nonumber \\
+I(t_0,t_1) &= \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left(\beta(s,u,x_s,y_s) \bar{M}(s,u) \right) du dW_s^{\mathbb{Q}} \nonumber \\
 &\approx \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,x_0,\hat{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
 &= \mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{0}^{t_1} g(s)h(s,x_0,\hat{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
 \end{align}
@@ -542,21 +532,21 @@ Where we have used that
 \begin{equation*}
 dW^{\mathbb{Q}^{t_2}}_s = dW^{\mathbb{Q}^{t_1}}_s + (\nu(s,t_2) - \nu(s,t_1)) ds 
 \end{equation*}
-Now from (\ref{malliavin_derive_x}) we have that 
+Now from (\ref{approximation_D_s_x_t}) we have that 
 \begin{equation*}
-D_s L(t_1,t_1,t_2) = \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(t_1,t_2)} D_s x_{t_1} \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, x_0, \hat{y}_s)M(s,t_1)
+D_s L(t_1,t_1,t_2) = \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(t_1,t_2)} D_s x_{t_1} \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, x_0, \bar{y}_s)\bar{M}(s,t_1)
 \end{equation*}
-Therefore, if we define 
+Therefore, if we define and we use (\ref{approsimation_E_s_x_t}) we have that
 \begin{equation*}
 CA(t_0,t_1) = \mathbb{E}^{\mathbb{Q}^{t_1}}\left( L_{E}\left(t_1,t_1,t_2\right)\right) - L_{E}\left(0,t_1,t_2\right)
 \end{equation*}
 and we use the last approximation and (\ref{general_convexity_fras}), we can get the next approximation for $CA(t_0,t_1)$ 
 \hspace{2cm}
 \fboxsep1em
-\fbox{\parbox{435pt}
+\fbox{\parbox{475pt}
 {
 \begin{equation}\label{ca_approximations_fra_arrears}
-CA(t_0,t_1) \approx  \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \int_{0}^{t_1} \beta(s,t_1, x_0, \hat{y}_s) (\nu(s,t_2) - \nu(s,t_1)) ds.
+CA(t_0,t_1) \approx  \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \int_{0}^{t_1} \beta(s,t_1, x_0, \bar{y}_s) \exp\left(-\int_{s}^{t_1} \partial_x \beta(u,t_1,x_0,y_0) \nu(u,t_2) du \right) (\nu(s,t_2) - \nu(s,t_1)) ds.
 \end{equation}
 }}
 \begin{example}
@@ -574,9 +564,6 @@ We have checked the last approximation using MC method to compute the value of a
 \end{figure} 
  
 \end{example}
-
-
-\newpage
 
 \subsection{CMSs}
 We will define the swap rate from $T_a$ to $T_b$ at time $t$
@@ -679,16 +666,37 @@ In the next figure, we can see the convexity adjustment for a CMS where the teno
 \section*{Appendix}
 \appendix
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
-\section{Malliavin derivative calculations}
-
-\subsection{Approximation of $\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right)$}
+\section{Approximation of $\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right)$}
 \label{expected_forward_measure_malliavin_derivative_x_t}
 From (\ref{short_rate_cheyette}) is easy to show that
 \begin{equation*}
 x_{T_a} = \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) y_u du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x_u,y_u) dW_u^{\mathbb{Q}}  
 \end{equation*}
-Therefore, we have that
-
+In order to get an approximation for $D_sX_{T_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{T_a}$. Follow, the ideas of Piterrbarg Volume II, we can approximate $y_t$ the next way
+\begin{equation*}
+y_t \approx \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0) du
+\end{equation*}
+Therefore, if we define $\bar{y}_t= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0)$, we have that
+\begin{equation*}
+X_{T_a} \approx \bar{X}_{T_a}:=\int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}_u du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_u,\bar{y}_u) dW_u^{\mathbb{Q}}  
+\end{equation*} 
+and therefore
+\begin{equation}\label{approximation_D_s_x_t}
+D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_s,\bar{y}_s)\bar{M}(s,T_a)
+\end{equation}
+where
+\begin{equation*}
+\bar{M}(s,T_a) = \exp\left(-\frac{\int_{s}^{t_0} \left(\partial_x \beta(u,T_a,\bar{x}_s,\bar{y}_s)\right)^{2} du}{2} + \int_{s}^{t_0} \partial_x \beta(u,T_a,\bar{x}_s,\bar{y}_s) dW^{\mathbb{Q}}_u \right)
+\end{equation*}
+Now, we must remember that by Girsanov's theorem we have that 
+\begin{equation*}
+dW^{\mathbb{Q}^{T_p}} = dW^{\mathbb{Q}} + \nu(t,T_p) dt 
+\end{equation*}
+and therefore 
+\begin{align}\label{approsimation_E_s_x_t}
+\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) &= \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{T_a} \partial_x \beta(u,T_a,\bar{x}_s,\bar{y}_s) \nu(u,T_p) du \right) \nonumber \\
+&\approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x_0,y_0) \exp\left(-\int_{s}^{T_a} \partial_x \beta(u,T_a,x_0,y_0) \nu(u,T_p) du \right)
+\end{align}
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
 \bibliographystyle{spbasic}
