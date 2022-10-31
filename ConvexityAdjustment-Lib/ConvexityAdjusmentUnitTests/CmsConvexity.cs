@@ -54,7 +54,7 @@ namespace ConvexityAdjustmentUnitTests
             }
             
             // MC
-            int numberOfSimulations = 10000;
+            int numberOfSimulations = 500000;
             ulong seed = 123545;
             
             // outputs
@@ -65,7 +65,8 @@ namespace ConvexityAdjustmentUnitTests
             var momentOrderTwo = new Dictionary<int, double>();
             var rateCmsForward = new List<double>();
             var annuity = new List<Tuple<double,double>>();
-            var partialOisSwap = new List<double>();
+            var partialOisSwapTa = new List<double>();
+            var partialOisSwapT0 = new List<double>();
             var partialVanillaSwap = new List<double>();
             var swapRates = new List<double>();
             var swapOisRates = new List<double>();
@@ -89,18 +90,23 @@ namespace ConvexityAdjustmentUnitTests
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward)
                     .value();
 
-                annuity.Add( model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], staticSwap.fixedSchedule(),
+                annuity.Add( model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
                     staticSwap.fixedDayCount()));
                 
-                var swapOisDerivative = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
+                var swapOisDerivativeT0 = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
                     staticSwap.floatingSchedule(), staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
                 
-                var swapVanillaDerivative = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
+                var swapOisDerivativeTa = model.GetPartialDerivativeSwapRate(startDate, datesToCompute[j], f0ts[j],
+                    staticSwap.floatingSchedule(), staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
+                    staticSwap.fixedDayCount());
+                
+                var swapVanillaDerivative = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
                     staticSwap.floatingSchedule(), staticForwardCurve, staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
                 
-                partialOisSwap.Add(swapOisDerivative);
+                partialOisSwapT0.Add(swapOisDerivativeT0);
+                partialOisSwapTa.Add(swapOisDerivativeTa);
                 partialVanillaSwap.Add(swapVanillaDerivative);
                 swapRates.Add(staticSwap.fairRate());
                 
@@ -157,6 +163,7 @@ namespace ConvexityAdjustmentUnitTests
                 var expectedValue = 0.0;
                 var dfMc = 0.0;
                 var rtaMc = 0.0;
+                var meanXi = 0.0;
 
                 rateCmsMc[datesToCompute[j].serialNumber()] = 0.0;
                 momentOrderTwo[datesToCompute[j].serialNumber()] = 0.0;
@@ -177,19 +184,20 @@ namespace ConvexityAdjustmentUnitTests
                     
                     double payoffMc = dfOis  * swapRate * pTaTp;
                     dfMc += dfOis * pTaTp / numberOfSimulations;
-                    rtaMc += (ri / dfOis) / numberOfSimulations; 
+                    rtaMc += swapRate / numberOfSimulations;
+                    meanXi += path[1] / numberOfSimulations;;
                     
                     rateCmsMc[datesToCompute[j].serialNumber()] += payoffMc / numberOfSimulations;
                     momentOrderTwo[datesToCompute[j].serialNumber()] += (payoffMc * payoffMc / numberOfSimulations);
                 }
 
                 var error = dfMc - discountCurve.link.discount(tP);
-                var errorRi = rtaMc - f0ts[j] / discountCurve.link.discount(tP);
+                var errorRi = (rtaMc -  swapOisRates[j]) / discountCurve.link.discount(datesToCompute[j]);
                 
                 // Analytic convexity adjustment
                 double ca = ConvexityAdjustment_Lib.HullWhite.convexityCms(discountCurve, startDate, datesToCompute[j],
                     swap.maturityDate(), tP, annuity[j].Item1, annuity[j].Item2, partialVanillaSwap[j], 
-                    partialOisSwap[j], swapRates[j], swapOisRates[j], dc, k, sigma);
+                    partialOisSwapTa[j], partialOisSwapT0[j], dc, k, sigma);
                 
                 convexityAdjustmentAnalytic.Add(ca);
             }

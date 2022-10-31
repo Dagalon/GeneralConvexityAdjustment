@@ -86,18 +86,19 @@ namespace ConvexityAdjustment_Lib
         }
 
         public static double convexityCms(ql.Handle<ql.YieldTermStructure> discountCurve,  ql.Date valueDate, ql.Date ta, ql.Date tb, ql.Date tp, double annuity,
-            double partialAnnuity, double partialVanillaSwap, double partialOisSwap, double swapRate, double swapOisRate, ql.DayCounter dc, double k, double sigma)
+            double partialAnnuity, double partialVanillaSwap, double partialOisSwap, double partialOisSwapT0 , ql.DayCounter dc, double k, double sigma)
         {
             var dta = dc.yearFraction(valueDate, ta);
             var dtp = dc.yearFraction(valueDate, tp);
             
             var dFtp = discountCurve.link.discount(tp);
             var dFta = discountCurve.link.discount(ta);
-            var m = - dFtp   * (beta(dta, dtp, k) + partialAnnuity / annuity);
+            var m = - dFtp  * (beta(dta, dtp, k) + partialAnnuity / annuity);
 
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
+            var ratio = partialOisSwap / partialOisSwapT0;
             return m * alpha * partialVanillaSwap;
-            
+
         }
 
         #endregion

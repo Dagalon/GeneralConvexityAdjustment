@@ -636,7 +636,7 @@ $$
 \end{example}
 Therefore (\ref{cms_adjustment}) is reduced to
 \begin{equation}\label{hullwhite_cms_convexity}
-01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \partial_{x}S_{a,b}(T_a) \partial_{x}S^{ois}_{a,b}(T_a) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k} 
+01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k} 
 \end{equation}
 A common practice in market, it is suppose that $f(x)=\alpha x + \beta$ (TSR model). We must to impose two equations in order to get $\alpha$ and $\beta$. The first equation follows straightforward from the definition of $M(t,T_p)$. Since, $M(t,T_p)$ is a $01(a,b)-$martingale we must have that
 \begin{equation*}
@@ -657,7 +657,7 @@ Then
 Then from the last equalities, we can approximate the convexity adjustment of a CMS rate as
 \begin{align*}
 &CA_{CMS}(T_a,T_b) \\ 
-\approx& 01(0,T_a,T_b) \alpha \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}  \\   
+\approx& \alpha 01(0,T_a,T_b) \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}  \\   
 =& - P_{ois}(0,T_p) \left(G(T_a,T_p)+\frac{\partial_x 01(0,T_a,T_b)}{01(0,T_a,T_b)}\right) \partial_{x}S_{a,b}(0)  \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}
 \end{align*}
 In the next figure, we can see the convexity adjustment for a CMS where the tenor for the underlying swap is 5Y using the last approximation and Monte Carlo method
@@ -672,7 +672,7 @@ From (\ref{short_rate_cheyette}) is easy to show that
 \begin{equation*}
 x_{T_a} = \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) y_u du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x_u,y_u) dW_u^{\mathbb{Q}}  
 \end{equation*}
-In order to get an approximation for $D_sX_{T_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{T_a}$. Follow, the ideas of Piterrbarg Volume II, we can approximate $y_t$ the next way
+In order to get an approximation for $D_sX_{T_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{T_a}$. Follow, the ideas of Piterbarg Volume II, we can approximate $y_t$ the next way
 \begin{equation*}
 y_t \approx \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0) du
 \end{equation*}
