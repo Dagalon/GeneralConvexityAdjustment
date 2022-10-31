@@ -31,11 +31,11 @@ namespace ConvexityAdjustmentUnitTests
             ql.HullWhite model = new ql.HullWhite(discountCurve, k, sigma);
             
             // Swap product
-            var payPeriod = new ql.Period(ql.Frequency.Annual);
+            var payPeriod = new ql.Period(ql.Frequency.Semiannual);
             var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
 
             // Convexity test
-            var periodToCompute = new ql.Period(30, ql.TimeUnit.Years);
+            var periodToCompute = new ql.Period(5, ql.TimeUnit.Years);
             int numberOftimes = 1;
 
             List<ql.Date> datesToCompute = new List<ql.Date>{calendar.advance(startDate, periodToCompute)};
@@ -113,8 +113,7 @@ namespace ConvexityAdjustmentUnitTests
                 // ois swap rate
                 var tb =  calendar.advance(datesToCompute[j], tenorSwap,
                     ql.BusinessDayConvention.ModifiedFollowing);
-                var dfta = discountCurve.link.discount(datesToCompute[j]);
-                var oisSwapRate = (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(tb)) / (dfta * annuity[j].Item1); 
+                var oisSwapRate = (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(tb)) /  annuity[j].Item1; 
                 swapOisRates.Add(oisSwapRate);
                 
                 var payDate = calendar.advance(datesToCompute[j], payPeriod,
@@ -192,7 +191,7 @@ namespace ConvexityAdjustmentUnitTests
                 }
 
                 var error = dfMc - discountCurve.link.discount(tP);
-                var errorRi = (rtaMc -  swapOisRates[j]) / discountCurve.link.discount(datesToCompute[j]);
+                var errorRi = rtaMc -  swapOisRates[j] / discountCurve.link.discount(datesToCompute[j]);
                 
                 // Analytic convexity adjustment
                 double ca = ConvexityAdjustment_Lib.HullWhite.convexityCms(discountCurve, startDate, datesToCompute[j],
