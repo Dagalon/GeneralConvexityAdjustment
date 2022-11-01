@@ -615,19 +615,21 @@ with initial condition $S^{ois}_{a,b}(0)$ and $S_{a,b}(0)$ respectivaly. Then
 \begin{align*}
 \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S^{ois}_{a,b}(T_a)S_{a,b}(T_a) \right) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(\int_0^{T_a} \partial_{x}S_{a,b}(u,x_u,y_u) \partial_{x}S^{ois}_{a,b}(u,x_u,y_u)  \eta^{2}(u,x_u,y_u)
 du \right)  + S_{a,b}(0) S^{ois}_{a,b}(0) \\
-&\approx  \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0)\int_0^{T_a} \eta^{2}(u,x_0,\hat{y}_u) + S_{a,b}(0) S^{ois}_{a,b}(0).
-du
+&\approx  \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \partial_{x}S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}))\int_0^{T_a} \eta^{2}(u,\bar{x}_0, \bar{y}({T_a})) du \\
+&+ S_{a,b}(0) S^{ois}_{a,b}(0).
 \end{align*}
-Therefore, from the last equality we can approximate $CA_{CMS}(T_a,T_b)$ the next way
+
+Then, we can approximate $CA_{CMS}(T_a,T_b)$ the next way
 
 \fboxsep1em
-\fbox{\parbox{435pt}
+\fbox{\parbox{430pt}
 {
-\begin{equation}\label{cms_adjustment}
-CA_{CMS}(T_a,T_b) \approx 01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0)\int_0^{T_a} \eta^{2}(u,x_0,\hat{y}_u) du
-\end{equation}
+\begin{align}\label{cms_adjustment}
+&CA_{CMS}(T_a,T_b)  \\
+&\approx  01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \nonumber \\
+&\cdot \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \partial_{x}S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}))\int_0^{T_a} \eta^{2}(u,\bar{x}_0, \bar{y}({T_a})) du \nonumber
+\end{align}
 }}
-
 
 \begin{example}
 In ghe case of a Hull-White model, we showed in the example  (\ref{example_convexity_hw_ois}) that 
@@ -637,7 +639,7 @@ $$
 \end{example}
 Therefore (\ref{cms_adjustment}) is reduced to
 \begin{equation}\label{hullwhite_cms_convexity}
-01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k} 
+01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \partial_{x}S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k} 
 \end{equation}
 A common practice in market, it is suppose that $f(x)=\alpha x + \beta$ (TSR model). We must to impose two equations in order to get $\alpha$ and $\beta$. The first equation follows straightforward from the definition of $M(t,T_p)$. Since, $M(t,T_p)$ is a $01(a,b)-$martingale we must have that
 \begin{equation*}
@@ -658,8 +660,8 @@ Then
 Then from the last equalities, we can approximate the convexity adjustment of a CMS rate as
 \begin{align*}
 &CA_{CMS}(T_a,T_b) \\ 
-\approx& \alpha 01(0,T_a,T_b) \partial_{x}S_{a,b}(0) \partial_{x}S^{ois}_{a,b}(0) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}  \\   
-=& - P_{ois}(0,T_p) \left(G(T_a,T_p)+\frac{\partial_x 01(0,T_a,T_b)}{01(0,T_a,T_b)}\right) \partial_{x}S_{a,b}(0)  \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}
+\approx& \alpha 01(0,T_a,T_b) \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \partial_{x}S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}  \\   
+=& - P_{ois}(0,T_p) \left(G(T_a,T_p)+\frac{\partial_x 01(0,T_a,T_b)}{01(0,T_a,T_b)}\right) \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a})) \frac{S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}))}{S^{ois}_{a,b}(0)}  \frac{ \sigma^2(1-\exp(-2kT_a))}{2k}
 \end{align*}
 In the next figure, we can see the convexity adjustment for a CMS where the tenor for the underlying swap is 5Y using the last approximation and Monte Carlo method
 
@@ -677,27 +679,26 @@ In order to get an approximation for $D_sX_{T_a}$ we must to avoid the recurrenc
 \begin{equation*}
 y_t \approx \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0) du
 \end{equation*}
-Therefore, if we define $\bar{y}_t= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0)$, we have that
+Therefore, if we define $\bar{y}(t)= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0)$, we have that
 \begin{equation*}
-X_{T_a} \approx \bar{X}_{T_a}:=\int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}_u du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_u,\bar{y}_u) dW_u^{\mathbb{Q}}  
-\end{equation*} 
-and therefore
+X_{T_a} \approx \bar{X}(T_a):=\int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+\end{equation*}
+With initial condition  $\bar{x}_{0}$ is such that $S_{a,b}(0,\bar{x}_0, \bar{y}({T_a})) = S_{a,b}(0)$ (see Piterbarg Volume II). Then we can do the next approximation for the Malliavin derivative of $X_{T_a}$
 \begin{equation}\label{approximation_D_s_x_t}
-D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_s,\bar{y}_s)\bar{M}(s,T_a)
+D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_0,\bar{y}_{T_a})\bar{M}(s,T_a)
 \end{equation}
 where
 \begin{equation*}
-\bar{M}(s,T_a) = \exp\left(-\frac{\int_{s}^{t_0} \left(\partial_x \beta(u,T_a,\bar{x}_s,\bar{y}_s)\right)^{2} du}{2} + \int_{s}^{t_0} \partial_x \beta(u,T_a,\bar{x}_s,\bar{y}_s) dW^{\mathbb{Q}}_u \right)
+\bar{M}(s,T_a) = \exp\left(-\frac{\int_{s}^{t_0} \left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2} du}{2} + \int_{s}^{t_0} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) dW^{\mathbb{Q}}_u \right)
 \end{equation*}
 Now, we must remember that by Girsanov's theorem we have that 
 \begin{equation*}
 dW^{\mathbb{Q}^{T_p}} = dW^{\mathbb{Q}} + \nu(t,T_p) dt 
 \end{equation*}
 and therefore 
-\begin{align}\label{approsimation_E_s_x_t}
-\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) &= \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{T_a} \partial_x \beta(u,T_a,\bar{x}_s,\bar{y}_s) \nu(u,T_p) du \right) \nonumber \\
-&\approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x_0,y_0) \exp\left(-\int_{s}^{T_a} \partial_x \beta(u,T_a,x_0,y_0) \nu(u,T_p) du \right)
-\end{align}
+\begin{equation}\label{approsimation_E_s_x_t}
+\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) \approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_0,\bar{y}_{T_a}) \exp\left(-\int_{s}^{T_a} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) \nu(u,T_p) du \right)
+\end{equation}
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
 \bibliographystyle{spbasic}
