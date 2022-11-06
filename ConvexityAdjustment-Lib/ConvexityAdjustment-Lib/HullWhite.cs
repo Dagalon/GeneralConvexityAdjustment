@@ -102,9 +102,34 @@ namespace ConvexityAdjustment_Lib
         }
 
         #endregion
+        
+        #region Process tools
+
+        public static double LiborVariance(double t, double t1, double t2, double sigma, double k)
+        {
+            double gamma1 = GetGammaVariance(t1, t2, t2, k, k);
+            double gamma2 = GetGammaVariance(t1, t1, t1, k, k);
+            double gamma12 = GetGammaVariance(t1, t1, t2, k, k);
+
+            return sigma * sigma * (gamma1 + gamma2 - 2.0 * gamma12);
+        }
+
+        #endregion
 
         #region Tools
-        
+
+        public static double GetGammaVariance(double t, double t1, double t2, double k1, double k2)
+        {
+            double m = 1.0 / (k1 * k2);
+            double part1 = t - beta(t1 - t, t1, k1) - beta(t2 - t, t2, k2);
+            double part2 = t2 > t1
+                ? Math.Exp(-k2 * (t2 - t1)) * beta(t1 - t, t1, k1 + k2)
+                : Math.Exp(-k1 * (t1 - t2)) * beta(t2 - t, t2, k1 + k2);
+
+            return m * (part1 + part2);
+        }
+
+
         public static double getExpectedIntegralRt(double k, double sigma, double t0, double t1)
         {
 

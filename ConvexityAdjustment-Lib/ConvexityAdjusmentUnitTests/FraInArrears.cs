@@ -47,52 +47,65 @@ namespace ConvexityAdjustmentUnitTests
                 // Delta times
                 double delta01 = dc.yearFraction(startDate, t1);
                 double delta02 = dc.yearFraction(startDate, t2);
-
-                List<double> mandatoryPoints = new List<double> { delta01};
+                
+                // Initial z0
+                double f0t = curve.currentLink().forwardRate(delta01, delta01, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
+                var z0Delta = 1.0 + (delta02 - delta01) * f0t;
+                
+                // List<double> mandatoryPoints = new List<double> { delta01};
                 double length = dc.yearFraction(startDate, t2);
                 
                 var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
                         ql.InverseCumulativeNormal>)
                     new ql.PseudoRandom().make_sequence_generator(timeSteps, seed);
 
-                ql.PathGenerator<ql.IRNG> generator = new ql.PathGenerator<ql.IRNG>(process, length, timeSteps, rsg, true, mandatoryPoints);
-                double f0t = curve.currentLink().forwardRate(delta01, delta01, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
-                double expat = (1.0 - Math.Exp(-k * delta01)) / k ;
-                double mt = (sigma * sigma) / (2.0 * k) * (expat - Math.Exp(-k * delta01) * expat);
+                // ql.PathGenerator<ql.IRNG> generator = new ql.PathGenerator<ql.IRNG>(process, length, timeSteps, rsg, true, mandatoryPoints);
+                
+                // double expat = (1.0 - Math.Exp(-k * delta01)) / k ;
+                // double mt = (sigma * sigma) / (2.0 * k) * (expat - Math.Exp(-k * delta01) * expat);
                 
                 // Adjustment forward measure
-                double adjFwdMeasure =
-                    -(sigma * sigma / k) * (ConvexityAdjustment_Lib.HullWhite.beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
+                // double adjFwdMeasure =
+                //     -(sigma * sigma / k) * (ConvexityAdjustment_Lib.HullWhite.beta(0.0, delta01, k) - Math.Exp(-k * delta01) * delta01);
                 
                 // Path generator
                 int i;
                 var mean = 0.0;
-                var meanXt0 = 0.0;
-                var varXt0 = 0.0;
                 var momentOrderTwoMean = 0.0;
                 
                 for (i = 0; i < numberOfSimulations; i++)
                 {
-                    ql.Sample<ql.IPath> sample = generator.next();
-                    var path = (ql.Path)sample.value;
-                    var rt0 = path[path.length() - 1] + mt + f0t + adjFwdMeasure;
-                    var df12 = model.discountBond(delta01, delta02, rt0);
-                    var libor = (1.0 / df12 - 1.0) / (delta02 - delta01);
-                    mean += (libor / numberOfSimulations);
-                    meanXt0 += path[path.length() - 1] / numberOfSimulations;
-                    varXt0 += (path[path.length() - 1] * path[path.length() - 1]) / numberOfSimulations;
+                    // ql.Sample<ql.IPath> sample = generator.next();
+                    // var path = (ql.Path)sample.value;
+                    var sample = rsg.nextSequence();
+                    var path = sample.value;
+                    
+                    // sampling Libor
+                    // var stdLibor =
+                    //     Math.Sqrt(ConvexityAdjustment_Lib.HullWhite.LiborVariance(delta01, delta01, delta02, sigma, k));
+                    var stdLibor = sigma * ConvexityAdjustment_Lib.HullWhite.beta(delta01, delta02, k);
+                    // var aux = Math.Pow(sigma * ConvexityAdjustment_Lib.HullWhite.beta(delta01, delta02,k), 2.0);
+                    
+                    // Dynamic included forward measure adjustment
+                    var ztDelta = z0Delta * Math.Exp(-0.5 * stdLibor * stdLibor * delta01 + stdLibor * Math.Sqrt(delta01) * path[0]);
+                    var libor = (ztDelta - 1.0) / (delta02 - delta01);
+                    
+                    // var rt0 = path[path.length() - 1] + mt + f0t + adjFwdMeasure;
+                    // var df12 = model.discountBond(delta01, delta02, rt0);
+                    // var libor = (1.0 / df12 - 1.0) / (delta02 - delta01);
+                    var ratio = curve.link.discount(delta02) / curve.link.discount(delta01);
+                    var payOff = ratio * libor * (1.0 + (delta02 - delta01) * libor);
+                    mean += payOff / numberOfSimulations;
                     momentOrderTwoMean += (libor * libor) / numberOfSimulations;
                 }
                 
-                
                 // Convexity future
-                var varAnalyticXt = sigma * sigma * (1 - Math.Exp(-2.0 * k * delta01)) / (2.0 * k);
                 var mcFraInArrears = mean;
                 var stdMc = Math.Sqrt(momentOrderTwoMean - mean * mean);
                 var intervalConfidence = new double[]
                     { mean - stdMc / Math.Sqrt(numberOfSimulations), mean + stdMc / Math.Sqrt(numberOfSimulations) };
                 var convexityMc = mcFraInArrears - curve.currentLink()
-                    .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
+                    .forwardRate(delta01, delta02, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
                 var convexityMalliavin =
                     ConvexityAdjustment_Lib.HullWhite.convexityFraInArrears(curve, k, sigma, delta01, delta02, 0.0);
                 
