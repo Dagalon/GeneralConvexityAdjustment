@@ -565,8 +565,6 @@ We have checked the last approximation using MC method to compute the value of a
  
 \end{example}
 
-\newpage
-
 \subsection{CMSs}
 We will define the swap rate from $T_a$ to $T_b$ at time $t$
 \begin{equation*}
@@ -583,50 +581,54 @@ The same way, let us define
 S^{ois}_{a,b}(t) = \frac{P_{ois}(t,T^{E}_a) - P_{ois}(t,T^{E}_b)}{01(t,T_a,T_b)}. 
 \end{equation*}
 
-We suppose, that we have a flow in $T_a < T_p < T_b$ with value $S_{a,b}(T_a)$. Then, the present value of this flow under the differents measure $\mathbb{Q}^{T_a}$,$\mathbb{Q}^{01(a,b)}$ and $\mathbb{Q}^{T_p}$ respectivaly is 
+We suppose, that we have a flow in $T_a < T_p < T_b$ with value $S_{a,b}(T_a)$. Then, the present value of this flow
 \begin{align}\label{cms_expedted_value}
 P_{ois}(0,T_a)\mathbb{E}^{\mathbb{Q}^{T_{a}}}\left(S_{a,b}(T_a) P_{ois}(T_a,T_p) \right) &= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \frac{P_{ois}(T_a,T_p)}{01(T_a,T_a,T_b) }\right) \nonumber \\
-&= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) M(T_a,T_p)\right) \\
-&=P_{ois}(0,T_p)\mathbb{E}^{\mathbb{Q}^{T_p}}\left(S_{a,b}(T_a)\right)
+&= 01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) M(T_a,T_p)\right)
 \end{align}
-where $M(t, T_p)= \frac{P_{ois}(t,T_p) }{01(t,T_a,T_b)} $. From the definition of $S_{a,b}(t)$ and $S^{ois}_{a,b}(t)$, we have that both are martingale under the measure $\mathbb{Q}^{01(a,b)}$. Therefore, we will define the convexity adjustment for CMS the next  way
+where $M(t, T_p)= \frac{P_{ois}(t,T_p) }{01(t,T_a,T_b)} $. In order to reduce the complexity to explain the movement od the forward curve, it is a common pratice to asumme that
 \begin{equation*}
-CA_{cms}(T_0,T_p) = S_{a,b}(0) - \mathbb{E}^{\mathbb{Q}^{T_p}}\left(S_{a,b}(T_a)\right). 
+M(t) = f(S^{ois}_{a,b}(t))
 \end{equation*}
-We will follow the same strategy that in the last examples. From Clark-Ocone formula we have that
-\begin{equation*}
-S_{a,b}(T_a) = \mathbb{E}^{\mathbb{Q}^{T_p}}\left(S_{a,b}(T_a)\right) + \int_{0}^{T_a} \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s S_{a,b}(T_a)\right) dW^{T_p}_s 
-\end{equation*} 
-Therefore, if we take $\mathbb{E}^{01(a,b)}$ and we use the Girsanov theorem  in the last expression, we get 
-\begin{equation*}
-S_{a,b}(0) = \mathbb{E}^{\mathbb{Q}^{T_p}}\left(S_{a,b}(T_a)\right) + \frac{01(0,T_a,T_b)}{P_{ois}(0,T_p)} \mathbb{E}^{T_p}\left(M(T_a,T_p) \int_{0}^{T_a} \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s S_{a,b}(T_a)\right) dW^{T_p}_s \right)
-\end{equation*}
-Now, if we use that the Skorohod integral is the adjoint operator of the Malliavin derivative, we have that
+where $f(\cdot)$ is known as mapping function. There is a extensive literature how to define this function (see Piterbarg Volume III), in later we will see some particular examples for this mapping function. Under the last assumption and applying Clark-Ocone to $f(S_{a,b}(t))$ we get
 \begin{align*}
-S_{a,b}(0) &= \mathbb{E}^{\mathbb{Q}^{T_p}}\left(S_{a,b}(T_a)\right) + \frac{01(0,T_a,T_b)}{P_{ois}(0,T_p)} \mathbb{E}^{T_p}\left(\int_{0}^{T_a} D_s M(T_a,T_p) \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s S_{a,b}(T_a)\right) ds  \right) \\
-&=\mathbb{E}^{\mathbb{Q}^{T_p}}\left(S_{a,b}(T_a)\right) + \frac{01(0,T_a,T_b)}{P_{ois}(0,T_p)} \mathbb{E}^{T_p}\left(\int_{0}^{T_a} \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s M(T_a,T_p)\right) \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s S_{a,b}(T_a)\right) ds  \right).
+f(S^{ois}_{a,b}(T_a)) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(f(S^{ois}_{a,b}(T_a)\right) + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( D_s (f(S^{ois}_{a,b}(T_a)) \right) dW^{01(a,b)}_{s} \\
+&= \frac{P_{ois}(0,T_p) }{01(0,T_a,T_b)} + \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left(f^{\prime}(S^{ois}_{a,b}(T_a) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s}. 
 \end{align*}
-Then we have the next expression for the convexity adjustment
-\begin{equation*}
-CA_{cms}(T_0,T_p) = \frac{01(0,T_a,T_b)}{P_{ois}(0,T_p)} \mathbb{E}^{T_p}\left(\int_{0}^{T_a} \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s M(T_a,T_p)\right) \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(D_s S_{a,b}(T_a)\right) ds  \right).
-\end{equation*}
-Now, if we do a freeze of $\partial_x M(t,T_p)$ and $\partial_x S_{a,b}(t)$, then we can do the next approximation for $CA_{ois}(T_0,T_p)$
+Therefore, we can define the convexity adjustment for a CMS the next way
 \begin{align*}
-CA_{cms}(T_0,T_p) &=  \frac{01(0,T_a,T_b)}{P_{ois}(0,T_p)} \mathbb{E}^{T_p}\left(\int_{0}^{T_a} \mathbb{E}^{T_p}_s \left(\partial_x M(s,T_p) D_s x_{T_a}\right) \mathbb{E}^{T_p}_s \left(\partial_x S_{a,b}(s)D_s x_{T_a} \right) ds \right) \\
-& \approx \frac{01(0,T_a,T_b)}{P_{ois}(0,T_p)} \partial_x M(0,T_p)  \partial_x S_{a,b}(0) \mathbb{E}^{\mathbb{Q}^{T_p}}\left(\int_{0}^{T_a} \left(D_s x_{T_a} \right)^{2} ds \right).
+&CA_{CMS}(T_a,T_b)  \\
+=&01(0,T_a,T_b) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \int_{0}^{T_a} \mathbb{E}_s^{01(a,b)}\left( f^{\prime}(S^{ois}_{a,b}(T_a)) \partial_{x}S^{ois}_{a,b}(T_a) D_s x_{T_a} \right) dW^{01(a,b)}_{s} \right)
 \end{align*}
-Now, if we use (\ref{approximation_D_s_x_t}) we can estimate  
-$
- \mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(\left(D_s x_{T_a} \right)^{2}\right)
-$
-the next way 
+Now if we use again the Clark-Ocone representation, but in this case for $S_{a,b}(T_a)$ we get that
 \begin{align*}
-\mathbb{E}_s^{\mathbb{Q}^{T_p}}\left(\left(D_s x_{T_a} \right)^{2}\right) &\approx \exp\left(-2 \int_{s}^{T_a}k_u du \right) \eta^{2}(s,\bar{x}_0,\bar{y}_{T_a}) \\
-& \cdot \exp\left(\int_{s}^{T_a} \left(\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2} - 2 \exp\left(-\int_{s}^{T_a}k_u du\right) \partial_x \partial_u \bar{\nu}(u,T_p)\right) du \right)
+CA_{CMS}(T_a,T_b) &\approx 01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S_{a,b}(T_a) \left( S^{ois}_{a,b}(T_a) - S^{ois}_{a,b}(0)\right)\right) \\
+&= 01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S^{ois}_{a,b}(T_a)S_{a,b}(T_a) -  S_{a,b}(0) S^{ois}_{a,b}(0)\right)
 \end{align*}
-Therefore
+Where we have used that $S_{a,b}(t)$ and $S^{ois}_{a,b}(T_a)$ are $01(a,b)$-martingale. Now, if we use Itô formula to $S^{ois}_{a,b}(t)$ and $S_{a,b}(t)$ we have that
+\begin{align*}
+dS^{ois}_{a,b}(t,x_t,y_t) &= \partial_{x}S^{ois}_{a,b}(t,x_t,y_t)\eta(t,x_t,y_t)dW^{01(a,b)}  \\
+dS_{a,b}(t,x_t,y_t) &= \partial_{x}S_{a,b}(t,x_t,y_t)\eta(t,x_t,y_t)dW^{01(a,b)} 
+\end{align*}
+with initial condition $S^{ois}_{a,b}(0)$ and $S_{a,b}(0)$ respectivaly. Then 
+\begin{align*}
+\mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(S^{ois}_{a,b}(T_a)S_{a,b}(T_a) \right) &= \mathbb{E}^{\mathbb{Q}^{01(a,b)}}\left(\int_0^{T_a} \partial_{x}S_{a,b}(u,x_u,y_u) \partial_{x}S^{ois}_{a,b}(u,x_u,y_u)  \eta^{2}(u,x_u,y_u)
+du \right)  + S_{a,b}(0) S^{ois}_{a,b}(0) \\
+&\approx  \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \partial_{x}S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}))\int_0^{T_a} \eta^{2}(u,\bar{x}_0, \bar{y}({T_a})) du \\
+&+ S_{a,b}(0) S^{ois}_{a,b}(0).
+\end{align*}
 
+Then, we can approximate $CA_{CMS}(T_a,T_b)$ the next way
 
+\fboxsep1em
+\fbox{\parbox{430pt}
+{
+\begin{align}\label{cms_adjustment}
+&CA_{CMS}(T_a,T_b)  \\
+&\approx  01(0,T_a,T_b)  f^{\prime}(S^{ois}_{a,b}(0)) \nonumber \\
+&\cdot \partial_{x}S_{a,b}(0,\bar{x}_0, \bar{y}({T_a}) \partial_{x}S^{ois}_{a,b}(0,\bar{x}_0, \bar{y}({T_a}))\int_0^{T_a} \eta^{2}(u,\bar{x}_0, \bar{y}({T_a})) du \nonumber
+\end{align}
+}}
 
 \begin{example}
 In ghe case of a Hull-White model, we showed in the example  (\ref{example_convexity_hw_ois}) that 
@@ -678,30 +680,23 @@ y_t \approx \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \ri
 \end{equation*}
 Therefore, if we define $\bar{y}(t)= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0)$, we have that
 \begin{equation*}
-X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+X_{T_a} \approx \bar{X}(T_a):=\int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
 \end{equation*}
-With initial condition  $\bar{x}_{0}$ is such that $S_{a,b}(0,\bar{x}_0, \bar{y}({T_a})) = S_{a,b}(0)$ (see Piterbarg Volume II). Now, we must remember that by Girsanov's theorem we have that 
-\begin{equation*}
-dW^{\mathbb{Q}^{T_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,T_p) dt 
-\end{equation*}
-where $\bar{\nu}(t,T_p) = \int_{t}^{T_p} \eta(s,\bar{x}_s,\bar{y}_s) ds $. Then, we have the next approximation of $\bar{x}_{T_a}$
-\begin{align*}
-X_{T_a} &\approx \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du - \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{\nu}(u, T_p) \eta(u,\bar{x}_u,\bar{y}_u) du +  \\
-&+ \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \partial_x \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
-\end{align*} 
-Therefore, if we taj¡ke the Malliavin derivative of $X_{T_a}$ we get
+With initial condition  $\bar{x}_{0}$ is such that $S_{a,b}(0,\bar{x}_0, \bar{y}({T_a})) = S_{a,b}(0)$ (see Piterbarg Volume II). Then we can do the next approximation for the Malliavin derivative of $X_{T_a}$
 \begin{equation}\label{approximation_D_s_x_t}
-D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{T_a})\bar{M}(s,T_a)
+D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_0,\bar{y}_{T_a})\bar{M}(s,T_a)
 \end{equation}
 where
-\begin{align*}
-\bar{M}(s,T_a) &= \exp\left(-\int_{s}^{T_a} \left( \frac{\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2}}{2} - \exp\left(-\int_{s}^{T_a}k_u du\right) \partial_x \partial_u \bar{\nu}(u,T_p)\right) du \right) \\ 
-&\cdot\exp\left(\int_{s}^{t_0} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) dW^{\mathbb{Q}}_u \right)
-\end{align*}
-With $\beta(u,T_a,x,y) = \exp\left(-\int_{u}^{T_a}k_u du\right) \partial_x \eta(u,x,y)$. Therefore, if we use the last equalities, we get the next approximation of $\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right)$
-
+\begin{equation*}
+\bar{M}(s,T_a) = \exp\left(-\frac{\int_{s}^{t_0} \left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2} du}{2} + \int_{s}^{t_0} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) dW^{\mathbb{Q}}_u \right)
+\end{equation*}
+Now, we must remember that by Girsanov's theorem we have that 
+\begin{equation*}
+dW^{\mathbb{Q}^{T_p}} = dW^{\mathbb{Q}} + \nu(t,T_p) dt 
+\end{equation*}
+and therefore 
 \begin{equation}\label{approsimation_E_s_x_t}
-\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) \approx \exp\left(-\int_{s}^{T_a}k_u du \right) \exp\left(-\int_{s}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \partial_x \partial_u \bar{\nu}(u,T_p) du \right).
+\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) \approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}_0,\bar{y}_{T_a}) \exp\left(-\int_{s}^{T_a} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) \nu(u,T_p) du \right)
 \end{equation}
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04

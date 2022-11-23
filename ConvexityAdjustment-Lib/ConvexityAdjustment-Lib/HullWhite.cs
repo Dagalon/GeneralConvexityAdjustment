@@ -96,7 +96,6 @@ namespace ConvexityAdjustment_Lib
             var m = - dFtp  * (beta(dta, dtp, k) + partialAnnuity / annuity);
 
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
-            var ratio = partialOisSwap / partialOisSwapT0;
             return m * alpha * partialVanillaSwap;
 
         }
@@ -170,6 +169,7 @@ namespace ConvexityAdjustment_Lib
         public static double forwardMeasureAdjustment(double dtP, double k, double sigma)
         {
             return (sigma * sigma / k) * (dtP * Math.Exp(-k * dtP) - beta(dtP, 2.0 * dtP, k));
+            // return (sigma * sigma / k) * ( - dtP * Math.Exp(-k * dtP) + beta(0.0, dtP, k));
         }
 
         #endregion
