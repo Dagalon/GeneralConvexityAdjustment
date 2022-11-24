@@ -100,6 +100,43 @@ namespace ConvexityAdjustment_Lib
 
         }
 
+        public static double convexityCmsNewApproach(ql.Handle<ql.YieldTermStructure> discountCurve,
+            ql.Date valueDate,
+            ql.Date ta,
+            ql.Date tb,
+            ql.Date tp,
+            double c,
+            double annuityOis,
+            double partialAnnuityOis,
+            ql.DayCounter dc,
+            double k,
+            double sigma)
+        {
+            
+            // anuuity and partial_x annuity for T_a
+            
+            var dta = dc.yearFraction(valueDate, ta);
+            var dtb = dc.yearFraction(valueDate, tb);
+            var dtp = dc.yearFraction(valueDate, tp);
+            
+            var dFtp = discountCurve.link.discount(tp);
+            var dFta = discountCurve.link.discount(ta);
+            var dFtb = discountCurve.link.discount(tb);
+            var dFTaTp = dFtp / dFta;
+            var dFtaTb = dFtb / dFta; 
+            
+            // Variance Hull-White model
+            var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
+            var m = discountCurve.link.discount(ta) / annuityOis;
+            var partialM = - (m * partialAnnuityOis / annuityOis  + beta(dta, dtp, k) * dFTaTp / annuityOis);
+            var swapOisRate = (1.0 -dFtaTb) / annuityOis;
+            var partialSwapOis = (beta(dta, dtb, k) * dFtaTb /annuityOis - swapOisRate * partialAnnuityOis / annuityOis);
+
+
+            return (annuityOis * dFta / dFtp) * c * partialM * partialSwapOis * alpha;
+
+        }
+
         #endregion
         
         #region Process tools
