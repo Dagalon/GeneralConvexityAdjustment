@@ -100,7 +100,7 @@ namespace ConvexityAdjustment_Lib
 
         }
 
-        public static double convexityCmsNewApproach(ql.Handle<ql.YieldTermStructure> discountCurve,
+        public static double ConvexityCmsNewApproach(ql.Handle<ql.YieldTermStructure> discountCurve,
             ql.Date valueDate,
             ql.Date ta,
             ql.Date tb,
@@ -125,15 +125,16 @@ namespace ConvexityAdjustment_Lib
             var dFTaTp = dFtp / dFta;
             var dFtaTb = dFtb / dFta; 
             
-            // Variance Hull-White model
+            // Hull-White's convexity adjustment parameter
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
-            var m = discountCurve.link.discount(ta) / annuityOis;
-            var partialM = - (m * partialAnnuityOis / annuityOis  + beta(dta, dtp, k) * dFTaTp / annuityOis);
-            var swapOisRate = (1.0 -dFtaTb) / annuityOis;
-            var partialSwapOis = (beta(dta, dtb, k) * dFtaTb /annuityOis - swapOisRate * partialAnnuityOis / annuityOis);
+            var m = dFTaTp / annuityOis;
+            // var partialM = - m  * (partialAnnuityOis / annuityOis  + beta(dta, dtp, k));
+            var swapOisRate = (dFta - dFtb) / annuityOis;
+            var partialSwapOis = (beta(0.0, dtb, k) * dFtb - beta(0.0, dta, k) * dFta) /annuityOis - swapOisRate * partialAnnuityOis / annuityOis;
+            var integral = sigma * sigma * (beta(dta, 2.0 * dta, k) - 0.5 * beta(dta, 3.0 * dta, k)) / k;
 
-
-            return (annuityOis * dFta / dFtp) * c * partialM * partialSwapOis * alpha;
+            // return beta(dta, dtp, k) * c * (alpha * (partialSwapOis / dFta) + (swapOisRate / dFta) * integral);
+            return beta(dta, dtp, k) * alpha * c * (partialSwapOis / dFta);
 
         }
 
@@ -165,7 +166,7 @@ namespace ConvexityAdjustment_Lib
             return m * (part1 + part2);
         }
 
-
+      
         public static double getExpectedIntegralRt(double k, double sigma, double t0, double t1)
         {
 
@@ -185,7 +186,15 @@ namespace ConvexityAdjustment_Lib
 
             return i1 + i2;
         }
-        
+
+        public static double GetVarianceIt(double t, double k, double sigma)
+        {
+            double m = Math.Pow(sigma / k, 2.0);
+            return m * (beta(0, t, 2.0 * k) + Math.Exp(-2.0 * k * t) * t -
+                                    2.0 * Math.Exp(-k * t) * beta(0.0, t, k));
+        }
+
+
         public static double beta(double t0, double t1, double alpha)
         {
             double delta = t1 - t0;
@@ -207,6 +216,26 @@ namespace ConvexityAdjustment_Lib
         {
             return (sigma * sigma / k) * (dtP * Math.Exp(-k * dtP) - beta(dtP, 2.0 * dtP, k));
             // return (sigma * sigma / k) * ( - dtP * Math.Exp(-k * dtP) + beta(0.0, dtP, k));
+        }
+
+        public static double GetDriftIt(double t, double k, double sigma)
+        {
+            var m = Math.Pow(sigma / k, 2.0);
+            var expKt = Math.Exp(-k * t);
+            var betaT = beta(0.0, t, k);
+
+            return m * (betaT - expKt * t - beta(0.0, t, 2.0 * k) + expKt * betaT);
+        }
+
+        public static double GetCovarianceRtIt(double t, double k, double sigma)
+        {
+            var m = sigma * sigma / k;
+            return m * (Math.Exp(-k * t) * t - beta(t, 2.0 * t, k));
+        }
+
+        public static double GetVarianceRt(double t, double k, double sigma)
+        {
+            return sigma * sigma * beta(0.0, t, 2.0 * k);
         }
 
         #endregion

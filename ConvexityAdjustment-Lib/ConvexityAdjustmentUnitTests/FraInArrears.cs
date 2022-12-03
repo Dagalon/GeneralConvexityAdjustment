@@ -75,24 +75,16 @@ namespace ConvexityAdjusmentUnitTests
                 
                 for (i = 0; i < numberOfSimulations; i++)
                 {
-                    // ql.Sample<ql.IPath> sample = generator.next();
-                    // var path = (ql.Path)sample.value;
                     var sample = rsg.nextSequence();
                     var path = sample.value;
                     
                     // sampling Libor
-                    // var stdLibor =
-                    //     Math.Sqrt(ConvexityAdjustment_Lib.HullWhite.LiborVariance(delta01, delta01, delta02, sigma, k));
                     var stdLibor = sigma * ConvexityAdjustment_Lib.HullWhite.beta(delta01, delta02, k);
-                    // var aux = Math.Pow(sigma * ConvexityAdjustment_Lib.HullWhite.beta(delta01, delta02,k), 2.0);
                     
                     // Dynamic included forward measure adjustment
                     var ztDelta = z0Delta * Math.Exp(-0.5 * stdLibor * stdLibor * delta01 + stdLibor * Math.Sqrt(delta01) * path[0]);
                     var libor = (ztDelta - 1.0) / (delta02 - delta01);
                     
-                    // var rt0 = path[path.length() - 1] + mt + f0t + adjFwdMeasure;
-                    // var df12 = model.discountBond(delta01, delta02, rt0);
-                    // var libor = (1.0 / df12 - 1.0) / (delta02 - delta01);
                     var ratio = curve.link.discount(delta02) / curve.link.discount(delta01);
                     var payOff = ratio * libor * (1.0 + (delta02 - delta01) * libor);
                     mean += payOff / numberOfSimulations;
