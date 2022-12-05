@@ -220,11 +220,11 @@ namespace ConvexityAdjustment_Lib
 
         public static double GetDriftIt(double t, double k, double sigma)
         {
-            var m = Math.Pow(sigma / k, 2.0);
-            var expKt = Math.Exp(-k * t);
-            var betaT = beta(0.0, t, k);
+            var m = 0.5 * Math.Pow(sigma / k, 2.0);
+            var auxValue = sigma * sigma * Math.Pow(t, 3.0) / 6.0;
+            return m * (t + beta(t, 2.0 * t, k) - beta(0.0, t, k)- beta(0.0, t, 2.0 * k));
 
-            return m * (betaT - expKt * t - beta(0.0, t, 2.0 * k) + expKt * betaT);
+            // return m * (betaT - expKt * t - beta(0.0, t, 2.0 * k) + expKt * betaT);
         }
 
         public static double GetCovarianceRtIt(double t, double k, double sigma)

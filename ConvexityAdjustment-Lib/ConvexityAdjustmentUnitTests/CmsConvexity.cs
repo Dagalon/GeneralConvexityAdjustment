@@ -90,18 +90,18 @@ namespace ConvexityAdjusmentUnitTests
                     .value();
 
                 annuity.Add( model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
-                    staticSwap.fixedDayCount()));
+                    discountCurve.link.dayCounter(),  staticSwap.fixedDayCount()));
                 
                 var swapOisDerivativeT0 = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
-                    staticSwap.floatingSchedule(), staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
+                    staticSwap.floatingSchedule(), staticSwap.fixedSchedule(), discountCurve.link.dayCounter(),  staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
                 
                 var swapOisDerivativeTa = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
-                    staticSwap.floatingSchedule(), staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
+                    staticSwap.floatingSchedule(),  staticSwap.fixedSchedule(), discountCurve.link.dayCounter(),  staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
                 
                 var swapVanillaDerivative = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
-                    staticSwap.floatingSchedule(), staticForwardCurve, staticSwap.fixedSchedule(), staticSwap.floatingDayCount(),
+                    staticSwap.floatingSchedule(), staticForwardCurve, staticSwap.fixedSchedule(), discountCurve.link.dayCounter(),  staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
                 
                 partialOisSwapT0.Add(swapOisDerivativeT0);
