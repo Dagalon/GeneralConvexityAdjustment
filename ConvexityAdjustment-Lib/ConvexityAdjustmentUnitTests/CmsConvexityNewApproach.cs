@@ -35,7 +35,7 @@ namespace ConvexityAdjusmentUnitTests
             var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
 
             // Convexity test
-            var periodToCompute = new ql.Period(5, ql.TimeUnit.Years);
+            var periodToCompute = new ql.Period(10, ql.TimeUnit.Years);
             int numberOftimes = 1;
 
             List<ql.Date> datesToCompute = new List<ql.Date> {calendar.advance(startDate, periodToCompute)};
@@ -77,7 +77,8 @@ namespace ConvexityAdjusmentUnitTests
             var std = new List<double>();
             var momentOrderTwo = new Dictionary<int, double>();
             var rateCmsForward = new List<double>();
-            var annuity = new List<Tuple<double, double>>();
+            var annuityTa = new List<Tuple<double, double>>();
+            var annuityT0 = new List<Tuple<double, double>>();
             
             // swap derivatives, rates ans ratio
             var partialOisSwap = new List<double>();
@@ -103,8 +104,12 @@ namespace ConvexityAdjusmentUnitTests
                     .withFixedLegRule(ql.DateGeneration.Rule.Forward)
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward)
                     .value();
-
-                annuity.Add(model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
+                
+           
+                annuityTa.Add(model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], staticSwap.fixedSchedule(),
+                    discountCurve.link.dayCounter(), staticSwap.fixedDayCount()));
+                
+                annuityT0.Add(model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
                     discountCurve.link.dayCounter(), staticSwap.fixedDayCount()));
 
                 var swapOisDerivative = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
@@ -116,7 +121,7 @@ namespace ConvexityAdjusmentUnitTests
                 // partialVanillaSwap.Add(swapVanillaDerivative);
                 var swapOisFairRate =
                     (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(staticSwap.maturityDate())) /
-                    annuity[j].Item1;
+                    annuityT0[j].Item1;
                 swapRates.Add(swapOisFairRate);
 
                 // ois swap rate
@@ -124,7 +129,7 @@ namespace ConvexityAdjusmentUnitTests
                 
                 var oisSwapRate =
                     (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(tb)) /
-                    annuity[j].Item1;
+                    annuityT0[j].Item1;
                 swapOisRates.Add(oisSwapRate);
                 
                 // ratio swaps
@@ -144,8 +149,7 @@ namespace ConvexityAdjusmentUnitTests
                     new ql.PseudoRandom().make_sequence_generator(2, seed);
 
                 // Pay date
-                var tP = calendar.advance(datesToCompute[j], payPeriod,
-                    ql.BusinessDayConvention.ModifiedFollowing);
+                var tP = calendar.advance(datesToCompute[j], payPeriod, ql.BusinessDayConvention.ModifiedFollowing);
                 var deltaTimeTp = dc.yearFraction(startDate, tP);
 
                 // Dynamics curve
@@ -181,15 +185,15 @@ namespace ConvexityAdjusmentUnitTests
                 var meanI0t = 0.0;
                 var varNoise = 0.0;
                 var meanNoise = 0.0;
-                
+
                 var ratioDf = 1.0 / discountCurve.link.discount(tP);
                 
                 // Moments to simulate
                 var varRt = ConvexityAdjustment_Lib.HullWhite.GetVarianceRt(deltaTimes[j], k, sigma);
-                var varIt = ConvexityAdjustment_Lib.HullWhite.GetVarianceIt(deltaTimes[j], k, sigma);
-                var covRtIt = ConvexityAdjustment_Lib.HullWhite.GetCovarianceRtIt(deltaTimes[j], k, sigma);
+                var varIt = ConvexityAdjustment_Lib.HullWhite.GetVarianceIt(deltaTimeTp, k, sigma);
+                var covRtIt = ConvexityAdjustment_Lib.HullWhite.GetCovarianceRtIt(deltaTimes[j], deltaTimeTp, k, sigma);
                 var driftRt = ConvexityAdjustment_Lib.HullWhite.hjmAdjustment(deltaTimes[j], k, sigma);
-                var driftIt = ConvexityAdjustment_Lib.HullWhite.GetDriftIt(deltaTimes[j], k, sigma);
+                var driftIt = ConvexityAdjustment_Lib.HullWhite.GetDriftIt(deltaTimeTp, k, sigma);
                 var rho = covRtIt / Math.Sqrt(varIt * varRt);
                 var w1 = rho;
                 var w2 = Math.Sqrt(1.0 - rho * rho);
@@ -205,10 +209,12 @@ namespace ConvexityAdjusmentUnitTests
                      
                     // Sampling It we have used Cholk between r_t  and I_t
                     var noiseI01 = w1 * path[0] + w2 * path[1];
-                    var i0T = driftIt + noiseI01 * Math.Sqrt(varIt);
+                    var i0Tp = driftIt + noiseI01 * Math.Sqrt(varIt);
                     var df = discountCurve.link.discount(deltaTimes[j]);
+                    var dfTp = discountCurve.link.discount(deltaTimeTp);
                     var r0t = -Math.Log(df);
-                    var bt = Math.Exp(i0T + r0t);
+                    var r0Tp = -Math.Log(dfTp);
+                    var bt = Math.Exp(i0Tp + r0Tp);
                     // var ri = path[1] + hjmAdjustment[j] + f0ts[j] - driftForwardMeasure[j];
                     // expectedValue += ri / numberOfSimulations;
 
@@ -219,14 +225,14 @@ namespace ConvexityAdjusmentUnitTests
                     swap.recalculate();
                     var swapRate = swap.fairRate();
 
-                    double payoffMc =  ratioDf * swapRate * pTaTp / bt;
+                    // double payoffMc =  ratioDf * swapRate * pTaTp / bt;
+                    double payoffMc =  ratioDf * swapRate / bt;
 
                     rateCmsMc[datesToCompute[j].serialNumber()] += payoffMc / numberOfSimulations;
                     momentOrderTwo[datesToCompute[j].serialNumber()] += (payoffMc * payoffMc / numberOfSimulations);
-                    var annuityTa = Math.Abs(swap.fixedLegNPV());
-                    swapMC += (swap.floatingLegNPV()/ (bt * annuity[j].Item1) ) / numberOfSimulations;
+                    swapMC += (swap.floatingLegNPV()/ (bt * annuityT0[j].Item1) ) / numberOfSimulations;
                     dfMC += (1.0 / bt) / numberOfSimulations;
-                    meanI0t += (i0T + r0t) / numberOfSimulations;
+                    meanI0t += (i0Tp + r0t) / numberOfSimulations;
                     varNoise += noiseI01 * noiseI01 / numberOfSimulations;
                     meanNoise += noiseI01 / numberOfSimulations;
                 }
@@ -238,8 +244,10 @@ namespace ConvexityAdjusmentUnitTests
                     swap.maturityDate(),
                     tP,
                     ratioSwaps[j],
-                    annuity[j].Item1,
-                    annuity[j].Item2,
+                    annuityT0[j].Item1,
+                    annuityT0[j].Item2,
+                    annuityTa[j].Item1,
+                    annuityTa[j].Item2,
                     dc,
                     k,
                     sigma);
