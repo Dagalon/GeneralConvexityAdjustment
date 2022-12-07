@@ -106,8 +106,10 @@ namespace ConvexityAdjustment_Lib
             ql.Date tb,
             ql.Date tp,
             double c,
-            double annuityOis,
-            double partialAnnuityOis,
+            double annuityOisT0,
+            double partialAnnuityOisT0,
+            double annuityOisTa,
+            double partialAnnuityOisTa,
             ql.DayCounter dc,
             double k,
             double sigma)
@@ -127,14 +129,14 @@ namespace ConvexityAdjustment_Lib
             
             // Hull-White's convexity adjustment parameter
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
-            var m = dFTaTp / annuityOis;
-            // var partialM = - m  * (partialAnnuityOis / annuityOis  + beta(dta, dtp, k));
-            var swapOisRate = (dFta - dFtb) / annuityOis;
-            var partialSwapOis = (beta(0.0, dtb, k) * dFtb - beta(0.0, dta, k) * dFta) /annuityOis - swapOisRate * partialAnnuityOis / annuityOis;
-            var integral = sigma * sigma * (beta(dta, 2.0 * dta, k) - 0.5 * beta(dta, 3.0 * dta, k)) / k;
+            var m = dFTaTp / annuityOisTa;
+            var m0 = dFtp / annuityOisT0;
+            var partialM = - m  * (partialAnnuityOisTa / annuityOisTa  + beta(dta, dtp, k));
+            var swapOisRate = (1.0 - dFtaTb) / annuityOisTa;
+            var partialSwapOis = beta(dta, dtb, k) * dFtaTb /annuityOisTa - swapOisRate * partialAnnuityOisTa / annuityOisTa;
 
             // return beta(dta, dtp, k) * c * (alpha * (partialSwapOis / dFta) + (swapOisRate / dFta) * integral);
-            return beta(dta, dtp, k) * alpha * c * (partialSwapOis / dFta);
+            return  c * (partialM / m0) *  partialSwapOis * alpha;
 
         }
 
@@ -227,10 +229,12 @@ namespace ConvexityAdjustment_Lib
             // return m * (betaT - expKt * t - beta(0.0, t, 2.0 * k) + expKt * betaT);
         }
 
-        public static double GetCovarianceRtIt(double t, double k, double sigma)
+        public static double GetCovarianceRtIt(double t1, double t2, double k, double sigma)
         {
+            // cov between xt1 and It2
             var m = sigma * sigma / k;
-            return m * (Math.Exp(-k * t) * t - beta(t, 2.0 * t, k));
+            return m * (beta(0.0, t1, k) - 0.5 * beta(t2 - t1, t2 + t1, k));
+            // return m * (Math.Exp(-k * t) * t - beta(t, 2.0 * t, k));
         }
 
         public static double GetVarianceRt(double t, double k, double sigma)
