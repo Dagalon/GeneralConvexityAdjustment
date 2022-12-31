@@ -129,14 +129,13 @@ namespace ConvexityAdjustment_Lib
             
             // Hull-White's convexity adjustment parameter
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
-            var m = dFTaTp / annuityOisTa;
             var m0 = dFtp / annuityOisT0;
-            var partialM = - m  * (partialAnnuityOisTa / annuityOisTa  + beta(dta, dtp, k));
-            var swapOisRate = (1.0 - dFtaTb) / annuityOisTa;
-            var partialSwapOis = beta(dta, dtb, k) * dFtaTb /annuityOisTa - swapOisRate * partialAnnuityOisTa / annuityOisTa;
-
-            // return beta(dta, dtp, k) * c * (alpha * (partialSwapOis / dFta) + (swapOisRate / dFta) * integral);
-            return  c * (partialM / m0) *  partialSwapOis * alpha;
+            var partialM = - m0  * (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k));
+            var swapOisRate = (dFta - dFtb) / annuityOisT0;
+            var partialSwapOis = (beta(0, dtb, k) * dFtb - beta(0, dta, k) * dFta) / annuityOisT0 -
+                                 swapOisRate * partialAnnuityOisT0 / annuityOisT0; 
+         
+            return  c * (partialM *  partialSwapOis / m0) * alpha;
 
         }
 

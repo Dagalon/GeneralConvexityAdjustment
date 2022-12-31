@@ -85,9 +85,7 @@ namespace ConvexityAdjusmentUnitTests
                     momentOrderTwoMean += (libor * libor) / numberOfSimulations;
                 }
                 
-                
                 // Convexity future
-                var varAnalyticXt = sigma * sigma * (1 - Math.Exp(-2.0 * k * delta00)) / (2.0 * k);
                 var mcFuturePrice = mean;
                 var stdMc = Math.Sqrt(momentOrderTwoMean - mean * mean);
                 var intervalConfidence = new double[]
