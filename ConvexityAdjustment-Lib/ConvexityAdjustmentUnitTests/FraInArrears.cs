@@ -32,7 +32,7 @@ namespace ConvexityAdjusmentUnitTests
             int numberOfSimulations = 2000000;
             ulong seed = 123545;
             int timeSteps = 1;
-            var numberOfMonths = 48;
+            var numberOfMonths = 240;
 
             List<double> t0s = new List<double>();
             List<double> caMc = new List<double>();

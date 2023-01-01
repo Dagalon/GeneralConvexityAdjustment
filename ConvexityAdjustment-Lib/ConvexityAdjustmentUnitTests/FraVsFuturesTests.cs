@@ -34,7 +34,7 @@ namespace ConvexityAdjusmentUnitTests
             // double deltaTime = 0.01;
             // int timeSteps = (int)(length / deltaTime);
             int timeSteps = 1;
-            var numberOfMonths = 48;
+            var numberOfMonths = 240;
 
             List<double> t0s = new List<double>();
             List<double> caMc = new List<double>();
