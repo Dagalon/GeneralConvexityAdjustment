@@ -2,6 +2,48 @@
     
 namespace ConvexityAdjustment_Lib
 {
+    // ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule, 
+    // ql.DayCounter dcCurve, ql.DayCounter dcSwap, double x
+    public class FSolverX0HullWHite: ql.ISolver1d
+    {
+        #region attributes
+
+        private ql.HullWhite _model;
+        private ql.Date _valueDate;
+        private ql.Schedule _schedule;
+        private ql.DayCounter _dcSwap;
+        private ql.DayCounter _dcCurve;
+        private double _swapRate;
+
+        #endregion
+
+        public FSolverX0HullWHite(ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule,
+            ql.DayCounter dcCurve, ql.DayCounter dcSwap, double swapRate)
+        {
+            _model = model;
+            _valueDate = valueDate;
+            _schedule = schedule;
+            _dcSwap = dcSwap;
+            _dcCurve = dcCurve;
+            _swapRate = swapRate;
+        }
+
+
+        public override double value(double v)
+        {
+            double deltaTime = _dcCurve.yearFraction(_valueDate, _schedule.dates()[0]);
+            double f0t = _model.termStructure().link.forwardRate(deltaTime, deltaTime, ql.Compounding.Continuous,
+                ql.Frequency.NoFrequency, true).rate();
+            var annuity = _model.GetAnnuity(_schedule.dates()[0], _schedule.dates()[0], v + f0t, _schedule, _dcCurve, _dcSwap);
+            var dfTa = _model.termStructure().link.discount(_schedule.dates()[0]);
+            var dfTp = _model.termStructure().link.discount(_schedule.dates()[_schedule.Count - 1]);
+            return (1.0 - (dfTa / dfTp)) / annuity.Item1 - _swapRate;
+           
+        }
+    }
+
+
+
     public static class HullWhite
     {
         
@@ -100,6 +142,55 @@ namespace ConvexityAdjustment_Lib
 
         }
 
+        public static List<double> GetDerivativeMapping(ql.Handle<ql.YieldTermStructure> discountCurve,
+            ql.Date valueDate,
+            ql.Date tp,
+            double annuityOisT0,
+            double partialAnnuityOisT0,
+            double secondPartialAnnuityOisT0,
+            ql.DayCounter dc,
+            double k,
+            double sigma)
+        {
+            
+            var dtp = dc.yearFraction(valueDate, tp);
+            var dFtp = discountCurve.link.discount(tp);
+            
+            // partial M
+            var m0 = dFtp / annuityOisT0;
+            var partialM = - m0  * (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k));
+            var partialSecondM = - partialM *  (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k)) - m0 * (secondPartialAnnuityOisT0 / annuityOisT0 - Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0));       
+            
+            // output 
+            List<double> output = new List<double>{ m0, partialM, partialSecondM };
+            return output;
+        }
+
+        public static double GetMappingApproximation(ql.Handle<ql.YieldTermStructure> discountCurve,
+            ql.Date valueDate,
+            ql.Date ta,
+            ql.Date tp,
+            double annuityOisT0,
+            double partialAnnuityOisT0,
+            double secondPartialAnnuityOisT0,
+            ql.DayCounter dc,
+            double k,
+            double sigma)
+        {
+            var dta = dc.yearFraction(valueDate, ta);
+            
+            // Hull-White's convexity adjustment parameter
+            var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
+            var alphaOrderTwo = 0.5 * (Math.Pow(sigma, 4.0) / k) *
+                                (beta(0.0, dta, 2.0 * k) - Math.Exp(-2.0 * k * dta) * dta);
+            
+            // M's derivatives
+            var derivativesM = GetDerivativeMapping(discountCurve, valueDate, tp, annuityOisT0, partialAnnuityOisT0,
+                secondPartialAnnuityOisT0, dc, k, sigma);
+
+            return derivativesM[0] + derivativesM[1] * alpha + derivativesM[2] * alphaOrderTwo;
+        }
+
         public static double ConvexityCmsNewApproach(ql.Handle<ql.YieldTermStructure> discountCurve,
             ql.Date valueDate,
             ql.Date ta,
@@ -108,8 +199,7 @@ namespace ConvexityAdjustment_Lib
             double c,
             double annuityOisT0,
             double partialAnnuityOisT0,
-            double annuityOisTa,
-            double partialAnnuityOisTa,
+            double secondPartialAnnuityOisT0,
             ql.DayCounter dc,
             double k,
             double sigma)
@@ -124,18 +214,31 @@ namespace ConvexityAdjustment_Lib
             var dFtp = discountCurve.link.discount(tp);
             var dFta = discountCurve.link.discount(ta);
             var dFtb = discountCurve.link.discount(tb);
-            var dFTaTp = dFtp / dFta;
-            var dFtaTb = dFtb / dFta; 
             
             // Hull-White's convexity adjustment parameter
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
+            var alphaOrderTwo = 0.5 * (Math.Pow(sigma, 4.0) / k) *
+                                (beta(0.0, dta, 2.0 * k) - Math.Exp(-2.0 * k * dta) * dta);
+            
+            // partial M
             var m0 = dFtp / annuityOisT0;
             var partialM = - m0  * (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k));
+            var partialSecondM = - partialM *  (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k)) - m0 * (secondPartialAnnuityOisT0 / annuityOisT0 - Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0));       
+            
+            // partial swap
+            double betaTa = beta(0.0, dta, k);
+            double betaTb =  beta(0.0, dtb, k);
             var swapOisRate = (dFta - dFtb) / annuityOisT0;
-            var partialSwapOis = (beta(0, dtb, k) * dFtb - beta(0, dta, k) * dFta) / annuityOisT0 -
-                                 swapOisRate * partialAnnuityOisT0 / annuityOisT0; 
+            var partialSwapOis = (betaTb * dFtb - betaTa * dFta) / annuityOisT0 -
+                                 swapOisRate * partialAnnuityOisT0 / annuityOisT0;
+            var partialSecondSwapOis = (betaTa * betaTa * dFta - betaTb * betaTb * dFtb) / annuityOisT0 -
+                                       partialSwapOis * partialAnnuityOisT0 / annuityOisT0 -
+                                       (partialSwapOis * partialAnnuityOisT0 / annuityOisT0 +
+                                        swapOisRate * (secondPartialAnnuityOisT0 / annuityOisT0 -
+                                        Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0))); 
          
-            return  c * (partialM *  partialSwapOis / m0) * alpha;
+            // return  c * (partialM *  partialSwapOis / m0) * alpha + c * (partialSecondM * partialSecondSwapOis / m0) * alphaOrderTwo;
+            return c * (partialM * partialSwapOis / m0) * alpha;
 
         }
 
@@ -155,6 +258,23 @@ namespace ConvexityAdjustment_Lib
         #endregion
 
         #region Tools
+        public static double GetX0(ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule, 
+            ql.DayCounter dcCurve, ql.DayCounter dcSwap, double swapRate)
+        {
+
+            var f = new FSolverX0HullWHite(model, valueDate, schedule, dcCurve, dcSwap, swapRate);
+            ql.Brent solver = new ql.Brent();
+            
+            // run solver
+            double accuracy = 1e-08;
+            double min = 0.0;
+            double max = 1.0;
+            
+            double root = solver.solve(f, accuracy, 0.0, min, max);
+
+            return root;
+
+        }
 
         public static double GetGammaVariance(double t, double t1, double t2, double k1, double k2)
         {
@@ -216,16 +336,12 @@ namespace ConvexityAdjustment_Lib
         public static double forwardMeasureAdjustment(double dtP, double k, double sigma)
         {
             return (sigma * sigma / k) * (dtP * Math.Exp(-k * dtP) - beta(dtP, 2.0 * dtP, k));
-            // return (sigma * sigma / k) * ( - dtP * Math.Exp(-k * dtP) + beta(0.0, dtP, k));
         }
 
         public static double GetDriftIt(double t, double k, double sigma)
         {
             var m = 0.5 * Math.Pow(sigma / k, 2.0);
-            var auxValue = sigma * sigma * Math.Pow(t, 3.0) / 6.0;
             return m * (t + beta(t, 2.0 * t, k) - beta(0.0, t, k)- beta(0.0, t, 2.0 * k));
-
-            // return m * (betaT - expKt * t - beta(0.0, t, 2.0 * k) + expKt * betaT);
         }
 
         public static double GetCovarianceRtIt(double t1, double t2, double k, double sigma)
@@ -233,7 +349,6 @@ namespace ConvexityAdjustment_Lib
             // cov between xt1 and It2
             var m = sigma * sigma / k;
             return m * (beta(0.0, t1, k) - 0.5 * beta(t2 - t1, t2 + t1, k));
-            // return m * (Math.Exp(-k * t) * t - beta(t, 2.0 * t, k));
         }
 
         public static double GetVarianceRt(double t, double k, double sigma)

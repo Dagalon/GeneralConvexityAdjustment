@@ -63,7 +63,7 @@ namespace ConvexityAdjusmentUnitTests
             var std = new List<double>();
             var momentOrderTwo = new Dictionary<int, double>();
             var rateCmsForward = new List<double>();
-            var annuity = new List<Tuple<double,double>>();
+            var annuity = new List<Tuple<double,double, double>>();
             var partialOisSwapTa = new List<double>();
             var partialOisSwapT0 = new List<double>();
             var partialVanillaSwap = new List<double>();
