@@ -1,4 +1,5 @@
-﻿using ql = QLNet;
+﻿using System.Globalization;
+using ql = QLNet;
     
 namespace ConvexityAdjustment_Lib
 {
@@ -35,9 +36,13 @@ namespace ConvexityAdjustment_Lib
             double f0t = _model.termStructure().link.forwardRate(deltaTime, deltaTime, ql.Compounding.Continuous,
                 ql.Frequency.NoFrequency, true).rate();
             var annuity = _model.GetAnnuity(_schedule.dates()[0], _schedule.dates()[0], v + f0t, _schedule, _dcCurve, _dcSwap);
-            var dfTa = _model.termStructure().link.discount(_schedule.dates()[0]);
-            var dfTp = _model.termStructure().link.discount(_schedule.dates()[_schedule.Count - 1]);
-            return (1.0 - (dfTa / dfTp)) / annuity.Item1 - _swapRate;
+            
+            // times
+            var dta = _dcCurve.yearFraction(_valueDate, _schedule.dates()[0]);
+            var dtb = _dcCurve.yearFraction(_valueDate, _schedule.dates()[_schedule.Count - 1]);
+
+            var dfTaTb = _model.discountBond(dta, dtb, v + f0t);
+            return (1.0 - dfTaTb) / annuity.Item1 - _swapRate;
            
         }
     }
@@ -191,19 +196,22 @@ namespace ConvexityAdjustment_Lib
             return derivativesM[0] + derivativesM[1] * alpha + derivativesM[2] * alphaOrderTwo;
         }
 
-        public static double ConvexityCmsNewApproach(ql.Handle<ql.YieldTermStructure> discountCurve,
+        public static double ConvexityCmsNewApproach(ql.HullWhite model,
             ql.Date valueDate,
             ql.Date ta,
             ql.Date tb,
             ql.Date tp,
             double c,
-            double annuityOisT0,
-            double partialAnnuityOisT0,
-            double secondPartialAnnuityOisT0,
+            double annuityT0,
+            double annuityOisTa,
+            double partialAnnuityOisTa,
+            double secondPartialAnnuityOisTa,
             ql.DayCounter dc,
-            double k,
-            double sigma)
+            double r0_Ta)
         {
+
+            var sigma = model.sigma();
+            var k = model.a();
             
             // anuuity and partial_x annuity for T_a
             
@@ -211,31 +219,40 @@ namespace ConvexityAdjustment_Lib
             var dtb = dc.yearFraction(valueDate, tb);
             var dtp = dc.yearFraction(valueDate, tp);
             
-            var dFtp = discountCurve.link.discount(tp);
-            var dFta = discountCurve.link.discount(ta);
-            var dFtb = discountCurve.link.discount(tb);
+            var dFtp = model.termStructure_.link.discount(tp);
+            // var dFta = discountCurve.link.discount(ta);
+            // var dFtb = discountCurve.link.discount(tb);
+
+            var dfTaTb = model.discountBond(dta, dtb, r0_Ta);
+            var dfTaTp = model.discountBond(dta, dtp, r0_Ta);
             
             // Hull-White's convexity adjustment parameter
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
-            var alphaOrderTwo = 0.5 * (Math.Pow(sigma, 4.0) / k) *
-                                (beta(0.0, dta, 2.0 * k) - Math.Exp(-2.0 * k * dta) * dta);
+            // var alphaOrderTwo = 0.5 * (Math.Pow(sigma, 4.0) / k) *
+            //                     (beta(0.0, dta, 2.0 * k) - Math.Exp(-2.0 * k * dta) * dta);
             
             // partial M
-            var m0 = dFtp / annuityOisT0;
-            var partialM = - m0  * (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k));
-            var partialSecondM = - partialM *  (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k)) - m0 * (secondPartialAnnuityOisT0 / annuityOisT0 - Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0));       
+            // var m0 = dFtp / annuityOisT0;
+            var mTa = dfTaTp / annuityOisTa;
+            var m0 = dFtp / annuityT0;
+            var partialM = - mTa * (partialAnnuityOisTa / annuityOisTa  + beta(dta, dtp, k));
+            // var partialSecondM = - partialM *  (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k)) - m0 * (secondPartialAnnuityOisT0 / annuityOisT0 - Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0));       
             
             // partial swap
-            double betaTa = beta(0.0, dta, k);
-            double betaTb =  beta(0.0, dtb, k);
-            var swapOisRate = (dFta - dFtb) / annuityOisT0;
-            var partialSwapOis = (betaTb * dFtb - betaTa * dFta) / annuityOisT0 -
-                                 swapOisRate * partialAnnuityOisT0 / annuityOisT0;
-            var partialSecondSwapOis = (betaTa * betaTa * dFta - betaTb * betaTb * dFtb) / annuityOisT0 -
-                                       partialSwapOis * partialAnnuityOisT0 / annuityOisT0 -
-                                       (partialSwapOis * partialAnnuityOisT0 / annuityOisT0 +
-                                        swapOisRate * (secondPartialAnnuityOisT0 / annuityOisT0 -
-                                        Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0))); 
+            // double betaTa = beta(0.0, dta, k);
+            double betaTb =  beta(dta, dtb, k);
+            // var swapOisRate = (dFta - dFtb) / annuityOisT0;
+            // var partialSwapOis = (betaTb * dFtb - betaTa * dFta) / annuityOisT0 -
+            //                      swapOisRate * partialAnnuityOisT0 / annuityOisT0;
+
+            
+            var swapOisRate = (1.0 - dfTaTb) / annuityOisTa;
+            var partialSwapOis = betaTb * dfTaTb / annuityOisTa - swapOisRate * partialAnnuityOisTa / annuityOisTa; 
+            // var partialSecondSwapOis = (betaTa * betaTa * dFta - betaTb * betaTb * dFtb) / annuityOisT0 -
+            //                            partialSwapOis * partialAnnuityOisT0 / annuityOisT0 -
+            //                            (partialSwapOis * partialAnnuityOisT0 / annuityOisT0 +
+            //                             swapOisRate * (secondPartialAnnuityOisT0 / annuityOisT0 -
+            //                             Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0))); 
          
             // return  c * (partialM *  partialSwapOis / m0) * alpha + c * (partialSecondM * partialSecondSwapOis / m0) * alphaOrderTwo;
             return c * (partialM * partialSwapOis / m0) * alpha;
@@ -267,11 +284,11 @@ namespace ConvexityAdjustment_Lib
             
             // run solver
             double accuracy = 1e-08;
-            double min = 0.0;
+            double min = -1.0;
             double max = 1.0;
             
             double root = solver.solve(f, accuracy, 0.0, min, max);
-
+            var auxValue = f.value(root);
             return root;
 
         }

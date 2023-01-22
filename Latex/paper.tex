@@ -605,8 +605,9 @@ M(T_a,T_p) = M(0,T_p)+ \int_{0}^{T_a} \mathbb{E}_s^{01}\left(D_s M(T_a,T_p)\righ
 \end{equation}
 Then, if we sustitute the last expressions in (\ref{expected_t_p_cms}) we have that
 \begin{align}
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) &= S_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left( S_a,b(T_a) \int_{0}^{T_a} \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) dW^{0,1}_s   \right) \nonumber \\
-&=  S_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(\int_{0}^{T_a} D_s X_{T_a} \partial_x S_{a,b}(T_a) \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) ds   \right)
+\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) =& S_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left( S_a,b(T_a) \int_{0}^{T_a} \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) dW^{0,1}_s   \right) \nonumber \\
+=&  S_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(\int_{0}^{T_a} D_s X_{T_a} \partial_x S_{a,b}(T_a) \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) ds   \right) \\
+\approx&  S_{a,b}(0) + \frac{\partial_x S_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \mathbb{E}^{0,1}\left( \int_{0}^{T_a} \left(\mathbb{E}_s^{0,1}\left( D_s x_{T_a}\right)\right)^{2} ds  \right)
 \end{align}
 
 \begin{example}
