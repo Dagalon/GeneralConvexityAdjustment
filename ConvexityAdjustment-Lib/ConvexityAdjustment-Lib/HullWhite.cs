@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using ql = QLNet;
-    
+﻿using ql = QLNet;
+using LA = MathNet.Numerics.LinearAlgebra;    
+
 namespace ConvexityAdjustment_Lib
 {
     // ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule, 
@@ -145,55 +145,6 @@ namespace ConvexityAdjustment_Lib
             var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
             return m * alpha * partialVanillaSwap;
 
-        }
-
-        public static List<double> GetDerivativeMapping(ql.Handle<ql.YieldTermStructure> discountCurve,
-            ql.Date valueDate,
-            ql.Date tp,
-            double annuityOisT0,
-            double partialAnnuityOisT0,
-            double secondPartialAnnuityOisT0,
-            ql.DayCounter dc,
-            double k,
-            double sigma)
-        {
-            
-            var dtp = dc.yearFraction(valueDate, tp);
-            var dFtp = discountCurve.link.discount(tp);
-            
-            // partial M
-            var m0 = dFtp / annuityOisT0;
-            var partialM = - m0  * (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k));
-            var partialSecondM = - partialM *  (partialAnnuityOisT0 / annuityOisT0  + beta(0.0, dtp, k)) - m0 * (secondPartialAnnuityOisT0 / annuityOisT0 - Math.Pow(partialAnnuityOisT0 / annuityOisT0, 2.0));       
-            
-            // output 
-            List<double> output = new List<double>{ m0, partialM, partialSecondM };
-            return output;
-        }
-
-        public static double GetMappingApproximation(ql.Handle<ql.YieldTermStructure> discountCurve,
-            ql.Date valueDate,
-            ql.Date ta,
-            ql.Date tp,
-            double annuityOisT0,
-            double partialAnnuityOisT0,
-            double secondPartialAnnuityOisT0,
-            ql.DayCounter dc,
-            double k,
-            double sigma)
-        {
-            var dta = dc.yearFraction(valueDate, ta);
-            
-            // Hull-White's convexity adjustment parameter
-            var alpha = sigma * sigma * beta(0.0, dta, 2.0 * k);
-            var alphaOrderTwo = 0.5 * (Math.Pow(sigma, 4.0) / k) *
-                                (beta(0.0, dta, 2.0 * k) - Math.Exp(-2.0 * k * dta) * dta);
-            
-            // M's derivatives
-            var derivativesM = GetDerivativeMapping(discountCurve, valueDate, tp, annuityOisT0, partialAnnuityOisT0,
-                secondPartialAnnuityOisT0, dc, k, sigma);
-
-            return derivativesM[0] + derivativesM[1] * alpha + derivativesM[2] * alphaOrderTwo;
         }
 
         public static double ConvexityCmsNewApproach(ql.HullWhite model,
@@ -372,6 +323,46 @@ namespace ConvexityAdjustment_Lib
         {
             return sigma * sigma * beta(0.0, t, 2.0 * k);
         }
+
+        #endregion
+        
+        #region sampling
+
+        public static LA.Matrix<double> GetSamplingRtBtSpotMeasure(ql.Handle<ql.YieldTermStructure> termStructure, double tr,
+            double tb, double k, double sigma, int numberOfPaths, ulong seed)
+        {
+            LA.Matrix<double> paths = LA.Matrix<double>.Build.Dense(numberOfPaths, 2);
+            
+            var varRt = GetVarianceRt(tr, k, sigma);
+            var varIt = GetVarianceIt(tb, k, sigma);
+            var covRtIt = GetCovarianceRtIt(tr, tb, k, sigma);
+            var driftRt = hjmAdjustment(tr, k, sigma);
+            var driftIt = GetDriftIt(tb, k, sigma);
+            var rho = covRtIt / Math.Sqrt(varIt * varRt);
+            var w1 = rho;
+            var w2 = Math.Sqrt(1.0 - rho * rho);
+            
+            var f0t = termStructure.link.forwardRate(tr, tr, ql.Compounding.Continuous,
+                ql.Frequency.NoFrequency).rate();
+            var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>,
+                    ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(2, seed);
+
+            for (int i = 0; i < numberOfPaths; i++)
+            {
+                var z = rsg.nextSequence().value;
+                
+                // Sampling It we have used Cholesky between r_t  and I_t
+                var noiseI01 = w1 * z[0] + w2 * z[1];
+                var i0Tb = driftIt + noiseI01 * Math.Sqrt(varIt);
+                var dfTb = termStructure.link.discount(tb);
+                var r0Tb = -Math.Log(dfTb);
+                paths[i,1] = Math.Exp(i0Tb + r0Tb);
+                paths[i,0] = driftRt + Math.Sqrt(varRt) * z[0] + f0t;
+            }
+
+            return paths;
+        }
+
 
         #endregion
 
