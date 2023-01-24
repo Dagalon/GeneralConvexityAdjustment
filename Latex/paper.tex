@@ -619,23 +619,20 @@ therefore (\ref{cms_first_order_convexity}) is equal to
 \begin{equation*}
 \mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) \approx  S_{a,b}(0) + \frac{\partial_x S_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \frac{\sigma^{2}(1-\exp(-2kT_a))}{2k}.
 \end{equation*}
-In the next figure, we can see the convexity adjustment for a CMS where the tenor of the underlying swap is 5Y using the last approximation and Montecarlo method with parameters for the Hull-White model $\sigma=0.01$ and $k=0.0007$
+In the next figure, we can see the convexity adjustment for a CMS where the tenor of the underlying swap is 5Y using the last approximation and Montecarlo method with parameters for the Hull-White model $\sigma=0.007$ and $k=0.0007$
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[scale=0.25]{Figures/cms_convexity_order_1.jpg}
+		\includegraphics[scale=0.25]{Figures/cms_convexity_order.jpg}
 		\caption{Convexity Mc Vs Convexity Malliavin}
 	\end{center}
 \end{figure} 
-
-
 \end{example}
 
-\newpage
 
 \section*{Appendix}
 \appendix
-\renewcommand{\thesection}{\Alph{section}.\arabic{section}}
+\renewcommand{\thesection}{\Alph{section}.\arabic{section}} 
 \section{Approximation of $\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right)$}
 \label{expected_forward_measure_malliavin_derivative_x_t}
 From (\ref{short_rate_cheyette}) is easy to show that
@@ -646,7 +643,11 @@ In order to get an approximation for $D_sX_{T_a}$ we must to avoid the recurrenc
 \begin{equation*}
 y_t \approx \int_{0}^{t} \exp\left(-2\int_{u}^{t} k_{u^{\prime}} du^{\prime} \right) \eta^{2}(u,x_0,y_0) du
 \end{equation*}
-Therefore, if we define $\bar{y}(t)= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0)$, we have that
+Therefore, if we define 
+\begin{equation}\label{y_t_approximation}
+\bar{y}(t)= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0), 
+\end{equation}
+we have that
 \begin{equation}\label{approximation_x_t_a}
 X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0(T_a)  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
 \end{equation}
@@ -670,15 +671,15 @@ where
 \end{align*}
 With $\beta(u,T_a,x,y) = \exp\left(-\int_{u}^{T_a}k_u du\right) \partial_x \eta(u,x,y)$. Therefore, if we use the last equalities, we get the next approximation of $\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right)$
 
-\begin{equation}\label{approsimation_E_s_x_t}
+\begin{equation}\label{approximation_E_s_x_t}
 \mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{T_a}k_u du \right) \exp\left(-\int_{s}^{T_a} \exp\left(-\int_{u}^{T_a}k_u du\right)\partial_x (\bar{\nu}(u,T_a) \bar{\nu}(u,T_p)) du \right).
 \end{equation}
 
 \section{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s x_{T_a}\right)$}
 Following the same procedure as before, we have that
-\begin{equation*}
-X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
-\end{equation*}
+\begin{equation}\label{approximation_x_t_a}
+X_{T_a} \approx \bar{X}_{T_a}:= \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+\end{equation}
 and therefore (see (\ref{approsimation_E_s_x_t}))
 \begin{equation}
 D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{T_a})\bar{M}(s,T_a)
@@ -706,8 +707,8 @@ From (\ref{annuity_spot_dynamic}) and using the Girsanov's theorem that
 dW^{01}_t = dW^{\mathbb{Q}}_t - \sigma_{01}(t,T_a,T_b)dt. 
 \end{equation*}
 We will use the last equation to get an approximation of the mean and order two moment of $x_t$. We can do the next approximaition of  (\ref{annuity_vol})
-\begin{equation}
-\sigma_{01}(t,T_a,T_b) \approx \sum_{i=a+1}^{b} w_i \nu(t,T_i)
+\begin{equation}\label{approximation_o1_vol}
+\sigma_{01}(t,T_a,T_b) \approx \bar{\sigma}_{0,1}(t,T_a,T_b):= \sum_{i=a+1}^{b} w_i \nu(t,T_i)
 \end{equation}
 with $w_i=\frac{\delta_{i-1,i} P(0,T_i)}{01(0,T_a,T_b)}$. Now, if we use (\ref{short_rate_cheyette}) and the last approximation we have that
 \begin{align}
@@ -722,6 +723,43 @@ Therefore, we have that
 \end{align}
 
 \section{Approximation of $\mathbb{E}^{01}\left(D_s x_{T_a} \right)$}
+Let us to remember that $\nu(t,T_i)=h(t,x_t,y_t) \frac{G(t,T_i)}{\beta_{t,k}}$ with  $\beta_{t,k} = \exp\left(\int_{0}^{t}k(u)\right)$. Then, we can do the next approximation 
+$$
+\nu(t,T_i) \approx \nu(t,T_i, \bar{x}_t, \bar{y}_t),
+$$ 
+therefore 
+\begin{equation*}
+D_s \nu(t,T_i) \approx  \partial_x \nu(t,T_i, \bar{x}_t, \bar{y}_t) D_s \bar{x}_t  \frac{G(t,T_i)}{\beta_{t,k}}
+\end{equation*}
+A cosequence of the last approximation is that 
+\begin{equation}
+D_s \sigma_{0,1}(t,T_a,T_b) \approx  D_s \bar{x}_t \mu(t,T_a,T_b)
+\end{equation}
+Where 
+$$
+\mu(t,T_a,T_b) =  \sum_{i=a+1}^{b} w_i \partial_x \nu(t,T_i, \bar{x}_t, \bar{y}_t) \frac{G(t,T_i)}{\beta_{t,k}}.
+$$
+
+Now, if we use the last approximation and (\ref{approximation_o1_vol}) in (\ref{approximation_x_t_a}) together with the Girsanov's theorem, we have that
+\begin{align*}
+\bar{x}_{T_a} &\approx  \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{\sigma}_{01}(u,T_a,T_b) du \nonumber \\\
+&+  \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}^{01}}
+\end{align*}
+Therefore
+\begin{equation*}
+D_s \bar{x}_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{T_a})\bar{M}^{01}(s,T_a)
+\end{equation*}
+where
+\begin{align*}
+\bar{M}^{01}(s,T_a) &= \exp\left(-\int_{s}^{T_a} \left(\frac{\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2}}{2} + \exp\left(-\int_{u}^{T_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,T_a,T_b) du \right)\right) \\
+&\cdot\exp\left(\int_{s}^{T_a} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) dW^{\mathbb{Q}^{01}}_u \right)
+\end{align*}
+with $\beta(u,T_a,x,y) = \exp\left(-\int_{u}^{T_a}k_u du\right) \partial_x \eta(u,x,y)$. Then
+
+\begin{equation}\label{approximation_E_01_s_x_t}
+\mathbb{E}^{01}_s\left(D_s x_{T_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{T_a}k_u du \right) \exp\left(-\int_{s}^{T_a} \exp\left(\int_{u}^{T_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,T_a,T_b) du \right).
+\end{equation}
+
 
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04

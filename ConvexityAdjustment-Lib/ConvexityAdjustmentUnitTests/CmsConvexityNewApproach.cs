@@ -15,7 +15,7 @@ namespace ConvexityAdjusmentUnitTests
 
             // Hull-White parameters
             double k = 0.0007;
-            double sigma = 0.01;
+            double sigma = 0.007;
 
             // Curves
             double discountFlatRate = 0.015;
@@ -35,8 +35,8 @@ namespace ConvexityAdjusmentUnitTests
             var tenorSwap = new ql.Period(5, ql.TimeUnit.Years);
 
             // Convexity test
-            var periodToCompute = new ql.Period(10, ql.TimeUnit.Years);
-            int numberOfTimes = 1;
+            var periodToCompute = new ql.Period(6, ql.TimeUnit.Months);
+            int numberOfTimes = 60;
 
             List<ql.Date> datesToCompute = new List<ql.Date> {calendar.advance(startDate, periodToCompute)};
             List<double> deltaTimes = new List<double> {dc.yearFraction(startDate, datesToCompute[0])};
@@ -172,10 +172,10 @@ namespace ConvexityAdjusmentUnitTests
                 var X0Root = ConvexityAdjustment_Lib.HullWhite.GetX0(model, startDate, swap.floatingSchedule(),
                     discountCurve.link.dayCounter(), swap.fixedDayCount(), swapRates[j]);
 
-                var annuityTa = model.GetAnnuity(datesToCompute[j], datesToCompute[j], X0Root + f0ts[j], swap.fixedSchedule(),
+                var annuityTa = model.GetAnnuity(startDate, datesToCompute[j], X0Root + f0ts[j], swap.fixedSchedule(),
                     discountCurve.link.dayCounter(), swap.fixedDayCount());
                 
-                var annuityT0 = model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], swap.fixedSchedule(),
+                var annuityT0 = model.GetAnnuity(startDate, startDate, f0ts[j], swap.fixedSchedule(),
                     discountCurve.link.dayCounter(), swap.fixedDayCount());
 
                 rateCmsMc[datesToCompute[j].serialNumber()] = 0.0;
@@ -244,6 +244,7 @@ namespace ConvexityAdjusmentUnitTests
                     tP,
                     ratioSwaps[j],
                     annuityT0.Item1,
+                    annuityT0.Item2,
                     annuityTa.Item1,
                     annuityTa.Item2,
                     annuityTa.Item3,
