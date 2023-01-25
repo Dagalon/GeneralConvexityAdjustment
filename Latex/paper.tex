@@ -310,49 +310,43 @@ is the Clark-Ocone representation formula.
  
 
 \section{Convexity Adjustment}\label{sec:CA}
-In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula for the convexity adjustment. In order to introduce a general idea of the method. Let define a $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$ and that we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure such that $\frac{d\mathbb{Q}_2}{d\mathbb{Q}_1} = \lambda_t$. 
-
-
-
-
-Since the convexity adjustment is derived for the Cheyette model, it can be applied to all included models, such as the Hull-White model.
+In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula . In order to introduce a general idea of the method. Let define a $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$ and that we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
+\begin{equation*}
+f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left(f(x_t)\right) + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) dW^{\mathbb{Q}_1}_s
+\end{equation*}
+Now, if we take $\mathbb{E}^{\mathbb{Q}_2}\left( \cdot \right)$ in the previous expression and we use the Girsanov's theorem, we get that
+\begin{equation}\label{general_convexity}
+\mathbb{E}^{\mathbb{Q}_2}\left( f(x_t) \right) = f(x_0) + \mathbb{E}^{\mathbb{Q}_1} \left(\int_{0}^{t}  \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) \lambda_s ds \right). 
+\end{equation}
+The second term, is the convexity adjustment to due to change of measure from $\mathbb{Q}_1$ to $\mathbb{Q}_2$. The differents choice of $f$, $\mathbb{Q}_1$ and $\mathbb{Q}_2$ will allow us to get an approximation of the convexity adjustment for the different case of interest.
 
 \subsection{FRAs Vs futures}
 The cash flows in FRAs and futures are computed under different measures. Consequently, we need to adjust the futures price quote to transform them into FRAs price quotes. As usual, we will define the forward rate at time $t_0$ between $t_1$ and $t_2$ under the forward curve $E$ as:
 \begin{equation}\label{forward_rate}
 L_{E}(t_0, t_1, t_2) = \frac{\left(\frac{P_{E}(t_0,t_1)}{P_{E}(t_0,t_2)} - 1 \right)}{\delta_{t_1,t_2}}
 \end{equation} 
-where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. Observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the conditional future rate as:  
+where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. Observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the future rate as:  
 \begin{equation}\label{future}
 \hat{L}_{E}(t,t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right), 
 \end{equation}
 where $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. Using
-\eqref{forward_rate} and \eqref{future}, we can express the convexity adjustment definition as:%From \eqref{forward_rate} and \eqref{future}, we will define the convexity adjustment as
+\eqref{forward_rate} and \eqref{future}, then the convexity adjustment definition is:%From \eqref{forward_rate} and \eqref{future}, we will define the convexity adjustment as
 \begin{equation*}
 CA(t, t_0, t_1, t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left(L_{E}(t_0, t_1, t_2) \right).
-\end{equation*}
-We use the Clark-Ocone formula with a view to obtaining a general representation formula of the convexity adjustment for futures. Applying \eqref{clark-okone} to 
-$L_{E}(t_0,t_1,t_2)$, we obtain
-\begin{equation}
-L_{E}(t_0,t_1,t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) + \int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s.
-\end{equation} 
-Therefore, if we apply $\mathbb{E}^{\mathbb{Q}^{t2}}(\cdot)$ in the last equation, then we get
-\begin{equation*}
-CA(t, t_0, t_1, t_2) = - \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s \right).
 \end{equation*}
 From (\ref{ois_forward_rate_curve}) and since $f_{ois}(t,T)$ is a $\mathbb{Q}^{T}$ martingale, we have that
 \begin{equation*}
 dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,t_2) dt. 
-\end{equation*}
-Therefore, if we apply Girsanov's theorem to switch to measure $\mathbb{Q}^{t_2}$, we get that
+\end{equation*} 
+Now, if we use (\ref{general_convexity}) with $f(x_t)=L_{E}(t,t_0, t_1, t_2)$, $\mathbb{Q}_1=\mathbb{Q}$, $\mathbb{Q}_1=\mathbb{Q}^{t_2}$ and $\lambda_t = \nu(t,t_2)$,  we get that
 \begin{equation}\label{ca_general_future}
 CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) \nu(s,t_2) ds \right)
 \end{equation}
-where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Now, from the definition of $L_{E}(t,T)$ we have that
+where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Now, from the definition of $L_{E}(t,T)$. Now, if we calculate the malliavin derive of $L_{E}(t_0,t_1,t_2)$ we have that
 \begin{equation*}
 D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)} D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right). 
 \end{equation*}
-If we use the representation formula (\ref{bond_ois}) we get that
+Now from the zero coupon representation formula (\ref{bond_ois}) we get that
 \begin{equation*}
 D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) = \frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}
 \end{equation*}
