@@ -581,45 +581,60 @@ S_{a,b}(t) = \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{
 \end{equation*}
 where
 \begin{align*}
-01(t,T_a,T_b) = \sum_{j=1}^{n_f} \delta_{t^{f}_{i-1}, t^{f}_i} P_{ois}(t,t^{f}_{j}) \\
-T_a=T^{E}_0 < T^{E}_i< \cdots < T^{E}_{n_E}=T_b \quad i=0,\cdots,n_E&  \\
-T_a=T^{f}_0 < T^{f}_j< \cdots < T^{f}_{n_f}=T_b \quad j=0,\cdots,n_f&
+01(t,t_a,t_b) = \sum_{j=1}^{n_f} \delta_{t^{f}_{i-1}, t^{f}_i} P_{ois}(t,t^{f}_{j}) \\
+t_a=t^{E}_0 < t^{E}_i< \cdots < t^{E}_{n_E}=t_b \quad i=0,\cdots,n_E&  \\
+t_a=t^{f}_0 < t^{f}_j< \cdots < t^{f}_{n_f}=t_b \quad j=0,\cdots,n_f&
 \end{align*}
 The same way, we will define the OIS swap rate as
 \begin{equation*}
-S^{ois}_{a,b}(t) = \frac{P_{ois}(t,T^{E}_a) - P_{ois}(t,T^{E}_b)}{01(t,T_a,T_b)}. 
+S^{ois}_{a,b}(t) = \frac{P_{ois}(t,T^{E}_a) - P_{ois}(t,T^{E}_b)}{01(t,t_a,t_b)}. 
 \end{equation*}
-Now, we suppose that we have a flow in $T_a < T_p < T_b$ with value $S_{a,b}(T_a)$. We know that, $S_{a,b}(T_a)$ is a martingale under the measure $\mathbb{Q}^{01}$, but not under the measure $\mathbb{Q}^{T_p}$. Therefore, we we have to take into consideration the effect to compute the expected value of $S_{a,b}(T_a)$ in a measure which is not its natural measure. Then, the convexity adjustment for a CMS is
+
+\begin{remark}
+We must note that from (\ref{bond_forward})we have that
+\begin{equation*}
+S_{a,b}(t) = S^{ois}_{a,b}(t) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})} {01(t,t_a,t_b)}
+\end{equation*}
+where $ \alpha(t,t^{E}_{i-1}, t^{E}_{i})  = \frac{\frac{H(t,t^{E}_{i-1})}{H(t,t^{E}_{i})} - 1}{\delta_{t^{E}_{i-1}, t^{E}_i}}$. How we have a one-factor HJM model, we can suppose that variability of $\alpha(t,t^{E}_{i-1}, t^{E}_{i})$ is low, and therefore it is reasonable to freeze it at time $t=0$. Of this way, we have that
+\begin{equation}\label{approximation_basis_swap}
+S_{a,b}(t) \approx S^{ois}_{a,b}(t) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
+\end{equation}
+
+\end{remark}
+
+Now, we suppose that we have a flow in $t_a < t_p < t_b$ with value $S_{a,b}(t_a)$. We know that, $S_{a,b}(t_a)$ is a martingale under the measure $\mathbb{Q}^{01}$, but not under the measure $\mathbb{Q}^{t_p}$. Therefore, we we have to take into consideration the effect to compute the expected value of $S_{a,b}(t_a)$ in a measure which is not its natural measure. Then, the convexity adjustment for a CMS is
 \begin{equation}
-CA_{CMS}(T_p) = \mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) - S_{a,b}(0).
+CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) - S_{a,b}(0).
 \end{equation} 
 After some changes of measure, it is easy to show that
 \begin{align}\label{expected_t_p_cms}
 \mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) &= \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S_{a,b}(T_a) M(T_a,T_p)\right) \nonumber \\
-&= \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S_{a,b}(T_a) \mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right) \right)
+&= \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S_{a,b}(T_a) \mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right) \right) \nonumber\\
+\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) &\approx  \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S^{ois}_{a,b}(T_a) \mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right) \right) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}
 \end{align}
-where $M(t,T_p)= \frac{P_{ois}(t,T_p)}{01(t,T_a,T_p)}$. It is common practice to assume that $M(T_a,T_p)$ is a funtion of the swap rate $S_{a,b}(T_a)$ i.e   $M(T_a,T_p)=f(S_{a,b}(T_a))$. The function $f(\cdot)$ is known as mapping function, and there is a vast literatura about how to choose it (see Piterbarg Volumen III, Hagan paper convexity withour replication). We will, try to do an approach, without to specify any mapping function.
-
-
-where $M(t,T_p)= \frac{P_{ois}(t,T_p)}{01(t,T_a,T_p)}$. Now, if we apply Clark-Ocone formula to $M(T_a,T_p)$ we get that
+with $M(t,T_p)= \frac{P_{ois}(t,T_p)}{01(t,T_a,T_p)}$. From te previous expression, we must note that under assumption of not stochastic basis, we must to compute the convexity adjustment for the OIS swap rate. Another, complicated point, is the expected value 
+$$
+\mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right).
+$$
+In order to reduce this complexity, it is a common practice to assume that $M(T_a,T_p)$ is a funtion of the swap rate $S_{a,b}(T_a)$ i.e   $M(T_a,T_p)=f(S_{a,b}(T_a))$, of this way the last expected value is trivial. The function $f(\cdot)$ is known as mapping function, and there is a vast literatura about how to choose it (see Piterbarg Volumen III, Hagan paper convexity withour replication). We will, try to do an approach, without to specify any mapping function. If we apply Clark-Ocone formula to $M(T_a,T_p)$ we get that
 \begin{equation} \label{clark_ocone_swap_m}
 M(T_a,T_p) = M(0,T_p)+ \int_{0}^{T_a} \mathbb{E}_s^{01}\left(D_s M(T_a,T_p)\right) dW^{01}_s
 \end{equation}
 Then, if we sustitute the last expressions in (\ref{expected_t_p_cms}) we have that
 \begin{align}\label{cms_first_order_convexity}
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) =& S_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left( S_a,b(T_a) \int_{0}^{T_a} \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) dW^{0,1}_s   \right) \nonumber \\
-=&  S_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(\int_{0}^{T_a} D_s X_{T_a} \partial_x S_{a,b}(T_a) \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) ds   \right) \nonumber \\
-\approx&  S_{a,b}(0) + \frac{\partial_x S_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \mathbb{E}^{0,1}\left( \int_{0}^{T_a} \left(\mathbb{E}_s^{0,1}\left( D_s x_{T_a}\right)\right)^{2} ds  \right)
+\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left( S^{ois}_a,b(T_a) \int_{0}^{T_a} \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) dW^{0,1}_s   \right) \nonumber \\
+=&  S^{ois}_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(\int_{0}^{T_a} D_s X_{T_a} \partial_x S_{a,b}(T_a) \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) ds   \right) \nonumber \\
+\approx&  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \mathbb{E}^{0,1}\left( \int_{0}^{T_a} \left(\mathbb{E}_s^{0,1}\left( D_s x_{T_a}\right)\right)^{2} ds  \right)
 \end{align}
 
 \begin{example}
-In order to check the accuracy of the last approximation, we will compute with Monte Carlo method the exact value of $\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right)$ under spot measure $\mathbb{Q}$ i.e we will compute  $\frac{1}{P(0,T_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(T_a)}{\beta_{T_a}} \right)$. In the case of a Hull-White model, we have that
+In order to check the accuracy of the last approximation, we will compute with Monte Carlo method the exact value of $\mathbb{E}^{T_p}\left(S^{ois}_{a,b}(T_a)\right)$ under spot measure $\mathbb{Q}$ i.e we will compute  $\frac{1}{P(0,T_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(T_a)}{\beta_{T_a}} \right)$. In the case of a Hull-White model, we have that
 $$
 D_s x_{T_a} = \sigma \exp(-(T_a - s))
 $$
 therefore (\ref{cms_first_order_convexity}) is equal to
 \begin{equation*}
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) \approx  S_{a,b}(0) + \frac{\partial_x S_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \frac{\sigma^{2}(1-\exp(-2kT_a))}{2k}.
+\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) \approx  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \frac{\sigma^{2}(1-\exp(-2kT_a))}{2k}.
 \end{equation*}
 In the next figure, we can see the convexity adjustment for a CMS where the tenor of the underlying swap is 5Y using the last approximation and Montecarlo method with parameters for the Hull-White model $\sigma=0.01$ and $k=0.0007$
 
@@ -677,15 +692,15 @@ With $\beta(u,T_a,x,y) = \exp\left(-\int_{u}^{T_a}k_u^{\prime} du^{\prime}\right
 \section{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s x_{T_a}\right)$}
 Following the same procedure as before, we have that
 \begin{equation*}
-X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0(T_a)  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
 \end{equation*}
 and therefore (see (\ref{approsimation_E_s_x_t}))
 \begin{equation}
-D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{T_a})\bar{M}(s,T_a)
+D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0(T_a),\bar{y}_{T_a})\bar{M}(s,T_a)
 \end{equation}
 Now, if we take $\mathbb{E}^{\mathbb{Q}}\left(\cdot\right)$ we get
 \begin{equation}\label{approximation_spot_E_s_x_t}
-\mathbb{E}^{\mathbb{Q}}_s\left(D_sX_{T_a} \right) \approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{T_a})
+\mathbb{E}^{\mathbb{Q}}_s\left(D_sX_{T_a} \right) \approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0(T_a),\bar{y}_{T_a})
 \end{equation} 
 
 \section{Approximation of $\mathbb{E}^{01}\left(x_t\right)$}
