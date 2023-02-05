@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using ConvexityAdjustment_Lib.HullWhite;
+using NUnit.Framework;
 using ql = QLNet;
 
 namespace ConvexityAdjusmentUnitTests
@@ -169,7 +170,7 @@ namespace ConvexityAdjusmentUnitTests
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward)
                     .value();
 
-                var X0Root = ConvexityAdjustment_Lib.HullWhite.GetX0(model, startDate, swap.floatingSchedule(),
+                var X0Root = HullWhite.getX0(model, startDate, swap.floatingSchedule(),
                     discountCurve.link.dayCounter(), swap.fixedDayCount(), swapRates[j]);
 
                 var annuityTa = model.GetAnnuity(startDate, datesToCompute[j], X0Root + f0ts[j], swap.fixedSchedule(),
@@ -190,11 +191,11 @@ namespace ConvexityAdjusmentUnitTests
                 var ratioDf = 1.0 / discountCurve.link.discount(tP);
                 
                 // Moments to simulate
-                var varRt = ConvexityAdjustment_Lib.HullWhite.GetVarianceRt(deltaTimes[j], k, sigma);
-                var varIt = ConvexityAdjustment_Lib.HullWhite.GetVarianceIt(deltaTimes[j], k, sigma);
-                var covRtIt = ConvexityAdjustment_Lib.HullWhite.GetCovarianceRtIt(deltaTimes[j], deltaTimes[j], k, sigma);
-                var driftRt = ConvexityAdjustment_Lib.HullWhite.hjmAdjustment(deltaTimes[j], k, sigma);
-                var driftIt = ConvexityAdjustment_Lib.HullWhite.GetDriftIt(deltaTimes[j], k, sigma);
+                var varRt = HullWhite.getVarianceRt(deltaTimes[j], k, sigma);
+                var varIt = HullWhite.getVarianceIt(deltaTimes[j], k, sigma);
+                var covRtIt = HullWhite.getCovarianceRtIt(deltaTimes[j], deltaTimes[j], k, sigma);
+                var driftRt = HullWhite.hjmAdjustment(deltaTimes[j], k, sigma);
+                var driftIt = HullWhite.getDriftIt(deltaTimes[j], k, sigma);
                 var rho = covRtIt / Math.Sqrt(varIt * varRt);
                 var w1 = rho;
                 var w2 = Math.Sqrt(1.0 - rho * rho);
@@ -237,20 +238,19 @@ namespace ConvexityAdjusmentUnitTests
                     // meanNoise += noiseI01 / numberOfSimulations;
                 }
 
-                double ca = ConvexityAdjustment_Lib.HullWhite.ConvexityCmsNewApproach(model,
+                double ca = HullWhite.convexityCmsNewApproach(model,
                     startDate,
                     datesToCompute[j],
                     swap.maturityDate(),
                     tP,
                     ratioSwaps[j],
                     annuityT0.Item1,
-                    annuityT0.Item2,
                     annuityTa.Item1,
                     annuityTa.Item2,
                     annuityTa.Item3,
                     dc,
                     X0Root + f0ts[j]);
-
+                
                 convexityAdjustmentAnalytic.Add(ca);
             }
 

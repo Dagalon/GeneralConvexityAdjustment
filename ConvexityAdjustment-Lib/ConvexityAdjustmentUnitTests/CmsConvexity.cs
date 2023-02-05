@@ -1,3 +1,4 @@
+using ConvexityAdjustment_Lib.HullWhite;
 using NUnit.Framework;
 using ql = QLNet;
 
@@ -40,16 +41,16 @@ namespace ConvexityAdjusmentUnitTests
             List<ql.Date> datesToCompute = new List<ql.Date>{calendar.advance(startDate, periodToCompute)};
             List<double> deltaTimes = new List<double>{dc.yearFraction(startDate, datesToCompute[0])};
             List<double> f0ts = new List<double>{discountCurve.link.forwardRate(deltaTimes[0], deltaTimes[0], ql.Compounding.Simple, ql.Frequency.NoFrequency).rate()};
-            List<double> hjmAdjustment = new List<double>{ConvexityAdjustment_Lib.HullWhite.hjmAdjustment(deltaTimes[0], k, sigma)};
-            var drift = new List<double>{ConvexityAdjustment_Lib.HullWhite.forwardMeasureAdjustment(deltaTimes[0], k, sigma)};
+            List<double> hjmAdjustment = new List<double>{HullWhite.hjmAdjustment(deltaTimes[0], k, sigma)};
+            var drift = new List<double>{HullWhite.forwardMeasureAdjustment(deltaTimes[0], k, sigma)};
             
             for (int i = 1; i < numberOftimes; i++)
             {
                 datesToCompute.Add(calendar.advance(datesToCompute[i-1], periodToCompute));
                 deltaTimes.Add(dc.yearFraction(startDate, datesToCompute[i]));
                 f0ts.Add(discountCurve.link.forwardRate(deltaTimes[i], deltaTimes[i], ql.Compounding.Simple, ql.Frequency.NoFrequency).rate());
-                hjmAdjustment.Add(ConvexityAdjustment_Lib.HullWhite.hjmAdjustment(deltaTimes[i], k, sigma));
-                drift.Add(ConvexityAdjustment_Lib.HullWhite.forwardMeasureAdjustment(deltaTimes[i], k, sigma));
+                hjmAdjustment.Add(HullWhite.hjmAdjustment(deltaTimes[i], k, sigma));
+                drift.Add(HullWhite.forwardMeasureAdjustment(deltaTimes[i], k, sigma));
             }
             
             // MC
@@ -195,7 +196,7 @@ namespace ConvexityAdjusmentUnitTests
                 var errorRi = rtaMc * discountCurve.link.discount(datesToCompute[j]) -  swapRates[j];
                 
                 // Analytic convexity adjustment
-                double ca = ConvexityAdjustment_Lib.HullWhite.convexityCms(discountCurve, startDate, datesToCompute[j],
+                double ca = HullWhite.convexityCms(discountCurve, startDate, datesToCompute[j],
                     swap.maturityDate(), tP, annuity[j].Item1, annuity[j].Item2, partialVanillaSwap[j], 
                     partialOisSwapTa[j], partialOisSwapT0[j], dc, k, sigma);
                 

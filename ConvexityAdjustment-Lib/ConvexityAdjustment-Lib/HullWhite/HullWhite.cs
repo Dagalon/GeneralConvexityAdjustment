@@ -1,10 +1,9 @@
 ﻿using ql = QLNet;
 using LA = MathNet.Numerics.LinearAlgebra;    
 
-namespace ConvexityAdjustment_Lib
+namespace ConvexityAdjustment_Lib.HullWhite
 {
-    // ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule, 
-    // ql.DayCounter dcCurve, ql.DayCounter dcSwap, double x
+   
     public class FSolverX0HullWHite: ql.ISolver1d
     {
         #region attributes
@@ -33,21 +32,19 @@ namespace ConvexityAdjustment_Lib
         public override double value(double v)
         {
             double deltaTime = _dcCurve.yearFraction(_valueDate, _schedule.dates()[0]);
-            double f0t = _model.termStructure().link.forwardRate(deltaTime, deltaTime, ql.Compounding.Continuous,
+            double f0T = _model.termStructure().link.forwardRate(deltaTime, deltaTime, ql.Compounding.Continuous,
                 ql.Frequency.NoFrequency, true).rate();
-            var annuity = _model.GetAnnuity(_schedule.dates()[0], _schedule.dates()[0], v + f0t, _schedule, _dcCurve, _dcSwap);
+            var annuity = _model.GetAnnuity(_schedule.dates()[0], _schedule.dates()[0], v + f0T, _schedule, _dcCurve, _dcSwap);
             
             // times
             var dta = _dcCurve.yearFraction(_valueDate, _schedule.dates()[0]);
             var dtb = _dcCurve.yearFraction(_valueDate, _schedule.dates()[_schedule.Count - 1]);
 
-            var dfTaTb = _model.discountBond(dta, dtb, v + f0t);
+            var dfTaTb = _model.discountBond(dta, dtb, v + f0T);
             return (1.0 - dfTaTb) / annuity.Item1 - _swapRate;
            
         }
     }
-
-
 
     public static class HullWhite
     {
@@ -127,9 +124,9 @@ namespace ConvexityAdjustment_Lib
             double i2 = m * (b2 + Math.Exp(-2.0 * k * t2) * delta12 - 2.0 * beta(t1+t2, 2.0*t2, k));
 
             var r01 = convexityOis(curve, k, sigma, t1, t2);
-            var logR01 = Math.Log(1.0 + delta12 * r01) / delta12;
+            // var logR01 = Math.Log(1.0 + delta12 * r01) / delta12;
             
-            return logR01 - (i1 + i2);
+            return r01 + (i1 + i2);
         }
 
         public static double convexityCms(ql.Handle<ql.YieldTermStructure> discountCurve,  ql.Date valueDate, ql.Date ta, ql.Date tb, ql.Date tp, double annuity,
@@ -147,7 +144,7 @@ namespace ConvexityAdjustment_Lib
 
         }
 
-        public static double ConvexityCmsNewApproach(ql.HullWhite model,
+        public static double convexityCmsNewApproach(ql.HullWhite model,
             ql.Date valueDate,
             ql.Date ta,
             ql.Date tb,
@@ -214,11 +211,11 @@ namespace ConvexityAdjustment_Lib
         
         #region Process tools
 
-        public static double LiborVariance(double t, double t1, double t2, double sigma, double k)
+        public static double liborVariance(double t, double t1, double t2, double sigma, double k)
         {
-            double gamma1 = GetGammaVariance(t1, t2, t2, k, k);
-            double gamma2 = GetGammaVariance(t1, t1, t1, k, k);
-            double gamma12 = GetGammaVariance(t1, t1, t2, k, k);
+            double gamma1 = getGammaVariance(t1, t2, t2, k, k);
+            double gamma2 = getGammaVariance(t1, t1, t1, k, k);
+            double gamma12 = getGammaVariance(t1, t1, t2, k, k);
 
             return sigma * sigma * (gamma1 + gamma2 - 2.0 * gamma12);
         }
@@ -226,7 +223,7 @@ namespace ConvexityAdjustment_Lib
         #endregion
 
         #region Tools
-        public static double GetX0(ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule, 
+        public static double getX0(ql.HullWhite model, ql.Date valueDate, ql.Schedule schedule, 
             ql.DayCounter dcCurve, ql.DayCounter dcSwap, double swapRate)
         {
 
@@ -244,7 +241,7 @@ namespace ConvexityAdjustment_Lib
 
         }
 
-        public static double GetGammaVariance(double t, double t1, double t2, double k1, double k2)
+        public static double getGammaVariance(double t, double t1, double t2, double k1, double k2)
         {
             double m = 1.0 / (k1 * k2);
             double part1 = t - beta(t1 - t, t1, k1) - beta(t2 - t, t2, k2);
@@ -276,7 +273,7 @@ namespace ConvexityAdjustment_Lib
             return i1 + i2;
         }
 
-        public static double GetVarianceIt(double t, double k, double sigma)
+        public static double getVarianceIt(double t, double k, double sigma)
         {
             double m = Math.Pow(sigma / k, 2.0);
             return m * (beta(0, t, 2.0 * k) + Math.Exp(-2.0 * k * t) * t -
@@ -306,63 +303,23 @@ namespace ConvexityAdjustment_Lib
             return (sigma * sigma / k) * (dtP * Math.Exp(-k * dtP) - beta(dtP, 2.0 * dtP, k));
         }
 
-        public static double GetDriftIt(double t, double k, double sigma)
+        public static double getDriftIt(double t, double k, double sigma)
         {
             var m = 0.5 * Math.Pow(sigma / k, 2.0);
             return m * (t + beta(t, 2.0 * t, k) - beta(0.0, t, k)- beta(0.0, t, 2.0 * k));
         }
 
-        public static double GetCovarianceRtIt(double t1, double t2, double k, double sigma)
+        public static double getCovarianceRtIt(double t1, double t2, double k, double sigma)
         {
             // cov between xt1 and It2
             var m = sigma * sigma / k;
             return m * (beta(0.0, t1, k) - 0.5 * beta(t2 - t1, t2 + t1, k));
         }
 
-        public static double GetVarianceRt(double t, double k, double sigma)
+        public static double getVarianceRt(double t, double k, double sigma)
         {
             return sigma * sigma * beta(0.0, t, 2.0 * k);
         }
-
-        #endregion
-        
-        #region sampling
-
-        public static LA.Matrix<double> GetSamplingRtBtSpotMeasure(ql.Handle<ql.YieldTermStructure> termStructure, double tr,
-            double tb, double k, double sigma, int numberOfPaths, ulong seed)
-        {
-            LA.Matrix<double> paths = LA.Matrix<double>.Build.Dense(numberOfPaths, 2);
-            
-            var varRt = GetVarianceRt(tr, k, sigma);
-            var varIt = GetVarianceIt(tb, k, sigma);
-            var covRtIt = GetCovarianceRtIt(tr, tb, k, sigma);
-            var driftRt = hjmAdjustment(tr, k, sigma);
-            var driftIt = GetDriftIt(tb, k, sigma);
-            var rho = covRtIt / Math.Sqrt(varIt * varRt);
-            var w1 = rho;
-            var w2 = Math.Sqrt(1.0 - rho * rho);
-            
-            var f0t = termStructure.link.forwardRate(tr, tr, ql.Compounding.Continuous,
-                ql.Frequency.NoFrequency).rate();
-            var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>,
-                    ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(2, seed);
-
-            for (int i = 0; i < numberOfPaths; i++)
-            {
-                var z = rsg.nextSequence().value;
-                
-                // Sampling It we have used Cholesky between r_t  and I_t
-                var noiseI01 = w1 * z[0] + w2 * z[1];
-                var i0Tb = driftIt + noiseI01 * Math.Sqrt(varIt);
-                var dfTb = termStructure.link.discount(tb);
-                var r0Tb = -Math.Log(dfTb);
-                paths[i,1] = Math.Exp(i0Tb + r0Tb);
-                paths[i,0] = driftRt + Math.Sqrt(varRt) * z[0] + f0t;
-            }
-
-            return paths;
-        }
-
 
         #endregion
 

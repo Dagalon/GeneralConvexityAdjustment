@@ -141,7 +141,7 @@
 \author[1,2]{David Garcia-Lorite\thanks{Corresponding author, \email{dddd@caixabank.es}}}
 \author[3]{Ra\'{u}l Merino}
 
-\affil[1]{CaixaBank,....}
+\affil[1]{CaixaBank, Quantitative Analyst Team, Plaza de Castilla, 3, 28046 Madrid, Spain}
 \affil[2]{Facultat de Matem\`{a}tiques i Inform\`{a}tica, Universitat de Barcelona, \authorcr Gran Via 585, 08007 Barcelona, Spain,\vspace*{3pt}}
 \affil[3]{VidaCaixa S.A., Market Risk Management Unit, \authorcr C/Juan Gris, 2-8, 08014 Barcelona, Spain.}
 
@@ -575,9 +575,9 @@ We have checked the last approximation using MC method to compute the value of a
 \end{example}
 
 \subsection{CMSs}
-In this last section we will study convexity adjustment for a CMS. Let us to introduce some notation, we will use it throughout the section. We will define the swap rate from $T_a$ to $T_b$ at time $t$
+In this last section we will study convexity adjustment for a CMS. Let us to introduce some notation, we will use it throughout the section. We will define the swap rate from $t_a$ to $T_b$ at time $t$
 \begin{equation*}
-S_{a,b}(t) = \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,T_a,T_b)}
+S_{a,b}(t) = \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,t_a,T_b)}
 \end{equation*}
 where
 \begin{align*}
@@ -608,33 +608,37 @@ CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) - S_{a,b}(0).
 \end{equation} 
 After some changes of measure, it is easy to show that
 \begin{align}\label{expected_t_p_cms}
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) &= \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S_{a,b}(T_a) M(T_a,T_p)\right) \nonumber \\
-&= \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S_{a,b}(T_a) \mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right) \right) \nonumber\\
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) &\approx  \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(S^{ois}_{a,b}(T_a) \mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right) \right) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S_{a,b}(t_a) M(t_a,t_p)\right) \nonumber \\
+&= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S_{a,b}(t_a) \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right) \right) \nonumber\\
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S^{ois}_{a,b}(t_a) \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right) \right) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}
 \end{align}
-with $M(t,T_p)= \frac{P_{ois}(t,T_p)}{01(t,T_a,T_p)}$. From te previous expression, we must note that under assumption of not stochastic basis, we must to compute the convexity adjustment for the OIS swap rate. Another, complicated point, is the expected value 
+with $M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}$. From te previous expression, we must note that under assumption of not stochastic basis, we must to compute the convexity adjustment for the OIS swap rate. Another, complicated point, is the expected value 
 $$
-\mathbb{E}^{01}\left( M(T_a,T_p)|S_{a,b}(T_a)\right).
+\mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right).
 $$
-In order to reduce this complexity, it is a common practice to assume that $M(T_a,T_p)$ is a funtion of the swap rate $S_{a,b}(T_a)$ i.e   $M(T_a,T_p)=f(S_{a,b}(T_a))$, of this way the last expected value is trivial. The function $f(\cdot)$ is known as mapping function, and there is a vast literatura about how to choose it (see Piterbarg Volumen III, Hagan paper convexity withour replication). We will, try to do an approach, without to specify any mapping function. If we apply Clark-Ocone formula to $M(T_a,T_p)$ we get that
+In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a funtion of the swap rate $S_{a,b}(t_a)$ i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$, of this way the last expected value is trivial. The function $f(\cdot)$ is known as mapping function, and there is a vast literatura about how to choose it (see Piterbarg Volumen III, Hagan paper convexity withour replication). We will, try to do an approach, without to specify any mapping function. If we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
 \begin{equation} \label{clark_ocone_swap_m}
-M(T_a,T_p) = M(0,T_p)+ \int_{0}^{T_a} \mathbb{E}_s^{01}\left(D_s M(T_a,T_p)\right) dW^{01}_s
+M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\left(D_s M(t_a,t_p)\right) dW^{01}_s
 \end{equation}
 Then, if we sustitute the last expressions in (\ref{expected_t_p_cms}) we have that
 \begin{align}\label{cms_first_order_convexity}
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left( S^{ois}_a,b(T_a) \int_{0}^{T_a} \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) dW^{0,1}_s   \right) \nonumber \\
-=&  S^{ois}_{a,b}(0) + \frac{1}{M(0,T_p)} \mathbb{E}^{01}\left(\int_{0}^{T_a} D_s X_{T_a} \partial_x S_{a,b}(T_a) \mathbb{E}^{0,1}_s\left(D_sX_{T_a}\partial_x M(T_a,T_p)  \right) ds   \right) \nonumber \\
-\approx&  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \mathbb{E}^{0,1}\left( \int_{0}^{T_a} \left(\mathbb{E}_s^{0,1}\left( D_s x_{T_a}\right)\right)^{2} ds  \right)
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left( S^{ois}_a,b(t_a) \int_{0}^{t_a} \mathbb{E}^{0,1}_s\left(D_sX_{t_a}\partial_x M(t_a,t_p)  \right) dW^{0,1}_s   \right) \nonumber \\
+=&  S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(\int_{0}^{t_a} D_s X_{t_a} \partial_x S_{a,b}(t_a) \mathbb{E}^{0,1}_s\left(D_sX_{t_a}\partial_x M(t_a,t_p)  \right) ds   \right) \nonumber \\
+\approx&  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(t_a, \bar{x}_0(t_a),\bar{y}(t_a))\partial_x M(t_a,t_p, \bar{x}_0(t_a),\bar{y}(t_a))}{M(0,t_p)} \mathbb{E}^{0,1}\left( \int_{0}^{t_a} \left(\mathbb{E}_s^{0,1}\left( D_s x_{t_a}\right)\right)^{2} ds  \right)
 \end{align}
 
+\begin{remark}
+We must observe that, if we want to use the last approximation  we must be able to approximate $\mathbb{E}_s^{0,1}\left( D_s x_{t_a}\right)$. The simplest case, if when $\eta(t,x_t,y_t) \eta(t)$ as for example happens in the Hull-White model or Ho-Lee model. The general case, has been treated in (\ref{approximation_under_annuity_measeure_d_s}). 
+\end{remark}
+
 \begin{example}
-In order to check the accuracy of the last approximation, we will compute with Monte Carlo method the exact value of $\mathbb{E}^{T_p}\left(S^{ois}_{a,b}(T_a)\right)$ under spot measure $\mathbb{Q}$ i.e we will compute  $\frac{1}{P(0,T_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(T_a)}{\beta_{T_a}} \right)$. In the case of a Hull-White model, we have that
+In order to check the accuracy of the last approximation, we will compute with Monte Carlo method the exact value of $\mathbb{E}^{t_p}\left(S^{ois}_{a,b}(t_a)\right)$ under spot measure $\mathbb{Q}$ i.e we will compute  $\frac{1}{P(0,t_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(t_a)}{\beta_{t_a}} \right)$. In the case of a Hull-White model, we have that
 $$
-D_s x_{T_a} = \sigma \exp(-(T_a - s))
+D_s x_{t_a} = \sigma \exp(-(t_a - s))
 $$
 therefore (\ref{cms_first_order_convexity}) is equal to
 \begin{equation*}
-\mathbb{E}^{T_p}\left(S_{a,b}(T_a)\right) \approx  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(T_a, \bar{x}_0(T_a),\bar{y}(T_a))\partial_x M(T_a,T_p, \bar{x}_0(T_a),\bar{y}(T_a))}{M(0,T_p)} \frac{\sigma^{2}(1-\exp(-2kT_a))}{2k}.
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) \approx  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(t_a, \bar{x}_0(t_a),\bar{y}(t_a))\partial_x M(t_a,t_p, \bar{x}_0(t_a),\bar{y}(t_a))}{M(0,t_p)} \frac{\sigma^{2}(1-\exp(-2kt_a))}{2k}.
 \end{equation*}
 In the next figure, we can see the convexity adjustment for a CMS where the tenor of the underlying swap is 5Y using the last approximation and Montecarlo method with parameters for the Hull-White model $\sigma=0.01$ and $k=0.0007$
 
@@ -651,127 +655,126 @@ In the next figure, we can see the convexity adjustment for a CMS where the teno
 \section*{Appendix}
 \appendix
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
-\section{Approximation of $\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right)$}
+\section{Approximation of $\mathbb{E}_s^{t_p}\left(D_s x_{t_a}\right)$}
 \label{expected_forward_measure_malliavin_derivative_x_t}
 From (\ref{short_rate_cheyette}) is easy to show that
 \begin{equation*}
-x_{T_a} = \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) y_u du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x_u,y_u) dW_u^{\mathbb{Q}}  
+x_{t_a} = \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) y_u du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,x_u,y_u) dW_u^{\mathbb{Q}}  
 \end{equation*}
-In order to get an approximation for $D_sX_{T_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{T_a}$. Follow, the ideas of Piterbarg Volume II, we can approximate $y_t$ the next way
+In order to get an approximation for $D_sX_{t_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{t_a}$. Follow, the ideas of Piterbarg Volume II, we can approximate $y_t$ the next way
 \begin{equation*}
 y_t \approx \int_{0}^{t} \exp\left(-2\int_{u}^{t} k_{u^{\prime}} du^{\prime} \right) \eta^{2}(u,x_0,y_0) du
 \end{equation*}
 Therefore, if we define $\bar{y}(t)= \int_{0}^{s} \exp\left(-2\int_{u}^{s} k_{u^{\prime}} du^{\prime} \right) \eta(u,x_0,y_0)$, we have that
 \begin{equation}\label{approximation_x_t_a}
-X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0(T_a)  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+X_{t_a} \approx \bar{X}(t_a):= \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
 \end{equation}
-With initial condition  $\bar{x}_{0}(T_a)$ is such that $S_{a,b}(T_a,\bar{x}_0(T_a), \bar{y}_{T_a}) = S_{a,b}(0)$ (see Piterbarg Volume II). Now, we must remember that 
+With initial condition  $\bar{x}_{0}(t_a)$ is such that $S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_{t_a}) = S_{a,b}(0)$ (see Piterbarg Volume II). Now, we must remember that 
 \begin{equation*}
-dW^{\mathbb{Q}^{T_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,T_p) dt 
+dW^{\mathbb{Q}^{t_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,t_p) dt 
 \end{equation*}
-where $\bar{\nu}(t,T_p) = \int_{t}^{T_p} \eta(s,\bar{x}_s,\bar{y}_s) ds $. Then, we have the next approximation of $\bar{x}_{T_a}$ under measure $\mathbb{Q}^{T_p}$
+where $\bar{\nu}(t,t_p) = \int_{t}^{t_p} \eta(s,\bar{x}_s,\bar{y}_s) ds $. Then, we have the next approximation of $\bar{x}_{t_a}$ under measure $\mathbb{Q}^{t_p}$
 \begin{align*}
-X_{T_a} &\approx \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}_s ds - \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{\nu}(s, T_p) \eta(s,\bar{x}_s,\bar{y}_s) ds +  \\
-&+ \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right)\eta(s,\bar{x}_s,\bar{y}_s) dW_s^{\mathbb{Q}^{T_p}}  
+X_{t_a} &\approx \bar{x}_0  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_s ds - \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\nu}(s, t_p) \eta(s,\bar{x}_s,\bar{y}_s) ds +  \\
+&+ \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right)\eta(s,\bar{x}_s,\bar{y}_s) dW_s^{\mathbb{Q}^{t_p}}  
 \end{align*} 
-Then, if we take $D_s$ on $\bar{X}_{T_a}$ we get that (esto hay que formalizarlo...)
+Then, if we take $D_s$ on $\bar{X}_{t_a}$ we get that (esto hay que formalizarlo...)
 \begin{equation}\label{approximation_D_s_x_t}
-D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0(T_a),\bar{y}(T_a))\bar{M}(s,T_a)
+D_sX_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}(t_a))\bar{M}(s,t_a)
 \end{equation}
 where
 \begin{align*}
-\bar{M}(s,T_a) &= \exp\left(-\int_{s}^{T_a} \left( \frac{\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2}}{2} - \exp\left(-\int_{u}^{T_a}k_u du\right) \partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,T_p))\right) du \right) \\ 
-&\cdot\exp\left(\int_{s}^{t_0} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) dW^{\mathbb{Q}}_u \right)
+\bar{M}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left( \frac{\left(\partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} - \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p))\right) du \right) \\ 
+&\cdot\exp\left(\int_{s}^{t_0} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}}_u \right)
 \end{align*}
-With $\beta(u,T_a,x,y) = \exp\left(-\int_{u}^{T_a}k_u^{\prime} du^{\prime}\right) \partial_x \eta(u,x,y)$. Therefore, from previous equalities, we have that
+With $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) \partial_x \eta(u,x,y)$. Therefore, from previous equalities, we have that
 
 \begin{equation}\label{approsimation_E_s_x_t}
-\mathbb{E}_s^{T_p}\left(D_s x_{T_a}\right) \approx \eta(s,\bar{x}_0(s),\bar{y}_s) \exp\left(-\int_{s}^{T_a}k_u du \right) \exp\left(-\int_{s}^{T_a} \exp\left(-\int_{u}^{T_a}k_u du\right)\partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,T_p)) du \right).
+\mathbb{E}_s^{t_p}\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x}_0(s),\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p)) du \right).
 \end{equation}
 
-\section{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s x_{T_a}\right)$}
+\section{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s x_{t_a}\right)$}
 Following the same procedure as before, we have that
 \begin{equation*}
-X_{T_a} \approx \bar{X}(T_a):= \bar{x}_0(T_a)  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+X_{t_a} \approx \bar{X}(T_a):= \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
 \end{equation*}
 and therefore (see (\ref{approsimation_E_s_x_t}))
 \begin{equation}
-D_sX_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0(T_a),\bar{y}_{T_a})\bar{M}(s,T_a)
+D_sX_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{T_a})\bar{M}(s,t_a)
 \end{equation}
 Now, if we take $\mathbb{E}^{\mathbb{Q}}\left(\cdot\right)$ we get
 \begin{equation}\label{approximation_spot_E_s_x_t}
-\mathbb{E}^{\mathbb{Q}}_s\left(D_sX_{T_a} \right) \approx \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0(T_a),\bar{y}_{T_a})
+\mathbb{E}^{\mathbb{Q}}_s\left(D_sX_{t_a} \right) \approx \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{t_a})
 \end{equation} 
 
-\section{Approximation of $\mathbb{E}^{01}\left(x_t\right)$}
+\section{Approximation of $\mathbb{E}^{01}\left(x_{t_a}\right)$}
 It is easy to show that the dynamic of the bond under HJM assumption is
 \begin{equation}
 \frac{dP(t,T)}{P(t,T)} = r_t dt - \nu(t,T)dW^{\mathbb{Q}}_t.  
 \end{equation}
 Therefore, if we apply Itô formula we have that 
 \begin{equation}\label{annuity_spot_dynamic}
-\frac{d01(t,T_a,T_b)}{01(t,T_a,T_b)} = r_t dt - \sigma_{01}(t,T_a,T_b)dW^{\mathbb{Q}}_t
+\frac{d01(t,t_a,t_b)}{01(t,t_a,t_b)} = r_t dt - \sigma_{01}(t,t_a,t_b)dW^{\mathbb{Q}}_t
 \end{equation}
 where 
 \begin{equation} \label{annuity_vol}
-\sigma_{01}(t,T_a,T_b) = \frac{\sum_{i=a+1}^{b} \delta_{i-1,i} P(t,T_i) \nu(t,T_i)}{01(t,T_a,T_b)}.
+\sigma_{01}(t,t_a,t_b) = \frac{\sum_{i=a+1}^{b} \delta_{i-1,i} P(t,t_i) \nu(t,t_i)}{01(t,t_a,t_b)}.
 \end{equation}
-From (\ref{annuity_spot_dynamic}) and using the Girsanov's theorem that 
+From (\ref{annuity_vol}) and since $\frac{P_{ois}(t,T)}{01(t)}$ is a martingale, we have that
 \begin{equation*}
-dW^{01}_t = dW^{\mathbb{Q}}_t - \sigma_{01}(t,T_a,T_b)dt. 
+dW^{01}_t = dW^{\mathbb{Q}}_t - \sigma_{01}(t,t_a,t_b)dt. 
 \end{equation*}
-We will use the last equation to get an approximation of the mean and order two moment of $x_t$. We can do the next approximaition of  (\ref{annuity_vol})
-\begin{equation}
-\sigma_{01}(t,T_a,T_b) \approx \sum_{i=a+1}^{b} w_i \nu(t,T_i)
+Thwn can do the next approximation of (\ref{annuity_vol})
+\begin{equation} \label{approximation_o1_vol}
+\bar{\sigma}_{01}(t,t_a,t_b) \approx \sum_{i=a+1}^{b} w_i \nu(t,t_i,x_0,y_0)
 \end{equation}
-with $w_i=\frac{\delta_{i-1,i} P(0,T_i)}{01(0,T_a,T_b)}$. Now, if we use (\ref{short_rate_cheyette}) and the last approximation we have that
+with $w_i=\frac{\delta_{i-1,i} P(0,T_i)}{01(0,t_a,t_b)}$. Now, if we use (\ref{short_rate_cheyette}) and the previous approximation we have that
 \begin{align}
-x_t &\approx \bar{x}_0  + \int_{0}^{t} \exp\left(-\int_{s}^{t}k_u du\right) \bar{y}(u) du + \int_{0}^{t}  \exp\left(-\int_{s}^{t}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}} \nonumber \\
-&=  \bar{x}_0  + \int_{0}^{t} \exp\left(-\int_{s}^{t}k_u du\right) \bar{y}(u) du + \int_{0}^{t} \exp\left(-\int_{s}^{t}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) \sigma_{01}(u, T_a, T_b) du  + \nonumber \\ 
-& \int_{0}^{t} \exp\left(-\int_{s}^{t}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{01} 
+x_{t_a} &\approx \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}} \nonumber \\
+&=  \bar{x}_0(t)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_A}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) \bar{\sigma}_{01}(u, T_a, T_b) du  + \nonumber \\ 
+& \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{01} 
 \end{align}
 Therefore, we have that
 \begin{align}
-\mathbb{E}^{01}\left(x_t\right) &\approx \bar{x}_0  + \int_{0}^{t} \exp\left(-\int_{s}^{t}k_u du\right) \bar{y}(u) du \nonumber \\ 
-+ &\int_{0}^{t} \exp\left(-\int_{s}^{t}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) \sigma_{01}(u, T_a, T_b) du
+\mathbb{E}^{01}\left(x_t\right) &\approx \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du \nonumber \\ 
++ &\int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) \bar{\sigma}_{01}(u, t_a, t_b) du
 \end{align}
 
-\section{Approximation of $\mathbb{E}^{01}\left(D_s x_{T_a} \right)$}
-Let us to remember that $\nu(t,T_i)=h(t,x_t,y_t) \frac{G(t,T_i)}{\beta_{t,k}}$ with  $\beta_{t,k} = \exp\left(\int_{0}^{t}k(u)\right)$. Then, we can do the next approximation 
+\section{Approximation of $\mathbb{E}^{01}\left(D_s x_{t_a} \right)$}\label{approximation_under_annuity_measeure_d_s}
+Let us to remember that $\nu(t,t_i)=h(t,x_t,y_t) \frac{G(t,t_i)}{\beta_{t,k}}$ with  $\beta_{t,k} = \exp\left(\int_{0}^{t}k(u)\right)$. Then, we can do the next approximation 
 $$
-\nu(t,T_i) \approx \nu(t,T_i, \bar{x}_t, \bar{y}_t),
+\nu(t,t_i) \approx \nu(t,t_i, \bar{x}_t, \bar{y}_t),
 $$ 
 therefore 
 \begin{equation*}
-D_s \nu(t,T_i) \approx  \partial_x \nu(t,T_i, \bar{x}_t, \bar{y}_t) D_s \bar{x}_t  \frac{G(t,T_i)}{\beta_{t,k}}
+D_s \nu(t,T_i) \approx  \partial_x \nu(t,T_i, \bar{x}_t, \bar{y}_t) D_s \bar{x}_t  \frac{G(t,t_i)}{\beta_{t,k}}
 \end{equation*}
 A cosequence of the last approximation is that 
 \begin{equation}
-D_s \sigma_{0,1}(t,T_a,T_b) \approx  D_s \bar{x}_t \mu(t,T_a,T_b)
+D_s \sigma_{0,1}(t,t_a,t_b) \approx  D_s \bar{x}_t \mu(t,t_a,t_b)
 \end{equation}
-Where 
+where 
 $$
-\mu(t,T_a,T_b) =  \sum_{i=a+1}^{b} w_i \partial_x \nu(t,T_i, \bar{x}_t, \bar{y}_t) \frac{G(t,T_i)}{\beta_{t,k}}.
+\mu(t,T_a,T_b) =  \sum_{i=a+1}^{b} w_i \partial_x \nu(t,t_i, \bar{x}_t, \bar{y}_t) \frac{G(t,t_i)}{\beta_{t,k}}.
 $$
-
 Now, if we use the last approximation and (\ref{approximation_o1_vol}) in (\ref{approximation_x_t_a}) together with the Girsanov's theorem, we have that
 \begin{align*}
-\bar{x}_{T_a} &\approx  \bar{x}_0  + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{y}(u) du + \int_{0}^{T_a} \exp\left(-\int_{s}^{T_a}k_u du\right) \bar{\sigma}_{01}(u,T_a,T_b) du \nonumber \\\
-&+  \int_{0}^{T_a}  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}^{01}}
+\bar{x}_{T_a} &\approx  \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\sigma}_{01}(u,t_a,t_b) du \nonumber \\\
+&+  \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}^{01}}.
 \end{align*}
 Therefore
 \begin{equation*}
-D_s \bar{x}_{T_a} \approx  \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{T_a})\bar{M}^{01}(s,T_a)
+D_s \bar{x}_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{t_a})\bar{M}^{01}(s,t_a)
 \end{equation*}
 where
 \begin{align*}
-\bar{M}^{01}(s,T_a) &= \exp\left(-\int_{s}^{T_a} \left(\frac{\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a})\right)^{2}}{2} + \exp\left(-\int_{u}^{T_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,T_a,T_b) du \right)\right) \\
-&\cdot\exp\left(\int_{s}^{T_a} \partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{T_a}) dW^{\mathbb{Q}^{01}}_u \right)
+\bar{M}^{01}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left(\frac{\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} + \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,t_a,t_b) du \right)\right) \\
+&\exp\left(\int_{s}^{t_a} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}^{01}}_u \right)
 \end{align*}
-with $\beta(u,T_a,x,y) = \exp\left(-\int_{u}^{T_a}k_u du\right) \partial_x \eta(u,x,y)$. Then
+and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x \eta(u,x,y)$. Therefore
 
 \begin{equation}\label{approximation_E_01_s_x_t}
-\mathbb{E}^{01}_s\left(D_s x_{T_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{T_a}k_u du \right) \exp\left(-\int_{s}^{T_a} \exp\left(\int_{u}^{T_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,T_a,T_b) du \right).
+\mathbb{E}^{01}_s\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(\int_{u}^{t_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,t_a,t_b) du \right).
 \end{equation}
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04

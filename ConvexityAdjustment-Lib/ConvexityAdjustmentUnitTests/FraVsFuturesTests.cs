@@ -1,3 +1,4 @@
+using ConvexityAdjustment_Lib.HullWhite;
 using NUnit.Framework;
 using ql = QLNet;
 
@@ -93,7 +94,7 @@ namespace ConvexityAdjusmentUnitTests
                 var convexityMc = mcFuturePrice - curve.currentLink()
                     .forwardRate(delta01, delta02, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate() - spreadBasis;
                 var convexityMalliavin =
-                    ConvexityAdjustment_Lib.HullWhite.convexityFuture(curve, k, sigma, delta00, delta01, delta02, spreadBasis);
+                    HullWhite.convexityFuture(curve, k, sigma, delta00, delta01, delta02, spreadBasis);
                 
                 // outputs
                 t0s.Add(delta00);

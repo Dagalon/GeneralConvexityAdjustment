@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using ConvexityAdjustment_Lib.HullWhite;
+using NUnit.Framework;
 using ql = QLNet;
 
 namespace ConvexityAdjusmentUnitTests
@@ -79,7 +80,7 @@ namespace ConvexityAdjusmentUnitTests
                     var path = sample.value;
                     
                     // sampling Libor
-                    var stdLibor = sigma * ConvexityAdjustment_Lib.HullWhite.beta(delta01, delta02, k);
+                    var stdLibor = sigma * HullWhite.beta(delta01, delta02, k);
                     
                     // Dynamic included forward measure adjustment
                     var ztDelta = z0Delta * Math.Exp(-0.5 * stdLibor * stdLibor * delta01 + stdLibor * Math.Sqrt(delta01) * path[0]);
@@ -99,7 +100,7 @@ namespace ConvexityAdjusmentUnitTests
                 var convexityMc = mcFraInArrears - curve.currentLink()
                     .forwardRate(delta01, delta02, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
                 var convexityMalliavin =
-                    ConvexityAdjustment_Lib.HullWhite.convexityFraInArrears(curve, k, sigma, delta01, delta02, 0.0);
+                    HullWhite.convexityFraInArrears(curve, k, sigma, delta01, delta02, 0.0);
                 
                 // outputs
                 t0s.Add(delta01);

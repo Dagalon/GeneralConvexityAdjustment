@@ -1,4 +1,5 @@
 ﻿using ConvexityAdjustment_Lib;
+using ConvexityAdjustment_Lib.HullWhite;
 using ql = QLNet;
 using NUnit.Framework;
 
