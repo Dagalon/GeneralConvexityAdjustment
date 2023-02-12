@@ -11,10 +11,11 @@
 
         <OutputType>Library</OutputType>
 
-        <RootNamespace>ConvexityAdjusmentUnitTests</RootNamespace>
+        <RootNamespace>ConvexityAdjustmentUnitTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MatplotlibCS" Version="1.0.63" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />

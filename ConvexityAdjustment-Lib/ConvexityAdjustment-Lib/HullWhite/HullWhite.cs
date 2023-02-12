@@ -113,20 +113,16 @@ namespace ConvexityAdjustment_Lib.HullWhite
         public static double convexityAvgOis(ql.Handle<ql.YieldTermStructure> curve, double k, double sigma, double t1,
             double t2)
         {
-            double b1 = beta(t1, t2, k);
             double b2 = beta(t1, t2, 2.0 * k);
             double delta12 = t2 - t1;
 
-            double df1 = curve.link.discount(t1, true);
-            double df2 = curve.link.discount(t2, true);
             double m = 0.5 * Math.Pow(sigma / k, 2.0);
-            double i1 = m * ( t1 * Math.Exp(- 2.0 * k * t1) + Math.Exp( - 2.0 * k * t2) * t1  - 2.0 * Math.Exp( - k * (t1 + t2)) * t1);
+            double i1 = m * t1 * (Math.Exp(- 2.0 * k * t1) + Math.Exp( - 2.0 * k * t2)  - 2.0 * Math.Exp( - k * (t1 + t2)));
             double i2 = m * (b2 + Math.Exp(-2.0 * k * t2) * delta12 - 2.0 * beta(t1+t2, 2.0*t2, k));
 
             var r01 = convexityOis(curve, k, sigma, t1, t2);
-            // var logR01 = Math.Log(1.0 + delta12 * r01) / delta12;
             
-            return r01 + (i1 + i2);
+            return r01 - (i1 + i2) / (t2 - t1);
         }
 
         public static double convexityCms(ql.Handle<ql.YieldTermStructure> discountCurve,  ql.Date valueDate, ql.Date ta, ql.Date tb, ql.Date tp, double annuity,

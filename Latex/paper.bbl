@@ -1,0 +1,75 @@
+\begin{thebibliography}{16}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{DOI~\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{DOI~\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Al\`os and García~Lorite(2021)}]{AlosLorite}
+Al\`os E, García~Lorite D (2021) Malliavin Calculus in Finance: Theory and
+  Practice. Chapman and Hall/CRC
+
+\bibitem[{Andreasen(2001)}]{Andreasen01}
+Andreasen J (2001) Turbo charging the cheyette model. SSRN Electronic Journal
+  \doi{10.2139/ssrn.1719142}
+
+\bibitem[{Benhamou(2000{\natexlab{a}})}]{Benhamou00}
+Benhamou E (2000{\natexlab{a}}) A martingale result for convexity adjustment in
+  the black pricing model. Journal of Financial Abstracts eJournal
+
+\bibitem[{Benhamou(2000{\natexlab{b}})}]{Benhamou00WC}
+Benhamou E (2000{\natexlab{b}}) Pricing convexity adjustment with wiener chaos.
+  Derivatives eJournal
+
+\bibitem[{Brotherton-Ratcliffe and Iben(1993)}]{BrothertonIben}
+Brotherton-Ratcliffe R, Iben B (1993) Advanced strategies in financial risk
+  management. New York Institute of Finance pp 400--450
+
+\bibitem[{Cheyette(2001)}]{Cheyette}
+Cheyette O (2001) Markov representation of the heath-jarrow-morton model.
+  Working paper, BARRA \doi{10.2139/ssrn.6073}
+
+\bibitem[{Flesaker(1993)}]{Flesaker}
+Flesaker B (1993) Arbitrage free pricing of interest rate futures and forward
+  contracts. Journal of Futures Markets 13(1):77--91,
+  \doi{https://doi.org/10.1002/fut.3990130108},
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1002/fut.3990130108},
+  \eprint{https://onlinelibrary.wiley.com/doi/pdf/10.1002/fut.3990130108}
+
+\bibitem[{Hagan(2003)}]{Hagan03}
+Hagan P (2003) Convexity conundrums: Pricing cms swaps, caps and floors.
+  Wilmott 2003:38--45, \doi{10.1002/wilm.42820030211}
+
+\bibitem[{Hagan and Woodward(2020)}]{HaganWoodward20}
+Hagan P, Woodward D (2020) An end to replication. Preprint
+
+\bibitem[{Hart(1997)}]{Hart}
+Hart Y (1997) Unifying theory. RISK pp 54--55
+
+\bibitem[{Hull(2006)}]{Hull06}
+Hull JC (2006) Options, Futures, and Other Derivatives. Pearson Prentice Hall
+
+\bibitem[{Kirikos and Novak(1997)}]{KirikosNovak}
+Kirikos G, Novak D (1997) Convexity conundrums. Risk Magazine 10:60--61
+
+\bibitem[{Nualart(1995)}]{Nualart}
+Nualart D (1995) The Malliavin Calculus and Related Topics, 2nd edn.
+  Springer-Verlag, Berlin
+
+\bibitem[{Pelsser(2001)}]{Pelsser}
+Pelsser A (2001) Mathematical foundation of convexity correction. Quantitative
+  Finance 3:59--65, \doi{10.2139/ssrn.267995}
+
+\bibitem[{Piterbarg and Renedo(2006)}]{PiterbargRenedo}
+Piterbarg V, Renedo M (2006) Eurodollar futures convexity adjustments in
+  stochastic volatility models. The Journal of Computational Finance 9:71--94,
+  \doi{10.21314/JCF.2006.154}
+
+\bibitem[{Ritchken and Sankarasubramanian(1993)}]{RitchkenS}
+Ritchken P, Sankarasubramanian L (1993) Averaging and deferred payment yield
+  agreements. The Journal of Futures Markets 13(1):23--41
+
+\end{thebibliography}

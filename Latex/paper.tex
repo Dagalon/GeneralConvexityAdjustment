@@ -17,6 +17,7 @@
 \renewcommand\Affilfont{\normalfont\small}
 
 \usepackage[round]{natbib}
+\bibliographystyle{spbasic}
 \bibpunct[, ]{(}{)}{;}{a}{}{,}
 \let\bibfont\relax
 \def\bibfont{\fontsize{8}{10}\selectfont}
@@ -176,8 +177,7 @@ The first references on the convexity adjustment were \cite{RitchkenS}, \cite{Fl
 
 In the present paper, we find an alternative way to calculate the convexity adjustment for a general interest rate model. The idea is to use the It\^o's representation theorem. Unfortunately, the theorem does not give an insight into how to calculate the elements therein. Therefore, it is necessary to introduce basic concepts of Malliavin calculus to apply the Clark-Ocone representation formula.
 
-
-The structure of the paper is as follows. In Section \ref{sec:Notation}, we give the basic preliminaries and our notation related to Interest Rates models. This notation will be used throughout the paper without being repeated in particular theorems unless we find it useful to do so in order to guide the reader through the results. In Section \ref{sec:Malliavin}, we make an introduction to Malliavin calculus. In Section \ref{sec:CA}, In Section \ref{sec:Numerical Results}, In Section \ref{sec:Conclusion}
+The structure of the paper is as follows. In Section \ref{sec:Notation}, we give the basic preliminaries and our notation related to Interest Rates models. This notation will be used throughout the paper without being repeated in particular theorems unless we find it useful to do so in order to guide the reader through the results. In Section \ref{sec:Malliavin}, we make an introduction to Malliavin calculus. In Section \ref{sec:CA}, we compute the convexity adjsustment for several payoffs that are presents as usual way in the interest rate trading desks. As well, we do some numerical expresents to check the analytical results obtained. To end, in Section \ref{sec:Conclusion} we give the conclusions of the paper and future lines of research to explore.
 
 
 \section{Preliminaries and notation}\label{sec:Notation}
@@ -310,49 +310,42 @@ is the Clark-Ocone representation formula.
  
 
 \section{Convexity Adjustment}\label{sec:CA}
-In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula for the convexity adjustment. In order to introduce a general idea of the method. Let define a $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$ and that we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure such that $\frac{d\mathbb{Q}_2}{d\mathbb{Q}_1} = \lambda_t$. 
-
-
-
-
-Since the convexity adjustment is derived for the Cheyette model, it can be applied to all included models, such as the Hull-White model.
-
+In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula . In order to introduce a general idea of the method. Let define a $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$ and that we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
+\begin{equation*}
+f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left(f(x_t)\right) + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) dW^{\mathbb{Q}_1}_s
+\end{equation*}
+Now, if we take $\mathbb{E}^{\mathbb{Q}_2}\left( \cdot \right)$ in the previous expression and we use the Girsanov's theorem, we get that
+\begin{equation}\label{general_convexity}
+\mathbb{E}^{\mathbb{Q}_2}\left( f(x_t) \right) = f(x_0) + \mathbb{E}^{\mathbb{Q}_1} \left(\int_{0}^{t}  \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) \lambda_s ds \right). 
+\end{equation}
+The second term, is the convexity adjustment to due to change of measure from $\mathbb{Q}_1$ to $\mathbb{Q}_2$. The differents choice of $f$, $\mathbb{Q}_1$ and $\mathbb{Q}_2$ will allow us to get an approximation of the convexity adjustment for the different case of interest. 
 \subsection{FRAs Vs futures}
-The cash flows in FRAs and futures are computed under different measures. Consequently, we need to adjust the futures price quote to transform them into FRAs price quotes. As usual, we will define the forward rate at time $t_0$ between $t_1$ and $t_2$ under the forward curve $E$ as:
+ The cash flows in FRAs and futures are computed under different measures. Consequently, we need to adjust the futures price quote to transform them into FRAs price quotes. As usual, we will define the forward rate at time $t_0$ between $t_1$ and $t_2$ under the forward curve $E$ as:
 \begin{equation}\label{forward_rate}
 L_{E}(t_0, t_1, t_2) = \frac{\left(\frac{P_{E}(t_0,t_1)}{P_{E}(t_0,t_2)} - 1 \right)}{\delta_{t_1,t_2}}
 \end{equation} 
-where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. Observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the conditional future rate as:  
+where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. Observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the future rate as:    
 \begin{equation}\label{future}
 \hat{L}_{E}(t,t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right), 
 \end{equation}
 where $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. Using
-\eqref{forward_rate} and \eqref{future}, we can express the convexity adjustment definition as:%From \eqref{forward_rate} and \eqref{future}, we will define the convexity adjustment as
+\eqref{forward_rate} and \eqref{future}, then the convexity adjustment definition is:
 \begin{equation*}
 CA(t, t_0, t_1, t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left(L_{E}(t_0, t_1, t_2) \right).
-\end{equation*}
-We use the Clark-Ocone formula with a view to obtaining a general representation formula of the convexity adjustment for futures. Applying \eqref{clark-okone} to 
-$L_{E}(t_0,t_1,t_2)$, we obtain
-\begin{equation}
-L_{E}(t_0,t_1,t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) + \int_{0}^{t_0} \mathbb{E}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s.
-\end{equation} 
-Therefore, if we apply $\mathbb{E}^{\mathbb{Q}^{t2}}(\cdot)$ in the last equation, then we get
-\begin{equation*}
-CA(t, t_0, t_1, t_2) = - \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) dW^{\mathbb{Q}}_s \right).
 \end{equation*}
 From (\ref{ois_forward_rate_curve}) and since $f_{ois}(t,T)$ is a $\mathbb{Q}^{T}$ martingale, we have that
 \begin{equation}\label{girsanov_spot_forward}
 dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,t_2) dt. 
 \end{equation}
-Therefore, if we apply Girsanov's theorem to switch to measure $\mathbb{Q}^{t_2}$, we get that
+Now, if we use (\ref{general_convexity}) with $f(x_t)=L_{E}(t,t_0, t_1, t_2)$, $\mathbb{Q}_1=\mathbb{Q}$, $\mathbb{Q}_1=\mathbb{Q}^{t_2}$ and $\lambda_t = \nu(t,t_2)$,  we get that
 \begin{equation}\label{ca_general_future}
 CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) \nu(s,t_2) ds \right)
 \end{equation}
-where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Now, from the definition of $L_{E}(t,T)$ we have that
+where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Now, from the definition of $L_{E}(t,T)$. Now, if we calculate the malliavin derive of $L_{E}(t_0,t_1,t_2)$ we have that
 \begin{equation*}
 D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)} D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) 
 \end{equation*}
-If we use the representation formula (\ref{bond_ois}) we get that
+Now from the zero coupon representation formula (\ref{bond_ois}) we get that
 \begin{equation*}
 D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) = \frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}
 \end{equation*}
@@ -452,9 +445,9 @@ Then, using the previous approximation, we get that
 &\approx \exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)  \mathbb{E}^{\mathbb{Q}}\left(\exp\left(\int_{t}^{t_1} \Gamma(s,t_0,t_1)dW_s^{\mathbb{Q}}\right)\right)
 \end{align*}
 where $\Gamma(s,t_0,t_1)= g(s)h(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$. 
-Since, the Girsanov's theorem (see (\ref{girsanov_spot_forward}))
+Therefore, we have that
 \begin{equation}\label{representation_i_0_t}
-1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(\int_{t}^{t_1}\frac{ \Gamma^{2}(s,t_0,t_1)}{2} ds\right)
+1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right)
 \end{equation}
 Therefore
 
@@ -463,7 +456,7 @@ Therefore
 \fbox{\parbox{335pt}
 {
 \begin{equation}\label{convexity_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
+\mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
 \end{equation}
 }}
 In order to get an approximation of $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right)$ with base $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right)$, we must note that 
@@ -472,7 +465,7 @@ In order to get an approximation of $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_
 \end{equation*}
 Then from (\ref{representation_i_0_t}) we get that
 \begin{equation}\label{convexity_avg_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} + \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
+\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
 \end{equation}
 The last step, is to use the basic inequality $\log(1+x) \approx x$
 when $x \approx 0$. If we do that, we get the next approximation for $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right)$ 
@@ -480,9 +473,9 @@ when $x \approx 0$. If we do that, we get the next approximation for $\mathbb{E}
 \fboxsep1em
 \fbox{\parbox{300pt}
 {
-\begin{equation*}\label{convexity_avg_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) \approx  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) + \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}.
-\end{equation*}
+\begin{equation}\label{convexity_avg_ois_future}
+\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) \approx  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) - \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}.
+\end{equation}
 }}
 
 \begin{remark}
@@ -510,18 +503,24 @@ Therefore we have that
 &+ \frac{\sigma^{2}}{2k^{2}} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
 &= \frac{\sigma^{2}t_0}{2k^{2}} \left( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \right)\\  
 &+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k} + \exp(-2kt_1)\delta_{t_0,t_1} - 2\frac{\exp(-k(t_0 + t_1)) - \exp(-kt_1)}{k}  \right)
-\end{align*}
-Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$. The next figure, show accuracy of (\ref{convexity_ois_future}) for the particular case of a Hull-White model.
-
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[scale=0.2]{Figures/convexity_ois.jpg}
+\end{align*}(we have to review this integral).
+Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$. The next figure, show accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) for the particular case of a Hull-White model.
+\begin{figure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.2]{Figures/convexity_ois.jpg}
 		\caption{Convexity Mc Vs Convexity Malliavin}
-	\end{center}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.2]{Figures/convexity_avg_ois.jpg}
+		\caption{Convexity Avg Mc Vs Convexity Avg Malliavin}
+\end{subfigure}
+\caption{Convexity adjustment for compounding and average OIS}
 \end{figure} 
-
- 
 \end{example}
+
+\newpage
 
 \subsection{FRAs in arrears}
 The price of a FRA in arrears, is the most classic example between the porducts with convexity adjustment. The cash flows associated to a FRAs in arrears is $L_{E}(t_1,t_1,t_2)$ in $t_1$. Therefore the payment will be
@@ -652,6 +651,10 @@ In the next figure, we can see the convexity adjustment for a CMS where the teno
 
 \newpage
 
+\section{Conclusions}\label{sec:Conclusion}
+
+
+
 \section*{Appendix}
 \appendix
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
@@ -777,9 +780,14 @@ and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x \eta(u
 \mathbb{E}^{01}_s\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(\int_{u}^{t_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,t_a,t_b) du \right).
 \end{equation}
 
+\section{Order of the approximation $\bar{y}_t$}
+Under the assumption of $\eta(t,\cdot,\cdot)$ is Lipschitz and with first derive continuous, we have that 
+
+
+\section{Order of the approximation $\bar{x}_t$}
+
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
-\bibliographystyle{spbasic}
-\bibliography{references/references,references/references-books,references/references-own,references/references-online}
+\bibliography{references/references, references/references-books,references/references-own,references/references-online}
 %\bibliography{references-export}
 
 \end{document}

@@ -4,6 +4,49 @@ namespace ConvexityAdjustment_Lib.HullWhite;
 
 public static class Sampling
 {
+
+    public static double[] getLiborPathsSpotMeasure(ql.HullWhite model, 
+        ql.Date t0, 
+        ql.Date ta, 
+        ql.Date tb, 
+        ql.DayCounter dc, 
+        ulong seed, 
+        int numberOfPaths)
+    {
+        // path vector
+        double[] paths = new double[numberOfPaths];
+        
+        // yearfracs
+        double dT0Ta = dc.yearFraction(t0, ta);
+        double dT0Tb = dc.yearFraction(t0, tb);
+        double dTaTb = dc.yearFraction(ta, tb);
+
+        var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
+            ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
+        
+        // mean, variance, ...
+        var stdXt0 = model.sigma() * Math.Sqrt(HullWhite.beta(0.0, dT0Ta, 2.0 * model.a()));
+        var driftXt0 = HullWhite.hjmAdjustment(dT0Ta, model.a(), model.sigma());
+        
+        var sample = rsg.nextSequence();
+        var zSampleValue = sample.value;
+        
+        double f0T = model.termStructure().currentLink().forwardRate(dT0Ta, dT0Tb, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
+
+        for (int i = 0; i < numberOfPaths; i++)
+        {
+            var rT0 = driftXt0 + f0T + stdXt0 * zSampleValue[i];
+            var dfT0Ta = model.discountBond(dT0Ta, dT0Ta, rT0);
+            var dfT0Tb = model.discountBond(dT0Ta, dT0Tb, rT0);
+
+            paths[i] = (dfT0Ta / dfT0Tb - 1.0) / dTaTb;
+        }
+
+        return paths;
+        
+    }
+
+
     public static double[] getLiborPaths(ql.HullWhite model, 
         ql.Date t0, 
         ql.Date ta, 
@@ -166,7 +209,7 @@ public static class Sampling
         
         double dfT0 = model.termStructure().currentLink().discount(t0, true);
         double dfT1 = model.termStructure().currentLink().discount(t1, true);
-        double r0T = -Math.Log(dfT0 / dfT1);
+        double r0T = -Math.Log(dfT1 / dfT0);
         
         for (int i = 0; i < numberOfPaths; i++)
         {

@@ -1,23 +1,21 @@
-﻿using ConvexityAdjustment_Lib;
-using ConvexityAdjustment_Lib.HullWhite;
+﻿using NUnit.Framework;
+using HullWhite = ConvexityAdjustment_Lib.HullWhite.HullWhite;
+using HullWhiteSampling = ConvexityAdjustment_Lib.HullWhite.Sampling;
 using ql = QLNet;
-using NUnit.Framework;
 
-namespace ConvexityAdjusmentUnitTests
+namespace ConvexityAdjustmentUnitTests
 {
     public class ConvexityAdjustmentSofr
     {
         [Test]
-        public void HullWhiteSofrConvexity()
+        public void hullWhiteSofrConvexity()
         {
-            
             // settings
             var calendar = new ql.TARGET();
             
             // Hull-White parameters
             double k = 0.0001;
             double sigma = 0.01;
-            // double spreadBasis = 0.001;
 
             // Curves
             double flatRate = 0.01;
@@ -27,15 +25,11 @@ namespace ConvexityAdjusmentUnitTests
             ql.Handle<ql.YieldTermStructure> curve =  new ql.Handle<ql.YieldTermStructure>(new ql.FlatForward(startDate, quoteRate, dc));
             
             // Model and process
-            ql.OrnsteinUhlenbeckProcess process = new ql.OrnsteinUhlenbeckProcess(k, sigma, 0.0, 0.0);
             ql.HullWhite model = new ql.HullWhite(curve, k, sigma);
             
             // MC
             int numberOfSimulations = 2000000;
             ulong seed = 123545;
-            // double deltaTime = 0.01;
-            // int timeSteps = (int)(length / deltaTime);
-            // int timeSteps = 1;
             var numberOfMonths = 240;
 
             List<double> t0s = new List<double>();
@@ -46,55 +40,47 @@ namespace ConvexityAdjusmentUnitTests
 
             for (var j = 1; j < numberOfMonths + 1; j++)
             {
+                
+                
                 // Product
                 var t0 = calendar.advance(startDate, j, ql.TimeUnit.Months);
                 var t1 = calendar.advance(startDate, j, ql.TimeUnit.Months);
                 var t2 = calendar.advance(t1, 12, ql.TimeUnit.Months);
-                 
+                
                 // Delta times
                 double delta00 = dc.yearFraction(startDate, t0);
                 double delta01 = dc.yearFraction(startDate, t1);
                 double delta02 = dc.yearFraction(startDate, t2);
-
-                var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>,
-                        ql.InverseCumulativeNormal>)
-                    new ql.PseudoRandom().make_sequence_generator(numberOfSimulations, seed);
-
-                double p0t1 = curve.currentLink().discount(delta01, true);
-                double p0t2 = curve.currentLink().discount(delta02, true);
-                double r0t = -Math.Log(p0t2 / p0t1);
                 
+                // paths
+                var paths = HullWhiteSampling.getIntRtPathSpotMeasure(model, delta02, delta01, seed,
+                    numberOfSimulations);
+
                 // Path generator
-                int i;
                 var mean = 0.0;
                 var avgMean = 0.0;
-                var meanXt0 = 0.0;
                 var momentOrderTwoMean = 0.0;
 
-                var zk = rsg.nextSequence();
-                var mu = HullWhite.getExpectedIntegralRt(k, sigma, delta01, delta02);
-                var std = Math.Sqrt(HullWhite.getVarianceIntegralRt(k, sigma, delta01, delta02));
-                
-                for (i = 0; i < numberOfSimulations; i++)
+                for (var i = 0; i < numberOfSimulations; i++)
                 {
-                    var it0Tot1 = mu + std * zk.value[i] + r0t;
-                    var libor = (Math.Exp(it0Tot1) - 1.0) / (delta02 - delta01);
-                    var avgLibor = it0Tot1 / (delta02 - delta01);
-                    mean += (libor / numberOfSimulations);
-                    avgMean += (avgLibor / numberOfSimulations);
-                    meanXt0 += it0Tot1 / numberOfSimulations;
-                    momentOrderTwoMean += (libor * libor) / numberOfSimulations;
+                    mean += (paths[i,0] / numberOfSimulations);
+                    avgMean += (paths[i,1] / numberOfSimulations);
+                    momentOrderTwoMean += (paths[i,0] * paths[i,0]) / numberOfSimulations;
                 }
                 
-                
-                // Convexity future
+                // Statistics
                 var mcFuturePrice = mean;
                 var stdMc = Math.Sqrt(momentOrderTwoMean - mean * mean);
                 var intervalConfidence = new double[]
                     { mean - stdMc / Math.Sqrt(numberOfSimulations), mean + stdMc / Math.Sqrt(numberOfSimulations) };
                 
-                var forward =  curve.currentLink()
-                    .forwardRate(delta01, delta02, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
+                // Convexity future
+                var dfTa = curve.link.discount(delta01);
+                var dfTb = curve.link.discount(delta02);
+                var forward = ((dfTa / dfTb) - 1.0) / (delta02 - delta01);
+                
+                // var forward =  curve.currentLink().
+                //     forwardRate(delta01, delta02, ql.Compounding.Compounded).rate();
 
                 var convexityMc = mcFuturePrice - forward;
                 var convexityAvgMc = avgMean - forward;
