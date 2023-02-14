@@ -4,7 +4,7 @@ using ql = QLNet;
 
 namespace ConvexityAdjustmentUnitTests
 {
-    public class CmsConvexityNewApproach
+    public class CmsConvexity
     {
         [Test]
         public void hullWhiteCms()

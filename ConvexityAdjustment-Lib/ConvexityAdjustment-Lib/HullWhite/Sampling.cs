@@ -1,4 +1,6 @@
 ﻿using ql = QLNet;
+using MathNet.Numerics.Distributions;
+using MathNet.Numerics.Random;
 
 namespace ConvexityAdjustment_Lib.HullWhite;
 
@@ -187,7 +189,7 @@ public static class Sampling
     public static double[,] getIntRtPathSpotMeasure(ql.HullWhite model,
         double t1,
         double t0,
-        ulong seed,
+        int seed,
         int numberOfPaths)
     {
         
@@ -199,24 +201,34 @@ public static class Sampling
         double k = model.a();
         double d01 = t1 - t0;
         
-        // path generator
-        var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
-            ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
+        // random numbers with math.net
+        var rng = new MersenneTwister(seed);
+        double[] zSampleValue = new double[numberOfPaths];
+        Normal.Samples(rng, zSampleValue, 0.0, 1.0);
         
-        var zSampleValue = rsg.nextSequence();
+        
+        // path generator
+        // var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
+        //     ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
+        
+        // var zSampleValue = rsg.nextSequence();
         var mu = HullWhite.getExpectedIntegralRt(k, sigma, t0, t1);
         var std = Math.Sqrt(HullWhite.getVarianceIntegralRt(k, sigma, t0, t1));
         
         double dfT0 = model.termStructure().currentLink().discount(t0, true);
         double dfT1 = model.termStructure().currentLink().discount(t1, true);
         double r0T = -Math.Log(dfT1 / dfT0);
-        
+
+        double meanAux = 0.0;
+        double meanZs = 0.0;
         for (int i = 0; i < numberOfPaths; i++)
         {
-            var it0Tot1 = mu + std * zSampleValue.value[i] + r0T;
+            var it0Tot1 = mu + std * zSampleValue[i] + r0T;
             paths[i,0] = (Math.Exp(it0Tot1) - 1.0) / d01;
             paths[i,1] = it0Tot1 / d01;
-           
+            meanAux += paths[i, 1] / numberOfPaths;
+            meanZs += zSampleValue[i] / numberOfPaths;
+
         }
 
         return paths;

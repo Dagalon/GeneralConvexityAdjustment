@@ -104,8 +104,8 @@ namespace ConvexityAdjustment_Lib.HullWhite
             double df2 = curve.link.discount(t2, true);
             double m = 0.5 * Math.Pow(sigma / k, 2.0);
             double expected = -Math.Log(df2 / df1) + m * (delta12 - 2.0 * b1 + b2);
-            double i1 = m * ( t1 * Math.Exp(- 2.0 * k * t1) + Math.Exp( - 2.0 * k * t2) * t1  - 2.0 * Math.Exp( - k * (t1 + t2)) * t1);
-            double i2 = m * (b2 + Math.Exp(-2.0 * k * t2) * delta12 - 2.0 * beta(t1+t2, 2.0*t2, k));
+            double i1 = m * t1 * (Math.Exp(- 2.0 * k * t1) + Math.Exp( - 2.0 * k * t2) - 2.0 * Math.Exp( - k * (t1 + t2)));
+            double i2 = m *(b2 + Math.Exp(-2.0 * k*t2) * delta12 - 2.0 * beta(t1 + t2, 2.0 * t2, k));
 
             return (Math.Exp(expected + i1 + i2) - 1.0) / delta12;
         }
@@ -121,8 +121,9 @@ namespace ConvexityAdjustment_Lib.HullWhite
             double i2 = m * (b2 + Math.Exp(-2.0 * k * t2) * delta12 - 2.0 * beta(t1+t2, 2.0*t2, k));
 
             var r01 = convexityOis(curve, k, sigma, t1, t2);
+            var logR01 = Math.Log(1.0 + delta12 * r01) / delta12;
             
-            return r01 - (i1 + i2) / (t2 - t1);
+            return logR01 - (i1 + i2) / (t2 - t1);
         }
 
         public static double convexityCms(ql.Handle<ql.YieldTermStructure> discountCurve,  ql.Date valueDate, ql.Date ta, ql.Date tb, ql.Date tp, double annuity,
@@ -251,11 +252,9 @@ namespace ConvexityAdjustment_Lib.HullWhite
       
         public static double getExpectedIntegralRt(double k, double sigma, double t0, double t1)
         {
-
             var m = 0.5 * Math.Pow(sigma / k, 2.0);
             var delta = t1 - t0;
             return m * (delta - 2.0 * beta(t0, t1, k) + beta(t0, t1, 2.0 * k));
-
         }
         
         public static double getVarianceIntegralRt(double k, double sigma, double t0, double t1)

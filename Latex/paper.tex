@@ -464,17 +464,12 @@ In order to get an approximation of $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_
 \mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left( \log(1+ \delta_{t_0,t_1} R(t_0,t_1))\right)}{ \delta_{t_0,t_1}}.
 \end{equation*}
 Then from (\ref{representation_i_0_t}) we get that
-\begin{equation}\label{convexity_avg_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
-\end{equation}
-The last step, is to use the basic inequality $\log(1+x) \approx x$
-when $x \approx 0$. If we do that, we get the next approximation for $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right)$ 
 
 \fboxsep1em
-\fbox{\parbox{300pt}
+\fbox{\parbox{360pt}
 {
 \begin{equation}\label{convexity_avg_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) \approx  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) - \frac{\int_{0}^{t_1}\Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}.
+\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
 \end{equation}
 }}
 
@@ -494,17 +489,18 @@ R_{avg}(t_0,t_1) &= \frac{\int_{t_0}^{t} r_{ois,s} ds}{t_1-t_0} +  \frac{\int_{t
 The same way that in the example (\ref{example_ca_future}), we will suppose a Hull-White model with constan mean reversion $k=0.003$ and volatility $\sigma=0.01$. It is easy to show in the case of the Hull-White model
 \begin{align*}
 \Gamma(s,t_0,t_1) &= \frac{\sigma \exp(-ks)}{k}\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-s))\right)\\
-\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) + \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{k}  \right).
+\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) + \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  \right).
 \end{align*}
 Therefore we have that
 \begin{align*}
-\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
-&= \frac{\sigma^{2}}{2k^{2}} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
-&+ \frac{\sigma^{2}}{2k^{2}} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k\delta_{t_0,t_1})\right)^{2} ds\\
+\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
+&= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
+&+ \frac{\sigma^{2}}{2k^2} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k(t_1 - s))\right)^{2} ds\\
 &= \frac{\sigma^{2}t_0}{2k^{2}} \left( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \right)\\  
-&+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k} + \exp(-2kt_1)\delta_{t_0,t_1} - 2\frac{\exp(-k(t_0 + t_1)) - \exp(-kt_1)}{k}  \right)
+&+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  + \exp(-kt0)t0 - 2 \frac{\exp(-2kt_0) - \exp(-k(t_0 + t_1))}{k}  \right)
 \end{align*}(we have to review this integral).
 Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$. The next figure, show accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) for the particular case of a Hull-White model.
+
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
   \centering
