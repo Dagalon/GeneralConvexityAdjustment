@@ -57,7 +57,7 @@
 %%\newtheorem{defi}[theorem]{Definition} 
 \newtheorem{example}[theorem]{Example} 
 %%\newtheorem{exercise}[theorem]{Exercise} 
-%%\newtheorem{hypothesis}[theorem]{Hypothesis} 
+\newtheorem{hypothesis}[theorem]{Hypothesis} 
 \newtheorem{lemma}[theorem]{Lemma} 
 %%\newtheorem{notation}[theorem]{Notation} 
 %%\newtheorem{problem}[theorem]{Problem} 
@@ -213,7 +213,30 @@ In order to have a Markovian representation of the HJM, we will assume that the 
 \begin{equation}
 \sigma(t,T)= h(t)g(T).
 \end{equation}
-with $g$ a positive time-dependent function and $h$ a non-negative process. This version of the HJM is also known as the Cheyette model, \cite{Cheyette}. It is easy to show (see \cite{Andreasen01}), that in this case (\ref{ois_forward_rate_curve})
+with $g$ a positive time-dependent function and $h$ a non-negative process. In addition
+\begin{align*}
+\eta_t &= g(t)h(t,x_t,y_t)  \nonumber \\
+k_t &= - \frac{\partial_t g(t)}{g(t)}.
+\end{align*}
+Throught this paper, we assume the following hypotheses on $\eta(t,x,y)$.
+\begin{hypothesis}\label{boundedness_volatility} 
+The process $\eta_t$ is global Lipschitz and differentiable a.s. In addition, we will suppose that
+\begin{align*}
+a1 \leq \eta(t,x,y) \leq a2 \quad \forall (t,x,t) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+}. \\
+|\eta(t,x_2,y_2) - \eta(t,x_2,y_2)| \leq C_{x,y}\left(|x_2 - x_1| + |y_2 - y_1| \right) \quad \forall (t,x,t) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+} 
+\end{align*}
+\end{hypothesis}
+\begin{hypothesis}\label{boundedness_reversion} 
+The next integrals are finite
+\begin{align*}
+I_{1,k}(0,t) &= \int_{0}^{t} \exp\left(- 2 \int_{s}^{t} k(s^{\prime})ds^{\prime}\right)  ds < \infty \\
+I_{2,k}(0,t) &= \int_{0}^{t} \exp\left(- \int_{s}^{t} k(s^{\prime})ds^{\prime}\right) G(s,t) ds < \infty
+\end{align*}
+\end{hypothesis}
+\begin{remark}
+Notice that the above hypotheses have been chosen for the sake of simplicity, but they can be replaced by adequate integrability conditions.
+\end{remark}
+We must note, that under the hypothesis (\ref{boundedness_volatility}) $\partial_x \eta(t,x,y)$ and $\partial_y \eta(t,x,y)$ are bounded. This version of the HJM is also known as the Cheyette model, \cite{Cheyette}. It is easy to show (see \cite{Andreasen01} that
 \begin{equation}
 r_{ois}(t)=f_{ois}(t,t)= f_{ois}(0,t) + x_t,
 \end{equation}  
@@ -227,7 +250,7 @@ with
 \eta_t &= g(t)h(t,x_t,y_t)  \nonumber \\
 k_t &= - \frac{\partial_t g(t)}{g(t)}.
 \end{align*}
-Then with a little bit of algebra and we use Itô formula we can show the next representation formula for $P_{ois}(t,T)$
+Now if we do a little bit of algebra and we use Itô formula we can show the next representation formula for $P_{ois}(t,T)$
 \begin{equation}\label{bond_ois}
 P_{ois}(t,T) = \frac{P_{ois}(0,T)}{P_{ois}(0,t)} \exp\left(-G(t,T)x_t - \frac{1}{2} G^{2}(t,T)y_t \right)
 \end{equation}
@@ -351,7 +374,7 @@ D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) = \frac{\left(\partia
 \end{equation*}
 therefore
 \begin{equation}\label{malliavin_derive_L}
-D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}. 
+D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0} 
 \end{equation}
 If we use (\ref{approximation_D_s_x_t}) with $T_a=t_0$ and $\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x,y)$ we have that
 \begin{align*}
@@ -654,6 +677,18 @@ In the next figure, we can see the convexity adjustment for a CMS where the teno
 \section*{Appendix}
 \appendix
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
+
+\section{Order of the approximation $\bar{y}_t$}
+Under the assumption of $\eta(t,\cdot,\cdot)$ is global Lipschitz and with first derive continuous, we have that
+\begin{align*}
+|\eta^{2}(t,x_t,y_t) - \eta^{2}(t,x_0,y_0)|&=|\eta(t,x_t,y_t) - \eta(t,x_0,y_0)||\eta(t,x_t,y_t) + \eta(t,x_0,y_0)| \nonumber \\ 
+&\leq C_{x,y}\left(|x_t - x_0| + |y_t - y_0|\right) + 
+\end{align*}
+
+
+
+\section{Order of the approximation $\bar{x}_t$}
+
 \section{Approximation of $\mathbb{E}_s^{t_p}\left(D_s x_{t_a}\right)$}
 \label{expected_forward_measure_malliavin_derivative_x_t}
 From (\ref{short_rate_cheyette}) is easy to show that
@@ -776,11 +811,7 @@ and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x \eta(u
 \mathbb{E}^{01}_s\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(\int_{u}^{t_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,t_a,t_b) du \right).
 \end{equation}
 
-\section{Order of the approximation $\bar{y}_t$}
-Under the assumption of $\eta(t,\cdot,\cdot)$ is Lipschitz and with first derive continuous, we have that 
 
-
-\section{Order of the approximation $\bar{x}_t$}
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
 \bibliography{references/references, references/references-books,references/references-own,references/references-online}
