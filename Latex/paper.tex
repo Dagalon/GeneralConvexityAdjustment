@@ -222,16 +222,13 @@ Throught this paper, we assume the following hypotheses on $\eta(t,x,y)$.
 \begin{hypothesis}\label{boundedness_volatility} 
 The process $\eta_t$ is global Lipschitz and differentiable a.s. In addition, we will suppose that
 \begin{align*}
-a1 \leq \eta(t,x,y) \leq a2 \quad \forall (t,x,t) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+}. \\
-|\eta(t,x_2,y_2) - \eta(t,x_2,y_2)| \leq C_{x,y}\left(|x_2 - x_1| + |y_2 - y_1| \right) \quad \forall (t,x,t) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+} 
+\alpha_1 \leq \eta(t,x,y) \leq \alpha_2 \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+}. \\
+|\eta(t,x_2,y_2) - \eta(t,x_1,y_1)| \leq C_{x,y} \lVert (x_2-x_1,y_2-y_1)\rVert \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+} 
 \end{align*}
+with $\lVert \cdot \rVert$ euclidean norm in $\mathbb{R}^{2}$.
 \end{hypothesis}
 \begin{hypothesis}\label{boundedness_reversion} 
-The next integrals are finite
-\begin{align*}
-I_{1,k}(0,t) &= \int_{0}^{t} \exp\left(- 2 \int_{s}^{t} k(s^{\prime})ds^{\prime}\right)  ds < \infty \\
-I_{2,k}(0,t) &= \int_{0}^{t} \exp\left(- \int_{s}^{t} k(s^{\prime})ds^{\prime}\right) G(s,t) ds < \infty
-\end{align*}
+The mean reversion function $k(\cdot)$ is positive a.s.
 \end{hypothesis}
 \begin{remark}
 Notice that the above hypotheses have been chosen for the sake of simplicity, but they can be replaced by adequate integrability conditions.
@@ -242,7 +239,7 @@ r_{ois}(t)=f_{ois}(t,t)= f_{ois}(0,t) + x_t,
 \end{equation}  
 where
 \begin{align}\label{short_rate_cheyette}
-dx_t &= (-k_t x_t + y_t)dt + \eta_t dW_t^{\mathbb{Q}} \nonumber \\
+dx_t &= (-k_t x_t + y_t)dt + \eta(t,x_t,y_t) dW_t^{\mathbb{Q}} \nonumber \\
 dy_t &= (\eta^{2}_t - 2 k_t y_t) dt ,
 \end{align} 
 with 
@@ -668,8 +665,6 @@ In the next figure, we can see the convexity adjustment for a CMS where the teno
 \end{figure} 
 \end{example}
 
-\newpage
-
 \section{Conclusions}\label{sec:Conclusion}
 
 
@@ -678,16 +673,7 @@ In the next figure, we can see the convexity adjustment for a CMS where the teno
 \appendix
 \renewcommand{\thesection}{\Alph{section}.\arabic{section}}
 
-\section{Order of the approximation $\bar{y}_t$}
-Under the assumption of $\eta(t,\cdot,\cdot)$ is global Lipschitz and with first derive continuous, we have that
-\begin{align*}
-|\eta^{2}(t,x_t,y_t) - \eta^{2}(t,x_0,y_0)|&=|\eta(t,x_t,y_t) - \eta(t,x_0,y_0)||\eta(t,x_t,y_t) + \eta(t,x_0,y_0)| \nonumber \\ 
-&\leq C_{x,y}\left(|x_t - x_0| + |y_t - y_0|\right) + 
-\end{align*}
 
-
-
-\section{Order of the approximation $\bar{x}_t$}
 
 \section{Approximation of $\mathbb{E}_s^{t_p}\left(D_s x_{t_a}\right)$}
 \label{expected_forward_measure_malliavin_derivative_x_t}
@@ -811,7 +797,50 @@ and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x \eta(u
 \mathbb{E}^{01}_s\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x_0(s)},\bar{y}_{s}) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(\int_{u}^{t_a}k_u du\right)\eta(u,\bar{x}(u),\bar{y}(u) \mu(u,t_a,t_b) du \right).
 \end{equation}
 
+\section{Order of the approximation $\bar{x}_t$}
+From (\ref{short_rate_cheyette}) is easy to show that
+\begin{equation*}
+x_{t_a} = \int_{0}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du^{\prime}\right) G(u,t_a) \eta^{2}(u,x_u,y_u) du + \int_{0}^{t_a}  \exp\left(-\int_{u}^{t_a}k_u^{\prime} du \right) \eta(u,x_u,y_u) dW_u^{\mathbb{Q}} 
+\end{equation*}
+Therefore, we have that
+\begin{align*}
+(x_{t_a} - \bar{x}_{t_a})^2 &\leq 2 \left(\int_{0}^{t_a} \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) G(u,t_a) (\eta^{2}(u,x_u,y_u) - \eta^{2}(u,x_0,y_0)) du \right)^{2} \\ 
+&+ 2 \left(\int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u^{\prime} du^{\prime} \right) (\eta(u,x_u,y_u)-\eta(u,\bar{x}_u,\bar{y}_u)) dW_u^{\mathbb{Q}}\right)^{2}
+\end{align*}
+Now, we will bound each integral term. We will call to the first term $(A)$ and the second $(B)$. From the hypothesis (\ref{boundedness_volatility}) we have that 
+\begin{align*}
+(A) &\leq 8 t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \|(x_u -x_0,y_u-y_0)\|^{2} du \\
+&\leq 16 t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \|(x_u - \bar{x}_u,y_u-\bar{y}_u)\|^{2} du \\
+&+ 16 t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \|(\bar{x}_u - x_0,\bar{y}_u-y_0)\|^{2} du
+\end{align*}
+and we take $\mathbb{E}^{\mathbb{Q}}\left(\cdot\right)$ on above inequality
+\begin{align*}
+\mathbb{E}^{\mathbb{Q}}\left((A)\right) &\leq 16  t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{s}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \mathbb{E}^{\mathbb{Q}}\left(\|(\bar{x}_u -x_0,\bar{y}_u-y_0)\|^{2}\right) du \\
+&+\leq 16  t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{s}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \mathbb{E}^{\mathbb{Q}}\left(\|(x_u - \bar{x}_u,y_u-\bar{y}_u)\|^{2}\right) du
+\end{align*}
+Again, from the hypotheses (\ref{boundedness_volatility}) and (\ref{boundedness_reversion}) we can show that 
+\begin{equation*}
+\mathbb{E}^{\mathbb{Q}}\left(\|(\bar{x}_u -x_0,\bar{y}_u-y_0)\|^{2}\right) = K h(u)
+\end{equation*}
+where $K$ is a constant with no dependency in $u$ and $h(u)\sim \mathcal{O}(u)$. In order to bound $(B)$, we will use the Doob's inequality and (\ref{boundedness_volatility}). Then
+\begin{align*}
+\mathbb{E}^{\mathbb{Q}}&\left((B)\right) \leq 2K \int_{0}^{t_a}  \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime} \right) (\eta(u,x_u,y_u)-\eta(u,\bar{x}_u,\bar{y}_u))^{2} du \\
+& \leq 2K C^{2}_{x,y} \int_{0}^{t_a}  \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime} \right) \mathbb{E}^{\mathbb{Q}}\left(\|(x_u - \bar{x}_u, y_u - \bar{y}_u) \|^{2}\right) du
+\end{align*}
+On other hand, we have that
+\begin{equation*}
+\mathbb{E}^{\mathbb{Q}}\left((y_{t_a} - \bar{y}_{t_a})^{2} \right) \leq 4 \alpha^{2}_{2} C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right)\mathbb{E}^{\mathbb{Q}}\left(\|(x_u-\bar{x}_u,y_u-\bar{y}_u)\|^{2}\right) du    
+\end{equation*}
+Now, if we put all of the above together, we get that
+\begin{equation*}
+\mathbb{E}^{\mathbb{Q}}\left(\|(x_{t_a} - \bar{x}_{t_a},y_{t_a} - \bar{y}_{t_a})\|^{2}\right) \leq C_1H(t_a) + C_2\int_{0}^{t_a} \mathbb{E}^{\mathbb{Q}}\left(\|(x_{u} - \bar{x}_{u},y_{u} - \bar{y}_{u})\|^{2}\right) du
+\end{equation*}
+where $H(t_a) \mathcal{O}(t_a)$. To end, if we apply the Gronwall's lemma we have that
+\begin{equation*}
+\mathbb{E}^{\mathbb{Q}}\left(\|(x_{t_a} - \bar{x}_{t_a},y_{t_a} - \bar{y}_{t_a})\|^{2}\right) \leq C_1H(t_a) \exp\left(C_2 t_a\right)
+\end{equation*}
 
+\newpage
 
 % TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
 \bibliography{references/references, references/references-books,references/references-own,references/references-online}
