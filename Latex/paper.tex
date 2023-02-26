@@ -228,7 +228,22 @@ The process $\eta_t$ is global Lipschitz and differentiable a.s. In addition, we
 with $\lVert \cdot \rVert$ euclidean norm in $\mathbb{R}^{2}$.
 \end{hypothesis}
 \begin{hypothesis}\label{boundedness_reversion} 
-The mean reversion function $k(\cdot)$ is positive a.s.
+The mean reversion function $k(\cdot)$ is a continuous and positive a.s such that
+\begin{equation*}
+m_k < k(t) \leq M_k \quad \forall t \geq 0.
+\end{equation*}
+
+\begin{remark}
+Under these assumptions on $k(\cdot)$, we have that
+\begin{equation*}
+\lim_{t \to \infty}  I(\alpha,0,t):= \lim_{t \to \infty} \int_{0}^{t} \exp\left(-\alpha \int_{u}^{t} k(s) ds\right) du \leq \frac{1}{\alpha m_k} \quad \text{with} \quad \alpha > 0.
+\end{equation*}
+On other hand, as well it is easy to show that
+\begin{equation*}
+\lim_{t \to \infty}  J(\alpha,0,t):= \lim_{t \to \infty} \int_{0}^{t} G^{\alpha}(u,t) \exp\left(-\alpha \int_{u}^{t} k(s) ds\right) du \leq \frac{1}{\alpha m^{\alpha+1}_{k}}
+\end{equation*}
+\end{remark}
+
 \end{hypothesis}
 \begin{remark}
 Notice that the above hypotheses have been chosen for the sake of simplicity, but they can be replaced by adequate integrability conditions.
@@ -409,7 +424,7 @@ Then it easy to show that the convexity adjustment (\ref{ca_approximation_future
 \begin{align*}
 CA(t_0,t_1) & \approx \frac{\sigma^{2} \exp(-k t_0)  P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(\frac{1 - \exp(- k t_0)}{k^{2}} - \frac{t_0 \exp(-k t_2)}{k} \right).   
 \end{align*}
-\newpage
+
 In the next figure, we can check the accuracy of the last formula versus montecarlo. The parameters that we have used are $\sigma=0.015$, $k=0.003$ and flat curve with level $r=0.01$.
 
 \begin{figure}[h]
@@ -521,6 +536,7 @@ Therefore we have that
 \end{align*}(we have to review this integral).
 Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$. The next figure, show accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) for the particular case of a Hull-White model.
 
+
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
   \centering
@@ -537,7 +553,6 @@ Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we ge
 \end{example}
 
 \newpage
-
 \subsection{FRAs in arrears}
 The price of a FRA in arrears, is the most classic example between the porducts with convexity adjustment. The cash flows associated to a FRAs in arrears is $L_{E}(t_1,t_1,t_2)$ in $t_1$. Therefore the payment will be
 \begin{equation}
@@ -815,14 +830,14 @@ Now, we will bound each integral term. We will call to the first term $(A)$ and 
 \end{align*}
 and we take $\mathbb{E}^{\mathbb{Q}}\left(\cdot\right)$ on above inequality
 \begin{align*}
-\mathbb{E}^{\mathbb{Q}}\left((A)\right) &\leq 16  t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{s}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \mathbb{E}^{\mathbb{Q}}\left(\|(\bar{x}_u -x_0,\bar{y}_u-y_0)\|^{2}\right) du \\
-&+\leq 16  t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{s}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \mathbb{E}^{\mathbb{Q}}\left(\|(x_u - \bar{x}_u,y_u-\bar{y}_u)\|^{2}\right) du
+\mathbb{E}^{\mathbb{Q}}\left((A)\right) &\leq 16  t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \mathbb{E}^{\mathbb{Q}}\left(\|(\bar{x}_u -x_0,\bar{y}_u-y_0)\|^{2}\right) du \\
+&+\leq 16  t_a \alpha^{2}_2 C^{2}_{x,y} \int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) G^{2}(u,t_a) \mathbb{E}^{\mathbb{Q}}\left(\|(x_u - \bar{x}_u,y_u-\bar{y}_u)\|^{2}\right) du
 \end{align*}
 Again, from the hypotheses (\ref{boundedness_volatility}) and (\ref{boundedness_reversion}) we can show that 
 \begin{equation*}
-\mathbb{E}^{\mathbb{Q}}\left(\|(\bar{x}_u -x_0,\bar{y}_u-y_0)\|^{2}\right) = K h(u)
+\mathbb{E}^{\mathbb{Q}}\left(\|(\bar{x}_u -x_0,\bar{y}_u-y_0)\|^{2}\right) \sim \mathcal{O}(I(0,u,2))
 \end{equation*}
-where $K$ is a constant with no dependency in $u$ and $h(u)\sim \mathcal{O}(u)$. In order to bound $(B)$, we will use the Doob's inequality and (\ref{boundedness_volatility}). Then
+In order to bound $(B)$, we will use the Doob's inequality and (\ref{boundedness_volatility}). Then
 \begin{align*}
 \mathbb{E}^{\mathbb{Q}}&\left((B)\right) \leq 2K \int_{0}^{t_a}  \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime} \right) (\eta(u,x_u,y_u)-\eta(u,\bar{x}_u,\bar{y}_u))^{2} du \\
 & \leq 2K C^{2}_{x,y} \int_{0}^{t_a}  \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime} \right) \mathbb{E}^{\mathbb{Q}}\left(\|(x_u - \bar{x}_u, y_u - \bar{y}_u) \|^{2}\right) du
@@ -833,11 +848,11 @@ On other hand, we have that
 \end{equation*}
 Now, if we put all of the above together, we get that
 \begin{equation*}
-\mathbb{E}^{\mathbb{Q}}\left(\|(x_{t_a} - \bar{x}_{t_a},y_{t_a} - \bar{y}_{t_a})\|^{2}\right) \leq C_1H(t_a) + C_2\int_{0}^{t_a} \mathbb{E}^{\mathbb{Q}}\left(\|(x_{u} - \bar{x}_{u},y_{u} - \bar{y}_{u})\|^{2}\right) du
+\mathbb{E}^{\mathbb{Q}}\left(\|(x_{t_a} - \bar{x}_{t_a},y_{t_a} - \bar{y}_{t_a})\|^{2}\right) \leq C_1H(t_a) + C_2\int_{0}^{t_a} \exp\left(-2\int_{u}^{t_a}k_u^{\prime} du^{\prime} \right) \mathbb{E}^{\mathbb{Q}}\left(\|(x_{u} - \bar{x}_{u},y_{u} - \bar{y}_{u})\|^{2}\right) du
 \end{equation*}
-where $H(t_a) \sim \mathcal{O}(t_a)$. To end, if we apply the Gronwall's lemma we have that
+where $C_1$ and $C_1$ are adequate positive constants and $H(t_a) \sim \mathcal{O}(\int_{0}^{t_a} I(0,u,2) du)$. To end, if we apply a slightly modified version of the Gronwall's lemma we have that
 \begin{equation*}
-\mathbb{E}^{\mathbb{Q}}\left(\|(x_{t_a} - \bar{x}_{t_a},y_{t_a} - \bar{y}_{t_a})\|^{2}\right) \leq C_1H(t_a) \exp\left(C_2 t_a\right)
+\mathbb{E}^{\mathbb{Q}}\left(\|(x_{t_a} - \bar{x}_{t_a},y_{t_a} - \bar{y}_{t_a})\|^{2}\right) \leq C_1 H(t_a)+ \int_{0}^{t_a} \exp\left(- C_2 \int_{u}^{t} k(s^{\prime})  ds^{\prime} \right) H(u) du.
 \end{equation*}
 
 \newpage
