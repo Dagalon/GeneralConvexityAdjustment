@@ -1,0 +1,774 @@
+\documentclass[a4paper,10pt]{article}
+%\documentclass{svjour3}
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+%\usepackage{tcolorbox}
+\usepackage{subcaption}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+%\usepackage{calrsfs} % nice cal fonts
+\usepackage{enumerate} 
+%\usepackage[toc,page]{appendix}
+
+%\usepackage[auth-sc]{authblk}
+\usepackage{authblk}
+\renewcommand\Affilfont{\normalfont\small}
+
+\usepackage[round]{natbib}
+\bibliographystyle{spbasic}
+\bibpunct[, ]{(}{)}{;}{a}{}{,}
+\let\bibfont\relax
+\def\bibfont{\fontsize{8}{10}\selectfont}
+\setlength{\bibsep}{0pt}
+
+\usepackage[svgnames]{xcolor}
+\usepackage[pdftex]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    colorlinks,
+    linkcolor=Navy,
+    citecolor=Navy,
+    urlcolor=Navy
+}
+%\definecolor{highlightNEW}{named}{Navy} %To get all equation in black:
+\definecolor{highlightNEW}{named}{black}
+
+\usepackage{graphicx}
+\graphicspath{{fig/}}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{float}
+
+% custom macros and definitions
+\newtheorem{theorem}{Theorem}[section] 
+%%\newtheorem{acknowledgement}[theorem]{Acknowledgement} 
+%%\newtheorem{algorithm}[theorem]{Algorithm} 
+%%\newtheorem{axiom}[theorem]{Axiom} 
+%%\newtheorem{case}[theorem]{Case} 
+%%\newtheorem{claim}[theorem]{Claim} 
+%%\newtheorem{conclusion}[theorem]{Conclusion} 
+%%\newtheorem{condition}[theorem]{Condition} 
+%%\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary} 
+%%\newtheorem{criterion}[theorem]{Criterion} 
+%%\newtheorem{defi}[theorem]{Definition} 
+\newtheorem{example}[theorem]{Example} 
+%%\newtheorem{exercise}[theorem]{Exercise} 
+\newtheorem{hypothesis}[theorem]{Hypothesis} 
+\newtheorem{lemma}[theorem]{Lemma} 
+%%\newtheorem{notation}[theorem]{Notation} 
+%%\newtheorem{problem}[theorem]{Problem} 
+\newtheorem{proposition}[theorem]{Proposition} 
+%%\newtheorem{question}[theorem]{Question} 
+\newtheorem{remark}[theorem]{Remark} 
+%%\newtheorem{solution}[theorem]{Solution} 
+%%\newtheorem{summary}[theorem]{Summary} 
+%%\newtheorem{Rem}[theorem]{Remark}
+
+\newcommand{\TODO}[1]{\textbf{\color{red}TODO: {#1}}\PackageWarning{TODO:}{#1!}}
+\newcommand{\doi}[1]{DOI~\href{\detokenize{http://dx.doi.org/#1}}{\detokenize{#1}}}
+
+\renewcommand{\d}{\,\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathcal{F}}
+\renewcommand{\H}{\mathcal{H}}
+\newcommand{\K}{\mathfrak{K}}
+\newcommand{\N}{\mathbb{N}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Var}{\mathbb{V}ar}
+\newcommand{\1}{\mathbf{1}}
+
+\newcommand{\la}{\!\left\langle}
+\newcommand{\ra}{\right\rangle}
+\newcommand{\p}{\partial}
+
+%\newcommand*{\Cdot}{\raisebox{-0.25ex}{\scalebox{1.2}{\ensuremath{\cdot}}}}
+\newcommand*{\Cdot}[1][1.25]{%
+  \mathpalette{\CdotAux{#1}}\cdot%
+}
+\newdimen\CdotAxis
+\newcommand*{\CdotAux}[3]{%
+  {%
+    \settoheight\CdotAxis{$#2\vcenter{}$}%
+    \sbox0{%
+      \raisebox\CdotAxis{%
+        \scalebox{#1}{%
+          \raisebox{-\CdotAxis}{%
+            $\mathsurround=0pt #2#3$%
+          }%
+        }%
+      }%
+    }%
+    % Remove depth that arises from scaling.
+    \dp0=0pt %
+    % Decrease scaled height.
+    \sbox2{$#2\bullet$}%
+    \ifdim\ht2<\ht0 %
+      \ht0=\ht2 %
+    \fi
+    % Use the same width as the original \cdot.
+    \sbox2{$\mathsurround=0pt #2#3$}%
+    \hbox to \wd2{\hss\usebox{0}\hss}%
+  }%
+}
+\makeatletter
+\def\mathcolor#1#{\@mathcolor{#1}}
+\def\@mathcolor#1#2#3{%
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+\makeatother
+
+
+\newcommand{\NEW}[1]{\mathcolor{highlightNEW}{#1}}
+\let\oldalpha\alpha
+\renewcommand{\alpha}{\mathcolor{highlightNEW}{\oldalpha}}
+\newcommand{\ccode}[2]{\par
+        \vspace*{8pt}
+        {{\leftskip18pt\rightskip\leftskip
+        \noindent{\it #1}\/: #2\par}}\par}
+\newcommand{\keywords}[1]{\ccode{Keywords}{#1}}
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}
+
+\title{\textcolor{Navy}{\textsc{Convexity adjustments with a bit of Malliavin}}}
+
+\author[1,2]{David Garcia-Lorite\thanks{Corresponding author, \email{dddd@caixabank.es}}}
+\author[3]{Ra\'{u}l Merino}
+
+\affil[1]{CaixaBank, Quantitative Analyst Team, Plaza de Castilla, 3, 28046 Madrid, Spain,}
+\affil[2]{Facultat de Matem\`{a}tiques i Inform\`{a}tica, Universitat de Barcelona, \authorcr Gran Via 585, 08007 Barcelona, Spain,\vspace*{3pt}}
+\affil[3]{VidaCaixa S.A., Market Risk Management Unit, \authorcr C/Juan Gris, 2-8, 08014 Barcelona, Spain.}
+
+%\date{Received: date / Accepted: date}
+\date{\normalfont\small\today}
+
+% main document
+\begin{document}
+
+\maketitle
+\begin{abstract}
+AA
+\end{abstract}
+%\keywords{V--}
+%\ccode{MSC classification}{--}
+%\ccode{JEL classification}{--}
+
+%\TODO{Remove ToC in final version}
+%\tableofcontents
+%\clearpage
+
+\section{Introduction}
+Mathematical finance aims to find a methodology to price consistently all the instruments quoted in the market. When working with fixed income derivatives, a classic research topic is the introduction of a price adjustment to achieve this. This adjustment is called convexity adjustment. It is non-linear and depends on the interest rate model.  
+
+There are several reasons to include this type of adjustment. One of them is to incorporate futures on the yield curve construction. Futures and other fixed-income instruments are quoted differently. The firsts are linear against the yield, but the others are not. Therefore, the changes in value and yield of different contracts are different. This difference will depend on the volatility and correlation of the yield curve.
+
+But it is not the only one. The fixed-income market has several features changing the schedule of payments. For example, in a swap in arrears, the floating coupon fixing and payment are on the same date. Or in a CMS swap, the floating rate is linked to a rate longer than the floating length. Any customization of an interest rate product based on changing time, currency, margin, or collateral will require a convexity adjustment. Deep down, by making these changes, we are mixing the martingale measures. 
+
+Convexity adjustments have become popular again. Not only by the increase in volatility in the markets. In addition, as a consequence of the transition in risk-free rates from the IBOR (InterBank Offered Rates) indices to the ARR (Alternative Reference Rates) indices, also called RFR. Both indices try to represent the same thing, the risk-free rate, but they are fundamentally different. While the former represents the average rate at which Panel Banks believe they could borrow money, the latter is calculated backward based on transactions. Therefore, these new products need their corresponding convexity adjustment. 
+
+The first references on the convexity adjustment were \cite{RitchkenS}, \cite{Flesaker} and \cite{BrothertonIben}, published almost simultaneously. A convexity formula for averaging contracts was found in \cite{RitchkenS}. Flesaker derived a convexity adjustment for computing the expected Libor rate under the Ho-Lee model in a continuous and discrete setting in \cite{Flesaker}. \cite{BrothertonIben} used the Taylor expansion on the inverse function for calculating the convexity adjustment. In the following years, several improvements were made. For example, the convexity adjustment was extended to other payoffs in \cite{Hull06}. \cite{Hart} improved the Taylor expansion. \cite{KirikosNovak} derived the convexity adjustment for the Hull-White model. Afterwards, we can find papers that extend the convexity adjustment to different payoffs, see \cite{Benhamou00WC} or \cite{Hagan03}. Or by applying alternative techniques such as the change of measure in \cite{Pelsser}, a martingale approach in \cite{Benhamou00} or the effects of stochastic volatility in \cite{PiterbargRenedo} and \cite{HaganWoodward20}.
+
+In the present paper, we find an alternative way to calculate the convexity adjustment for a general interest rate model. The idea is to use the It\^o's representation theorem. Unfortunately, the theorem does not give an insight into how to calculate the elements therein. Therefore, it is necessary to introduce basic concepts of Malliavin calculus to apply the Clark-Ocone representation formula.
+
+The structure of the paper is as follows. In Section \ref{sec:Notation}, we give the basic preliminaries and our notation related to Interest Rates models. This notation will be used throughout the paper without being repeated in particular theorems unless we find it useful to do so in order to guide the reader through the results. In Section \ref{sec:Malliavin}, we make an introduction to Malliavin calculus. In Section \ref{sec:CA}, we compute the convexity adjsustment for several payoffs that are presents as usual way in the interest rate trading desks. As well, we do some numerical expresents to check the analytical results obtained. To end, in Section \ref{sec:Conclusion} we give the conclusions of the paper and future lines of research to explore.
+
+
+\section{Preliminaries and notation}\label{sec:Notation}
+In this section, we give the basic preliminaries and notation necessary throughout the paper.
+\subsection{A tale of two curves}
+Consider a continuous-time economy where zero-coupon bonds are traded for all maturities. The price at time $t$ of a zero-coupon bond with maturity $T$ is denoted by $P(t,T)$ where $0\leq t \leq T$. Clearly, $P(T,T)=1$. The compounded instantaneous forward rate is defined as:
+\begin{eqnarray*}
+f(t,T)= -\partial_{T}\ln P(t,T)
+\end{eqnarray*}
+and the spot interest rates as:
+\begin{eqnarray*}
+r(t)=\lim_{T\longrightarrow t} -\partial_{T}\ln P(t,T).
+\end{eqnarray*}
+Therefore, the zero-coupon bond price is given by
+\begin{eqnarray*}
+P(t,T)=\exp\left(-\int^{T}_{t} f(t,u) du\right).
+\end{eqnarray*}
+
+Before the financial crisis, there was a single curve framework based on the same curve for discounting and forecasting. Since then, the market has adopted a multi-curve approach with two different curves: the discount curve and the estimation curve chosen based on the maturity of the underlying rate. The difference between these two curves is known as the basis. In this paper, we will assume that the basis are not stochastic. Therefore, it can be obtained directly from the market at time $t=0$. In other words, the estimation forward curve $f_{E}(t, T)$ is given by
+\begin{equation}\label{estimation_forward_rate_curve}
+f_{E}(t,T) = f_{ois}(t,T) + s(t,T)
+\end{equation}
+where and $f_{ois}$ is the discount curve and $s(t,T)$ are the basis between the two curves, i.e. $s(t,T)= f_{E}(0,T) - f_{ois}(0,T)$.\\
+
+Given the discount curve $P_{ois}(t,T)$ and using the representation \eqref{estimation_forward_rate_curve}, it is possible to find the discount curve for the estimation curve using the relation
+\begin{equation}\label{bond_forward}
+P_{E}(t,T)=H(t,T)P_{ois}(t,T)
+\end{equation}
+where $H(t,T)=\exp\left(-\int_{t}^{T}s(t,u) du \right)$.
+
+\subsection{The model}
+We will assume that the $f_{ois}$ dynamics follows a single factor Heath-Jarrow-Morton model under the $\mathbb{Q}$-measure. Therefore, let $T>0$ a fixed time horizon, $t>0$ the starting time, and $W$ a Brownian motion defined on a complete probability space $(\omega, \mathcal{F}, \mathbb{P})$. Then, the HJM model is defined by
+\begin{align}\label{ois_forward_rate_curve}
+df_{ois}(t,T) &= \sigma(t,T)\nu(t,T)dt + \sigma(t,T)dW^{\mathbb{Q}}_t
+\end{align}
+where $\nu(t,T)=\int_{t}^{T}\sigma(t,s)ds$ and $\sigma(t, T)$ are $\mathcal{F}_{t}$-adapted process that are positive functions for all $t,T$. In particular, we have that
+\begin{eqnarray*}
+f_{ois}(t,T)= -\partial_{T}\ln P_{ois}(t,T).
+\end{eqnarray*}
+
+To have a Markovian representation of the HJM, we will assume that the volatility is separable, i.e.
+\begin{equation}\label{separation_condition}
+\sigma(t,T)= h(t)g(T).
+\end{equation}
+with $g$ a positive time-dependent function and $h$ a non-negative process. In addition,
+\begin{align*}
+\eta_t &= g(t)h(t,x_t,y_t)  \nonumber \\
+k_t &= - \frac{\partial_t g(t)}{g(t)}.
+\end{align*}
+
+This version of the HJM is also known as the Cheyette model, \cite{Cheyette}. In \cite{AndreasenPiterbarg}, we have the following proposition.
+\begin{proposition}
+Consider the HJM model \eqref{ois_forward_rate_curve} with the separable volatility condition \eqref{separation_condition}. Define the stochastic processes $x(t)$ and $y(t)$ by
+\begin{align}\label{short_rate_cheyette}
+dx_t &= \left(-k(t) x(t) + y(t)\right)dt + \eta\left(t,x(t),y(t)\right) dW_t^{\mathbb{Q}} \nonumber \\
+dy_t &= \left(\eta^{2}(t) - 2 k(t) y(t)\right) dt ,\nonumber \\
+x(0) &=y(0)=0.
+\end{align}
+All zero-discount bonds are deterministic functions of the processes $x(t)$ and $y(t)$,
+\begin{eqnarray*}
+P_{ois}(t,T)=P(t, T, x(t), y(t)), 
+\end{eqnarray*}
+where 
+\begin{eqnarray}\label{bond_ois}
+P_{ois}(t,T,x,y) = \frac{P_{ois}(0,T)}{P_{ois}(0,t)} \exp\left(-G(t,T)x - \frac{1}{2} G^{2}(t,T)y \right),
+\end{eqnarray}
+where $G(t,T) = \int_{t}^{T} \exp\left(-\int_{t}^{u} k(s) ds \right) du$ and the short rate is
+\begin{equation}
+r_{ois}(t)=f_{ois}(t,t)= f_{ois}(0,t) + x(t).
+\end{equation} 
+\end{proposition}
+
+The whole interest rate curve can be reduced to the evolution of the two-state variables $x(t)$ and $y(t)$. The variable $x(t)$ constitutes the main yield curve driver, whereas $y(t)$ is an auxiliary `convexity' variable. Note that the function $y(t)$ is not deterministic, however, it does not have a diffusion term. We call such processes locally deterministic. \\
+
+We can see from \eqref{short_rate_cheyette} that
+\begin{equation*}
+x(t_a) = \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) y(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k(u) du \right) \eta(u,x(u),y(u)) dW_u^{\mathbb{Q}}. 
+\end{equation*}
+
+In order to have a more manageable model, we will follow the ideas of \cite{AndreasenPiterbarg} where the state variables are approximated. So, we can approximate $y(t)$ as
+\begin{equation}\label{approximation_y_t}
+y(t) \approx \bar{y}(t):=\int_{0}^{t} \exp\left(-2\int_{u}^{t} k(w) dw \right) \eta^{2}(u,x(0),y(0)) du
+\end{equation} 
+and
+\begin{eqnarray}
+X_{t_a} \approx \bar{X}(t_a):= \bar{x}_0(t_a)  &+& \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) \bar{y}(u) du \nonumber \\
+&+& \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k(u) du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}   \label{approximation_x_t_a}
+\end{eqnarray}
+with initial condition $\bar{x}_{0}(t_a)$ is such a way that  
+\begin{equation*}
+S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_{t_a}) = S_{a,b}(0).
+\end{equation*}
+
+\subsection{Model constraints}
+To calculate the convergence order of the convexity adjustment approximation, we use the following hypotheses on $\eta(t,x,y)$.
+\begin{hypothesis}\label{boundedness_volatility} 
+The process $\eta_t$ is global Lipschitz and differentiable a.s. In addition, we will suppose that
+\begin{align*}
+\alpha_1 \leq \eta(t,x,y) \leq \alpha_2 \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+}. \\
+|\eta(t,x_2,y_2) - \eta(t,x_1,y_1)| \leq C_{x,y} \lVert (x_2-x_1,y_2-y_1)\rVert \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+} 
+\end{align*}
+with $\lVert \cdot \rVert$ euclidean norm in $\mathbb{R}^{2}$.
+\end{hypothesis}
+
+The mean reversion function $k(\cdot)$ influences the range and flexibility of the volatility structure. The function is always positive and, in practice, it is usually low.
+
+\begin{hypothesis}\label{boundedness_reversion} 
+The mean reversion function $k(\cdot)$ is a continuous and positive a.s such that
+\begin{equation*}
+m_k < k(t) \leq M_k \quad \forall t \geq 0.
+\end{equation*}
+
+As a consequence.
+\begin{remark}
+Under these assumptions on $k(\cdot)$, we have that
+\begin{equation*}
+\lim_{t \to \infty}  I(\alpha,0,t):= \lim_{t \to \infty} \int_{0}^{t} \exp\left(-\alpha \int_{u}^{t} k(s) ds\right) du \leq \frac{1}{\alpha m_k} \quad \text{with} \quad \alpha > 0.
+\end{equation*}
+On other hand, 
+\begin{equation*}
+\lim_{t \to \infty}  J(\alpha,0,t):= \lim_{t \to \infty} \int_{0}^{t} G^{\alpha}(u,t) \exp\left(-\alpha \int_{u}^{t} k(s) ds\right) du \leq \frac{1}{\alpha m^{\alpha+1}_{k}}
+\end{equation*}
+\end{remark}
+\end{hypothesis}
+
+The hypotheses have been chosen for simplicity, but they can be replaced by suitable integrability conditions.\\
+
+Note, that under the hypothesis \eqref{boundedness_volatility}, $\partial_x \eta(t,x,y)$ and $\partial_y \eta(t,x,y)$ are bounded.
+
+\subsection{Notation}
+\textcolor{red}{(Falta pasteleo)}\\
+$\delta_{t_1,t_2}=t_2 -t_1$ is the year fraction between $t_1$ and $t_2$.
+
+\section{Convexity Adjustment}\label{sec:CA}
+In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula . In order to introduce a general idea of the method. Let define a $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$ and that we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
+\begin{equation*}
+f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left(f(x_t)\right) + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) dW^{\mathbb{Q}_1}_s
+\end{equation*}
+Now, if we take $\mathbb{E}^{\mathbb{Q}_2}\left( \cdot \right)$ in the previous expression and we use the Girsanov's theorem, we get that
+\begin{equation}\label{general_convexity}
+\mathbb{E}^{\mathbb{Q}_2}\left( f(x_t) \right) = f(x_0) + \mathbb{E}^{\mathbb{Q}_1} \left(\int_{0}^{t}  \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) \lambda_s ds \right). 
+\end{equation}
+The second term, is the convexity adjustment to due to change of measure from $\mathbb{Q}_1$ to $\mathbb{Q}_2$. The differents choice of $f$, $\mathbb{Q}_1$ and $\mathbb{Q}_2$ will allow us to get an approximation of the convexity adjustment for the different case of interest. 
+\subsection{FRAs Vs futures}
+ The cash flows in FRAs and futures are computed under different measures. Consequently, we need to adjust the futures price quote to transform them into FRAs price quotes. As usual, we will define the forward rate at time $t_0$ between $t_1$ and $t_2$ under the forward curve $E$ as:
+\begin{equation}\label{forward_rate}
+L_{E}(t_0, t_1, t_2) = \frac{1}{\delta_{t_1,t_2}}\left(\frac{P_{E}(t_0,t_1)}{P_{E}(t_0,t_2)} - 1 \right)
+\end{equation} 
+where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. 
+
+\begin{theorem}\label{Th_CA_futures}[Convexity Adjustment approximation for Futures]
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for futures is 
+\begin{equation}\label{ca_approximation_futures}
+CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,x_0,\hat{y}_s) \nu(s,t_2) ds. 
+\end{equation}
+with 
+\begin{equation*}
+\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x,y).
+\end{equation*}
+\end{theorem}
+\begin{proof}
+See appendix \ref{Proof_CA_futures}.
+\end{proof}
+
+\begin{example}[Convexity adjustment for futures under the Hull-White model]\label{example_ca_future}
+The Cheyette model can be reduced to Hull-White model using the following parameters
+\begin{align*}
+g(T) &= \exp(-kT), \\
+h(t) &= \sigma.
+\end{align*}
+Moreover, from the definition of $g(\cdot)$ and $h(\cdot)$, we have that
+\begin{align*}
+\eta_s &= \sigma \exp(-ks),\\
+\beta(s,u, x_0, \bar{y}_s) &= \sigma \exp(-ku),\\
+\nu(s,t_2) &= \sigma \frac{\exp(-ks) - \exp(-kt_2)}{k}.
+\end{align*}
+Then the convexity adjustment \eqref{ca_approximation_futures} is
+\begin{align*}
+CA(t_0,t_1) & \approx \frac{\sigma^{2} \exp(-k t_0)  P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(\frac{1 - \exp(- k t_0)}{k^{2}} - \frac{t_0 \exp(-k t_2)}{k} \right).   
+\end{align*}
+
+In the Figure \ref{fig:Futures}, we can check the accuracy of the last formula versus Monte Carlo. The parameters that we have used are $\sigma=0.015$, $k=0.003$ and flat curve with level $r=0.01$.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.3]{Figures/future_convexity.jpg}
+	\end{center}
+	\caption{Convexity Mc Vs Convexity Malliavin}
+	\label{fig:Futures}
+\end{figure} 
+\end{example}
+
+\subsection{OIS futures}
+In this section, we will derive the convexity adjustment for the overnight-indexed swap, also known as OIS. Given $t_0 < t_1$, we define \textcolor{red}{(qué es R y Ravg, tipo OIS y tipo OIS medio, nombre tecnico?)}
+\begin{align*}
+R(t_0,t_1) &:=\frac{1}{\delta_{t_0,t_1}} \left(\exp\left(\int_{t_0}^{t_1}r_{ois,u} du \right) - 1\right), \\
+R_{avg}(t_0,t_1) &:= \frac{1}{\delta_{t_0,t_1}}\int_{t_0}^{t_1}r_{ois,u} du.
+\end{align*}
+We observe that $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$  are not predictable and are only observable in $t_1$. However, 
+$R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$ are flows that will be payed in $t_1$. Therefore, we can consider that the expected value under the measure $\mathbb{Q}$ is observable during entire period $[t_0, t_1]$. Let us define the next $\mathbb{Q}$ martingales:
+\begin{align*} 
+\bar{R}(t,t_0,t_1) &:= \mathbb{E}_t^{\mathbb{Q}}\left( R(t_0,t_1)  \right), \\
+\bar{R}_{avg}(t,t_0,t_1) &:= \mathbb{E}_t^{\mathbb{Q}}\left( R_{avg}(t_0,t_1)  \right).
+\end{align*}
+
+Given $t_0\leq t_1$, we define \textcolor{red}{(qué es I, buscar nombre chulo)}
+\begin{equation*}
+I(t_0,t_1) := \int_{t_0}^{t_1} r_s ds.
+\end{equation*}
+
+\begin{theorem}\label{Th_CA_OIS}[Convexity Adjustment approximation for OIS Futures]
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for OIS futures is 
+\begin{equation}\label{convexity_ois_future}
+\mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
+\end{equation}
+and for the average OIS future is
+\begin{equation}\label{convexity_avg_ois_future}
+\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
+\end{equation}
+\end{theorem}
+\begin{proof}
+See appendix \ref{Proof_CA_OIS_futures}.
+\end{proof}
+
+\begin{remark}
+We can calculate the convexity adjustment for the case $t_0 < t < t_1$ in a similar way to when $t < t_0$, for this we will define
+\begin{equation*}
+I(t,t_1):=\int_{t}^{t_1} r_s ds
+\end{equation*}
+and 
+\begin{align*}
+R(t_0,t_1) &:= \frac{1}{\delta_{t_0,t_1}}\left(\frac{\exp(\int_{t}^{t_1} r_{ois,s} ds )}{P_{ois}(t_0,t)} - 1\right), \\
+R_{avg}(t_0,t_1) &:= \frac{1}{\delta_{t_0,t_1}}\left(\int_{t_0}^{t} r_{ois,s} ds + \int_{t}^{t_1} r_{ois,s} ds\right).   
+\end{align*}
+\end{remark}
+
+\begin{example}[Convexity adjustment for OIS futures under the Hull-White model]\label{example_convexity_hw_ois}
+Similarly to the Example \ref{example_ca_future}, we can find the equivalent parameters for the Hull-White model: 
+\begin{align*}
+\Gamma(s,t_0,t_1) &= \frac{\sigma \exp(-ks)}{k}\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-s))\right)\\
+\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) + \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  \right).
+\end{align*}
+Therefore, we have that
+\begin{align*}
+\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
+&= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
+&+ \frac{\sigma^{2}}{2k^2} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k(t_1 - s))\right)^{2} ds\\
+&= \frac{\sigma^{2}t_0}{2k^{2}} \left( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \right)\\  
+&+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  + \exp(-kt0)t0 - 2 \frac{\exp(-2kt_0) - \exp(-k(t_0 + t_1))}{k}  \right)
+\end{align*} \textcolor{red}{(we have to review this integral), Poner abreviado, calculo apendice}\\
+Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$.\\
+
+The next figure, show accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) for the Hull-White model case when the mean reversion is $k=0.003$ and volatility $\sigma=0.01$. 
+\begin{figure}[H]
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.2]{Figures/convexity_ois.jpg}
+		\caption{Convexity Mc Vs Convexity Malliavin}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.2]{Figures/convexity_avg_ois.jpg}
+		\caption{Convexity Avg Mc Vs Convexity Avg Malliavin}
+\end{subfigure}
+\caption{Convexity adjustment for compounding and average OIS}
+\end{figure} 
+\end{example}
+
+
+
+\subsection{FRAs in arrears}
+A FRA in arrears is the most classic example among the products with convexity adjustment. The price is given by 
+\begin{equation}\label{FRAinArrear}
+P_{E}(0,t_1)\mathbb{E}^{\mathbb{Q}^{t_1}}\left(L_{E}(t_1,t_1,t_2)\right),
+\end{equation}
+i.e. the cash flow associated to a FRA in arrears is $L_{E}(t_1,t_1,t_2)$ in $t_1$.
+
+\begin{theorem}\label{Th_CA_FRAsinArrears}[Convexity Adjustment approximation for FRAs in Arrears]
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for FRAs in Arrears is 
+\begin{align}\label{ca_approximations_fra_arrears}
+CA(t_0,t_1) \approx  \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \int_{0}^{t_1}& \beta(s,t_1, x_0, \bar{y}_s) \exp\left(-\int_{s}^{t_1} \partial_x \beta(u,t_1,x_0,y_0) \nu(u,t_2) du \right) \nonumber\\
+\qquad\qquad &\cdot \left(\nu(s,t_2) - \nu(s,t_1)\right) ds.
+\end{align}
+\end{theorem}
+\begin{proof}
+See appendix \ref{Proof_CA_FRAsinArrears}.
+\end{proof}
+
+
+\begin{example}[Convexity adjustment for FRAs in Arrears under the Hull-White model]\label{example_convexity_hw_FRAsinArrears}
+We can restrict the model the the Hull-White model with constant parameters. The analytical approximation that we get from \eqref{ca_approximations_fra_arrears} is
+\begin{equation*}
+CA(t_0,t_1) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)}  \frac{\sigma^{2}}{k} \int_{0}^{t_1} \exp(- k(t_1 + u)) -   \exp(- k(t_2 + u)) du 
+\end{equation*}
+In Figure \ref{fig:FRA_HW}, we compare the approximation with a Monte Carlo method when the parameters are $\sigma=0.1$, $k=0.007$.
+\begin{figure}[H]
+		\begin{center}
+		\includegraphics[scale=0.3]{Figures/fra_convexity.jpg}
+		\end{center}
+		\caption{Convexity Mc Vs Convexity Malliavin}
+		\label{fig:FRA_HW}
+\end{figure}
+\end{example}
+
+
+
+\subsection{CMSs}
+The last product we will approximate the convexity adjustment are CMS. We will introduce some notation that we will use throughout the section. We define the swap rate from $t_a$ to $T_b$ at time $t$ as
+\begin{equation*}
+S_{a,b}(t) := \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} L^{E}(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})}{01(t,t_a,T_b)}
+\end{equation*}
+where
+\begin{align*}
+01(t,t_a,t_b) = \sum_{j=1}^{n_f} \delta_{t^{f}_{i-1}, t^{f}_i} P_{ois}(t,t^{f}_{j}) \\
+t_a=t^{E}_0 < t^{E}_i< \cdots < t^{E}_{n_E}=t_b \quad i=0,\cdots,n_E&  \\
+t_a=t^{f}_0 < t^{f}_j< \cdots < t^{f}_{n_f}=t_b \quad j=0,\cdots,n_f&
+\end{align*}
+The same way, we will define the OIS swap rate as
+\begin{equation*}
+S^{ois}_{a,b}(t) = \frac{P_{ois}(t,T^{E}_a) - P_{ois}(t,T^{E}_b)}{01(t,t_a,t_b)}. 
+\end{equation*}
+
+\begin{remark}
+Note from \eqref{bond_forward} that
+\begin{equation*}
+S_{a,b}(t) = S^{ois}_{a,b}(t) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(t,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(t,t^{E}_{i})} {01(t,t_a,t_b)}
+\end{equation*}
+where 
+\begin{equation*}
+\alpha(t,t^{E}_{i-1}, t^{E}_{i})  = \frac{1}{\delta_{t^{E}_{i-1}, t^{E}_i}}\left(\frac{H(t,t^{E}_{i-1})}{H(t,t^{E}_{i})} - 1\right)
+\end{equation*}
+
+Under one-factor HJM model, we can suppose that variability of $\alpha(t,t^{E}_{i-1}, t^{E}_{i})$ is low. Therefore, it is reasonable to freeze it at time $t=0$. Having
+\begin{equation}\label{approximation_basis_swap}
+S_{a,b}(t) \approx S^{ois}_{a,b}(t) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
+\end{equation}
+\end{remark}
+
+\begin{theorem}\label{Th_CA_CMS}[Convexity Adjustment approximation for CMS]
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Given
+\begin{equation}
+M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}
+\end{equation}
+and 
+\begin{align}\label{cms_first_order_convexity}
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) \approx  S^{ois}_{a,b}(0) &+ \frac{\partial_x S^{ois}_{a,b}(t_a, \bar{x}_0(t_a),\bar{y}(t_a))\partial_x M(t_a,t_p, \bar{x}_0(t_a),\bar{y}(t_a))}{M(0,t_p)} \nonumber \\
+\qquad\qquad &\cdot \mathbb{E}^{0,1}\left( \int_{0}^{t_a} \left(\mathbb{E}_s^{0,1}\left( D_s x_{t_a}\right)\right)^{2} ds  \right)
+\end{align}
+Then, the convexity adjustment approximation for CMS is
+\begin{equation}
+CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) - S_{a,b}(0).
+\end{equation} 
+\end{theorem}
+\begin{proof}
+See appendix \ref{Proof_CA_CMS}.
+\end{proof}
+
+\begin{remark}
+The key point is calculate an approximation of $\mathbb{E}_s^{0,1}\left( D_s x_{t_a}\right)$. The simplest cases are on the Hull-White or Ho-Lee model. The general case is treated in (\ref{approximation_under_annuity_measeure_d_s}). 
+\end{remark}
+
+\begin{example}[Convexity adjustment for CMS under the Hull-White model]
+To check the accuracy of the last approximation, we compute with a Monte Carlo the exact value of $\mathbb{E}^{t_p}\left(S^{ois}_{a,b}(t_a)\right)$ under spot measure $\mathbb{Q}$, i.e we will compute  $\frac{1}{P(0,t_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(t_a)}{\beta_{t_a}} \right)$.\\
+In the Hull-White model case, we have that
+\begin{equation*}
+D_s x_{t_a} = \sigma \exp(-(t_a - s)).
+\end{equation*}
+Therefore, \eqref{cms_first_order_convexity} is equal to
+\begin{equation*}
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) \approx  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(t_a, \bar{x}_0(t_a),\bar{y}(t_a))\partial_x M(t_a,t_p, \bar{x}_0(t_a),\bar{y}(t_a))}{M(0,t_p)} \frac{\sigma^{2}(1-\exp(-2kt_a))}{2k}.
+\end{equation*}
+
+In Figure \ref{fig:CMS}, we observe the CMS convexity adjustment when the tenor of the underlying swap is 5Y. We compare the last approximation and a Monte Carlo for a Hull-White model with parameters $\sigma=0.01$ and $k=0.0007$
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.25]{Figures/cms_convexity_order.jpg}
+	\end{center}
+	\caption{Convexity Mc Vs Convexity Malliavin}
+	\label{fig:CMS}
+\end{figure} 
+\end{example}
+
+
+\section{Conclusions}\label{sec:Conclusion}
+
+
+
+\section*{Appendix}
+\appendix
+\renewcommand{\thesection}{\Alph{section}.\arabic{section}}
+
+
+
+
+\section{Auxiliary lemmas}
+\begin{lemma}\label{DsX}[Approximation $D_s x_{t_a}$]
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, 
+\begin{equation}\label{approximation_D_s_x_t}
+D_sX_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}(t_a))\bar{M}(s,t_a)
+\end{equation}
+where
+\begin{align*}
+\bar{M}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left( \frac{\left(\partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} - \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p))\right) du \right) \\ 
+&\cdot\exp\left(\int_{s}^{t_0} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}}_u \right)
+\end{align*}
+With $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) \partial_x \eta(u,x,y)$. Therefore, we have that
+\begin{equation}\label{approsimation_E_s_x_t}
+\mathbb{E}_s^{t_p}\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x}_0(s),\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p)) du \right).
+\end{equation}
+\end{lemma}
+\begin{proof}
+To get an approximation for $D_sX_{t_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{t_a}$. For that reason, we will use the approximations \eqref{approximation_y_t} and \eqref{approximation_x_t_a}.\\
+
+Using the relation 
+\begin{equation*}
+dW^{\mathbb{Q}^{t_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,t_p) dt \text{ where }\bar{\nu}(t,t_p) = \int_{t}^{t_p} \eta(s,\bar{x}_s,\bar{y}_s) ds,
+\end{equation*}
+we will represent an approximation of $X_{t_a}$ under the measure $\mathbb{Q}^{t_p}$ 
+\begin{align*}
+X_{t_a} \approx \bar{x}_0  &+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_s ds - \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\nu}(s, t_p) \eta(s,\bar{x}_s,\bar{y}_s) ds   \\
+&+ \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right)\eta(s,\bar{x}_s,\bar{y}_s) dW_s^{\mathbb{Q}^{t_p}}. 
+\end{align*}
+\textcolor{red}{(Revisar)}
+\end{proof}
+
+\subsection{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s x_{t_a}\right)$}
+Following the same procedure as before, we have that
+\begin{equation*}
+X_{t_a} \approx \bar{X}(T_a):= \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
+\end{equation*}
+and therefore (see (\ref{approsimation_E_s_x_t}))
+\begin{equation}
+D_sX_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{T_a})\bar{M}(s,t_a)
+\end{equation}
+Now, if we take $\mathbb{E}^{\mathbb{Q}}\left(\cdot\right)$ we get
+\begin{equation}\label{approximation_spot_E_s_x_t}
+\mathbb{E}^{\mathbb{Q}}_s\left(D_sX_{t_a} \right) \approx \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{t_a})
+\end{equation}
+
+\section{Proofs}
+\subsection{Proof Theorem \ref{Th_CA_futures}}\label{Proof_CA_futures}
+Observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the future rate as:    
+\begin{equation}\label{future}
+\hat{L}_{E}(t,t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right), 
+\end{equation}
+where $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. Using
+\eqref{forward_rate} and \eqref{future}, then the convexity adjustment definition is:
+\begin{equation*}
+CA(t, t_0, t_1, t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left(L_{E}(t_0, t_1, t_2) \right).
+\end{equation*}
+From (\ref{ois_forward_rate_curve}) and since $f_{ois}(t,T)$ is a $\mathbb{Q}^{T}$ martingale, we have that
+\begin{equation}\label{girsanov_spot_forward}
+dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,t_2) dt. 
+\end{equation}
+Applying (\ref{general_convexity}) with $f(x_t)=L_{E}(t,t_0, t_1, t_2)$, $\mathbb{Q}_1=\mathbb{Q}$, $\mathbb{Q}_1=\mathbb{Q}^{t_2}$ and $\lambda_t = \nu(t,t_2)$,  we get that
+\begin{equation}\label{ca_general_future}
+CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) \nu(s,t_2) ds \right)
+\end{equation}
+where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Calculating the malliavin derive of $L_{E}(t_0,t_1,t_2)$ we have that
+\begin{equation*}
+D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)} D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) 
+\end{equation*}
+Now from the zero coupon representation formula (\ref{bond_ois}), we get that
+\begin{equation*}
+D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) = \frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}.
+\end{equation*}
+Therefore
+\begin{equation}\label{malliavin_derive_L}
+D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}.
+\end{equation}
+If we use (\ref{approximation_D_s_x_t}) with $T_a=t_0$ and $\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x,y)$, we have that
+\begin{align*}
+D_s L_{E}(t_0,t_1,t_2) &\approx \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} \beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0) \nonumber \\
+\approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)} \right)\beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0).
+\end{align*}
+Therefore
+\begin{equation}\label{approximation_clarkocone}
+\mathbb{E}_s\left( D_s L_{E}(t_0,t_1,t_2) \right) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1)\right)\beta(t,t_0,x_0,\bar{y}_s)\bar{M}(s,t_0).
+\end{equation}
+Then from (\ref{ca_general_future}) and (\ref{approximation_clarkocone}) we find the approximation for the convexity adjustment for futures.
+
+
+
+\subsection{Proof Theorem \ref{Th_CA_OIS}}\label{Proof_CA_OIS_futures}
+To prove it, we will do several observations. The first observation is that if we define $F(t,t_0,t_1) = \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R(t_0,t_1)\right)$, then we have that
+\begin{align*}
+F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)}  \mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_1} r_{ois,u} du \right) R(t_0,t_1) \right) = \frac{1}{\delta_{t_0,t_1}}\left(\frac{P_{ois}(t,t_0)}{P_{ois}(t,t_1)} - 1\right), \quad t \in [0,t_0] \\
+F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)} \mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_1} r_{ois,u} du \right) R(t_0,t_1) \right) = \frac{1}{\delta_{t_0,t_1}} \left(\frac{\left( \exp\left(\int_{t}^{t_1}r_{ois,u} du\right)\right)}{P_{ois}(t_0,t)}-1\right), \quad  t \in  [t_0, t_1].
+\end{align*}
+The convexity adjustment for $ R(t_0,t_1)$ can be defined as
+\begin{equation}\label{R_ois_ca}
+CA_{ois}(t,t_0,t_1) = F(t,t_0,t_1) - \bar{R}(t,t_0,t_1).
+\end{equation}
+The second observation is that we have the following equivalence
+\begin{equation}\label{R_ois_avg}
+\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) = \mathbb{E}^{\mathbb{Q}}\left( \frac{\log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right)}{\delta_{t_0,t_1}} \right)  \end{equation}
+To compute $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right)$, we apply $D_s$ on $I(t_0,t_1)$ obtaining that
+\begin{equation*}
+D_s I(t_0,t_1) = \int_{\max(s, t_{0})}^{t_1}  D_s x_u du 
+\end{equation*}
+Now, if $t < t_0$, then from (\ref{clark-okone}) and (\ref{approximation_spot_E_s_x_t}), we have that 
+\begin{align}\label{apprx_I_t0_t1}
+I(t_0,t_1) &= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left(\beta(s,u,x_s,y_s) \bar{M}(s,u) \right) du dW_s^{\mathbb{Q}} \nonumber \\
+&\approx \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,x_0,\bar{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
+&= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1} g(s)h(s,x_0,\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
+\end{align}
+Then, using the previous approximation, we get that
+\begin{align*}
+1 + \delta_{t_0,t_1}\mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) &= \mathbb{E}_t^{\mathbb{Q}}\left( \exp(I(t_0,t_1)) \right)\\
+&\approx \exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)  \mathbb{E}^{\mathbb{Q}}\left(\exp\left(\int_{t}^{t_1} \Gamma(s,t_0,t_1)dW_s^{\mathbb{Q}}\right)\right)
+\end{align*}
+where $\Gamma(s,t_0,t_1)= g(s)h(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$.\\
+Therefore, we have that
+\begin{equation}\label{representation_i_0_t}
+1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right).
+\end{equation}
+Then, we obtain \eqref{convexity_ois_future}.
+
+In order to get an approximation of $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right)$ with base $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right)$, we must note that 
+\begin{equation*}
+\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left( \log(1+ \delta_{t_0,t_1} R(t_0,t_1))\right)}{ \delta_{t_0,t_1}}.
+\end{equation*}
+Then from (\ref{representation_i_0_t}), we get \eqref{convexity_avg_ois_future}.
+
+\subsection{Proof Theorem \ref{Th_CA_FRAsinArrears}}\label{Proof_CA_FRAsinArrears}
+$L_{E}(t,t_1,t_2)$ is martingale under the measure $\mathbb{Q}^{t_2}$, therefore the expected value of \eqref{FRAinArrear} is taken with respect to the wrong martingale. To calculate the convexity adjustment we use the Clark-Ocone to get a representation for $L_{E}(t_1,t_1,t_2)$ i.e
+\begin{equation}\label{general_convexity_fras}
+L_{E}(t_1,t_1,t_2) = \mathbb{E}^{\mathbb{Q}^{t_2}}\left(L_{E}(t_1,t_1,t_2) \right) + \int_{0}^{t_1} \mathbb{E}^{\mathbb{Q}^{t_2}}\left(D_s L_{E}(t_1,t_1,t_2) \right) dW^{\mathbb{Q}^{t_2}}_{s}
+\end{equation}
+Under the HJM dynamics, we have the relation
+\begin{equation*}
+dW^{\mathbb{Q}^{t_2}}_s = dW^{\mathbb{Q}^{t_1}}_s + (\nu(s,t_2) - \nu(s,t_1)) ds. 
+\end{equation*}
+Taking $\mathbb{E}^{^{\mathbb{Q}^{t_1}}}(\cdot)$, we get that
+\begin{align*}
+\mathbb{E}^{\mathbb{Q}^{t_1}}\left(L_{E}(t_1,t_1,t_2) \right) &= L_{E}(0,t_1,t_2) + \mathbb{E}\left( \int_{0}^{t_1} \mathbb{E}^{\mathbb{Q}^{t_2}}\left(D_s L_{E}(t_1,t_1,t_2) \right) dW^{\mathbb{Q}^{t_2}}_{s}\right)\\
+&= L_{E}(0,t_1,t_2) + \mathbb{E}\left( \int_{0}^{t_1} \mathbb{E}^{\mathbb{Q}^{t_2}}\left(D_s L_{E}(t_1,t_1,t_2) \right) (\nu(s,t_2)-\nu(s,t_1)) ds \right).
+\end{align*}
+Now from (\ref{approximation_D_s_x_t}) we have that 
+\begin{eqnarray*}
+D_s L(t_1,t_1,t_2) &=& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(t_1,t_2)} D_s x_{t_1}\\
+&\approx& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, x_0, \bar{y}_s)\bar{M}(s,t_1)
+\end{eqnarray*}
+Therefore, if we define and we use (\ref{approsimation_E_s_x_t}) we have that
+\begin{equation*}
+CA(t_0,t_1) = \mathbb{E}^{\mathbb{Q}^{t_1}}\left( L_{E}\left(t_1,t_1,t_2\right)\right) - L_{E}\left(0,t_1,t_2\right)
+\end{equation*}
+and we use the last approximation and (\ref{general_convexity_fras}), we can get the next approximation for $CA(t_0,t_1)$.
+
+
+\subsection{Proof Theorem \ref{Th_CA_CMS}}\label{Proof_CA_CMS}
+Assume we have a cash flow in $t_a < t_p < t_b$ with value $S_{a,b}(t_a)$. $S_{a,b}(t_a)$ is a martingale under the measure $\mathbb{Q}^{01}$, but not under the measure $\mathbb{Q}^{t_p}$. Therefore, we take into consideration the effect to compute the expected value of $S_{a,b}(t_a)$ in a measure which is not its natural measure. Then, the convexity adjustment for a CMS is
+\begin{equation}
+CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) - S_{a,b}(0).
+\end{equation} 
+After some changes of measure, we can see that
+\begin{align}
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S_{a,b}(t_a) M(t_a,t_p)\right) \nonumber \\
+&= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S_{a,b}(t_a) \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right) \right) \nonumber
+\end{align}
+with $M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}$.\\
+
+Then, we can approximate it by
+\begin{align}\label{expected_t_p_cms}
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S^{ois}_{a,b}(t_a) \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right) \right) \\
+\qquad\qquad &+ \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
+\end{align}
+
+From the previous expression, we must note that under assumption of not stochastic basis, we must to compute the convexity adjustment for the OIS swap rate. But a complicated point is calculate the expected value 
+\begin{equation}\label{Exp_M_conditional}
+\mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right).
+\end{equation}
+In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. This assumption makes trivial to calculate \ref{Exp_M_conditional}. The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\
+
+We will do an approach without to specify any mapping function. If we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
+\begin{equation} \label{clark_ocone_swap_m}
+M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\left(D_s M(t_a,t_p)\right) dW^{01}_s
+\end{equation}
+Then, if we substitute the last expressions in (\ref{expected_t_p_cms}) we have that
+\begin{align}\label{cms_first_order_convexity_prev}
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left( S^{ois}_a,b(t_a) \int_{0}^{t_a} \mathbb{E}^{0,1}_s\left(D_sX_{t_a}\partial_x M(t_a,t_p)  \right) dW^{0,1}_s   \right) \nonumber \\
+=&  S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(\int_{0}^{t_a} D_s X_{t_a} \partial_x S_{a,b}(t_a) \mathbb{E}^{0,1}_s\left(D_sX_{t_a}\partial_x M(t_a,t_p)  \right) ds   \right).
+\end{align}
+The final ap
+From \eqref{cms_first_order_convexity_prev}, we can approximate \eqref{cms_first_order_convexity}.
+
+% TODO: Change bibliographystyle according to the journal style - it should know the online entry, see Matsuda04
+\bibliography{references/references, references/references-books,references/references-own,references/references-online}
+%\bibliography{references-export}
+
+\end{document}
+
