@@ -260,17 +260,14 @@ x(t_a) = \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) y(u) du + \int_{
 
 In order to have a more manageable model, we will follow the ideas of \cite{AndreasenPiterbarg} where the state variables are approximated. So, we can approximate $y(t)$ as
 \begin{equation}\label{approximation_y_t}
-y(t) \approx \bar{y}(t):=\int_{0}^{t} \exp\left(-2\int_{u}^{t} k(w) dw \right) \eta^{2}(u,x(0),y(0)) du
+\bar{y}(t):=\int_{0}^{t} \exp\left(-2\int_{u}^{t} k(w) dw \right) \eta^{2}(u,x(0),y(0)) du
 \end{equation} 
 and
 \begin{eqnarray}
-X_{t_a} \approx \bar{X}(t_a):= \bar{x}_0(t_a)  &+& \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) \bar{y}(u) du \nonumber \\
+\bar{x}_{t_a}:= \bar{x}_0(t_a)  &+& \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) \bar{y}(u) du \nonumber \\
 &+& \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k(u) du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}   \label{approximation_x_t_a}
 \end{eqnarray}
-with initial condition $\bar{x}_{0}(t_a)$ is such a way that  
-\begin{equation*}
-S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_{t_a}) = S_{a,b}(0).
-\end{equation*}
+with initial condition $\bar{x}_{0}(t_a)$ will be chosen appropriately depending on the case. In the appendix ($\cdots$), we can find the order of this approxiamtion.
 
 \subsection{Model constraints}
 To calculate the convergence order of the convexity adjustment approximation, we use the following hypotheses on $\eta(t,x,y)$.
@@ -575,10 +572,10 @@ In Figure \ref{fig:CMS}, we observe the CMS convexity adjustment when the tenor 
 
 
 \section{Auxiliary lemmas}
-\begin{lemma}\label{DsX}[Approximation $D_s x_{t_a}$]
+\begin{lemma}\label{DsX}[Approximation $D_s \bar{x}_{t_a}$]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, 
 \begin{equation}\label{approximation_D_s_x_t}
-D_sX_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}(t_a))\bar{M}(s,t_a)
+D_s \bar{x}_{t_a} = \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_a)
 \end{equation}
 where
 \begin{align*}
@@ -587,37 +584,48 @@ where
 \end{align*}
 With $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) \partial_x \eta(u,x,y)$. Therefore, we have that
 \begin{equation}\label{approsimation_E_s_x_t}
-\mathbb{E}_s^{t_p}\left(D_s x_{t_a}\right) \approx \eta(s,\bar{x}_0(s),\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right) \exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p)) du \right).
+\mathbb{E}_s^{t_p}\left(D_s \bar{x}_{t_a}\right) \eta(s,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right) \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p))|_{\bar{x}_u=\bar{x}_0(t_a)} du \right)\right).
 \end{equation}
 \end{lemma}
 \begin{proof}
-To get an approximation for $D_sX_{t_a}$ we must to avoid the recurrence in the Malliavin derivative of $X_{t_a}$. For that reason, we will use the approximations \eqref{approximation_y_t} and \eqref{approximation_x_t_a}.\\
-
 Using the relation 
 \begin{equation*}
-dW^{\mathbb{Q}^{t_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,t_p) dt \text{ where }\bar{\nu}(t,t_p) = \int_{t}^{t_p} \eta(s,\bar{x}_s,\bar{y}_s) ds,
+dW^{\mathbb{Q}^{t_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,t_p) dt
 \end{equation*}
-we will represent an approximation of $X_{t_a}$ under the measure $\mathbb{Q}^{t_p}$ 
+where $\bar{\nu}(t,t_p) = \int_{t}^{t_p} \eta(s,\bar{x}_s,\bar{y}_s) ds$. We must observe, that, we can approximate $x_s$ by $\mathbb{E}^{t_p}(x_s) = \bar{x}_0(t_p) + \mathcal{O}(\int_{0}^{s}\exp\left(-\int_{s}^{t_a}k_u du ds\right))$. Therefore, we can do the next approximation
+\begin{equation*}
+\bar{\nu}(t,t_p)\approx \int_{t}^{t_p} \eta(s,\bar{x}_0(t_p),\bar{y}_s) ds.
+\end{equation*}
+Then, we have that under the measure $\mathbb{Q}^{t_p}$ 
 \begin{align*}
-X_{t_a} \approx \bar{x}_0  &+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_s ds - \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\nu}(s, t_p) \eta(s,\bar{x}_s,\bar{y}_s) ds   \\
+\bar{x}_{t_a} = \bar{x}_0(t_a) &+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_s ds - \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\nu}(s, t_p) \eta(s,\bar{x}_s,\bar{y}_s) ds   \\
 &+ \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right)\eta(s,\bar{x}_s,\bar{y}_s) dW_s^{\mathbb{Q}^{t_p}}. 
 \end{align*}
-\textcolor{red}{(Revisar)}
+Now, if we apply $D_s$ in above equality and we use the last approximation we have that
+\begin{equation*}
+\mathbb{E}_s(D_s \bar{x}_{t_a}) \approx \eta(s,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right) \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p))|_{\bar{x}_u=\bar{x}_0(t_a)} du \right)\right) 
+\end{equation*}
 \end{proof}
 
-\subsection{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s x_{t_a}\right)$}
-Following the same procedure as before, we have that
-\begin{equation*}
-X_{t_a} \approx \bar{X}(T_a):= \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}(u),\bar{y}(u)) dW_u^{\mathbb{Q}}  
-\end{equation*}
+\subsection{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s \bar{x}_{t_a}\right)$}
+As above appendix we have that
+\begin{align*}
+\bar{x}_{t_a} &= \bar{x}_0(t_a) + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_u du + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}_u,\bar{y}_u) dW_u^{\mathbb{Q}}\\
+\end{align*}
 and therefore (see (\ref{approsimation_E_s_x_t}))
 \begin{equation}
-D_sX_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{T_a})\bar{M}(s,t_a)
+D_s \bar{x}_{t_a} =  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_s,\bar{y}_{s})\bar{M}(s,t_a)
 \end{equation}
 Now, if we take $\mathbb{E}^{\mathbb{Q}}\left(\cdot\right)$ we get
 \begin{equation}\label{approximation_spot_E_s_x_t}
-\mathbb{E}^{\mathbb{Q}}_s\left(D_sX_{t_a} \right) \approx \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{t_a})
+\mathbb{E}^{\mathbb{Q}}_s\left(D_s \bar{x}_{t_a} \right)=\exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_s,\bar{y}_{s})
 \end{equation}
+Therefore, we have that
+\begin{equation}\label{approximation_spot_E_s_x_t}
+\mathbb{E}^{\mathbb{Q}}_s\left(D_s \bar{x}_{t_a} \right)= \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{s}) + E(s)
+\end{equation}
+where $\mathbb{E}(E^{2}(s)) \sim \mathcal{O}(s)$ when $s \to 0$.
+
 
 \section{Proofs}
 \subsection{Proof Theorem \ref{Th_CA_futures}}\label{Proof_CA_futures}
