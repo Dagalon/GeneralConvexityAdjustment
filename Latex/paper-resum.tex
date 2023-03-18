@@ -392,7 +392,7 @@ The second term, is the convexity adjustment to due to change of measure from $\
 \begin{equation}\label{forward_rate}
 L_{E}(t_0, t_1, t_2) = \frac{1}{\delta_{t_1,t_2}}\left(\frac{P_{E}(t_0,t_1)}{P_{E}(t_0,t_2)} - 1 \right)
 \end{equation} 
-where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. 
+where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and $\delta_{t_1,t_2}$ is the year fraction between $t_1$ and $t_2$. we must note, that $L_{E}(t_0, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$ associated with the numeraire $P_{ois}(t,t_2)$.
 
 \begin{theorem}\label{Th_CA_futures}[Convexity Adjustment approximation for Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for futures is 
@@ -460,11 +460,11 @@ I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois,s} ds.
 \begin{theorem}\label{Th_CA_OIS}[Convexity Adjustment approximation for OIS Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for OIS futures is 
 \begin{equation}\label{convexity_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
+\bar{R}(t_0,t_1) \approx \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
 \end{equation}
 and for the average OIS future is
 \begin{equation}\label{convexity_avg_ois_future}
-\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
+\bar{R}_{avg}(t_0,t_1) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
 \end{equation}
 \end{theorem}
 with  $\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$
@@ -504,7 +504,7 @@ Therefore, we have that
 \end{align*}
 Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$.\\
 
-The next figure, show accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) for the Hull-White model case when the mean reversion is $k=0.003$ and volatility $\sigma=0.01$. 
+The next figure, show accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}). The parameters that we have used to run the Monte Carlo have been $k=0.003$ and volatility $\sigma=0.01$ and flat curve $r=0.01$. 
 \begin{figure}[H]
 \begin{subfigure}{.5\textwidth}
   \centering
@@ -594,15 +594,12 @@ Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{bou
 \begin{equation}
 M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}
 \end{equation}
-and 
-\begin{align}\label{cms_first_order_convexity}
-\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  S^{ois}_{a,b}(0) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)} \nonumber \\
+Then, we have the temporal convexity adjusment for a CMS rate is approximated by
+\begin{align} \label{cms_first_order_convexity}
+CA_{CMS}(t_p) &\approx \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)}{M(0,t_p)} \nonumber \\
 &\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \exp\left(-2\int_{s}^{t_a}\beta(u,t_a,\bar{x}_{0}(t_a),\bar{y}_u) \mu(u,t_a,t_b) du \right)ds 
 \end{align}
-with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$. Then, the convexity adjustment approximation for CMS is
-\begin{equation}
-CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) - S_{a,b}(0).
-\end{equation} 
+with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$.
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_CMS}.
@@ -663,8 +660,8 @@ With $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right
 \end{align}
 where 
 \begin{align*}
-\bar{DM}(s,t_a) &= \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x \eta(u, \bar{x}_0(t_a), \bar{y}_{u}) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \\
-&+ \left. \left. \eta(u,\bar{x}_0(t_a), \bar{y}_{u})) \partial_x \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right)\right) 
+\bar{DM}(s,t_a) &= \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\left(\partial_x \eta(u, \bar{x}_0(t_a), \bar{y}_{u}) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \right. \\
+&+ \left. \left. \left. \eta(u,\bar{x}_0(t_a), \bar{y}_{u})) \partial_x \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right) \right)\right) 
 \end{align*}
 \end{lemma}
 \begin{proof}
@@ -687,8 +684,8 @@ Then, we have that under the measure $\mathbb{Q}^{t_p}$
 \end{align*}
 Now, if we apply $D_s$ in above equality and we use the last approximation we have that
 \begin{align*}
-\mathbb{E}_s(D_s \bar{x}_{t_a}) &\approx \eta(s,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right)\\ &\cdot \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\partial_x (\eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \\
-&+ \left. \left. \eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \partial_x  \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right)\right) 
+\mathbb{E}_s(D_s \bar{x}_{t_a}) &\approx \eta(s,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right)\\ &\cdot \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\left(\partial_x (\eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \right. \\
+&+ \left. \left. \left. \eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \partial_x  \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right)\right)\right) 
 \end{align*}
 \end{proof}
 \subsection{Estimation of $\mathbb{E}_s^{\mathbb{Q}}\left((x_t - \bar{x}_{t})^{2}\right)$}\label{estimation_error_l2}
@@ -962,7 +959,7 @@ Under the HJM dynamics, we have the relation
 \begin{equation*}
 dW^{\mathbb{Q}^{t_2}}_s = dW^{\mathbb{Q}^{t_1}}_s + (\nu(s,t_2) - \nu(s,t_1)) ds. 
 \end{equation*}
-Taking $\mathbb{E}^{^{\mathbb{Q}^{t_1}}}(\cdot)$, we get that
+Taking $\mathbb{E}^{^{t_1}}(\cdot)$, we get that
 \begin{align*}
 \mathbb{E}^{t_1}\left(L_{E}(t_1,t_1,t_2) \right) &= L_{E}(0,t_1,t_2) + \mathbb{E}^{t_1}\left( \int_{0}^{t_1} \mathbb{E}_s^{t_2}\left(D_s L_{E}(t_1,t_1,t_2) \right) dW^{t_2}_{s}\right)\\
 &= L_{E}(0,t_1,t_2) + \mathbb{E}^{t_1}\left( \int_{0}^{t_1} \mathbb{E}_s^{t_2}\left(D_s L_{E}(t_1,t_1,t_2) \right) (\nu(s,t_2)-\nu(s,t_1)) ds \right).
