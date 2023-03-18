@@ -998,9 +998,8 @@ From the previous expression, we must note that under assumption of not stochast
 \begin{equation}\label{Exp_M_conditional}
 \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right).
 \end{equation}
-In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. This assumption makes trivial to calculate (\ref{Exp_M_conditional}). The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\
-
-We will do an approach without to specify any mapping function. If we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
+In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. Under this assumption (\ref{Exp_M_conditional}) is trivial to calulate it. The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\
+In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$. If we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
 \begin{equation} \label{clark_ocone_swap_m}
 M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\left(D_s M(t_a,t_p)\right) dW^{01}_s
 \end{equation}
@@ -1009,12 +1008,12 @@ Then, if we substitute the last expressions in (\ref{expected_t_p_cms}) we have 
 \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left( S^{ois}_{a,b}(t_a) \int_{0}^{t_a} \mathbb{E}^{0,1}_s\left(D_s x_{t_a}\partial_x M(t_a,t_p)  \right) dW^{0,1}_s   \right) \nonumber \\
 =&  S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(\int_{0}^{t_a} D_s x_{t_a} \partial_x S_{a,b}(t_a) \mathbb{E}^{0,1}_s\left(D_s x_{t_a}\partial_x M(t_a,t_p)  \right) ds   \right)
 \end{align}
-Now if we use (\ref{approximation_E_01_Ds_x_t}) we have that
+Now if we use (\ref{approximation_E_01_Ds_x_t}) and choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$, we have that
 \begin{align}
 \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  S^{ois}_{a,b}(0) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)} \nonumber \\
 &\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \exp\left(-2\int_{s}^{t_a}\beta(u,t_a,\bar{x}_{0}(t_a),\bar{y}_u) \mu(u,t_a,t_b) du \right)ds 
 \end{align}
-In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$.
+
 
 
 
