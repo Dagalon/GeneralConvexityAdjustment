@@ -397,11 +397,11 @@ where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and
 \begin{theorem}\label{Th_CA_futures}[Convexity Adjustment approximation for Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for futures is 
 \begin{equation}\label{ca_approximation_futures}
-CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,x_0,\hat{y}_s) \nu(s,t_2) ds. 
+CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds. 
 \end{equation}
 with 
 \begin{equation*}
-\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x,y).
+\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{t_0}k_u du \right) \eta(u,x,y).
 \end{equation*}
 \end{theorem}
 \begin{proof}
@@ -644,63 +644,19 @@ In the present paper, we have shown how we can use Malliavin calculus to find th
 
 
 \section{Auxiliary lemmas}
-\begin{lemma}\label{DsX}[Approximation $D_s \bar{x}_{t_a}$]
-Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, 
-\begin{equation}\label{approximation_D_s_x_t}
-D_s \bar{x}_{t_a} = \beta(s,t_a,\bar{x}_s,\bar{y}_s) \bar{M}(s,t_a)
-\end{equation}
-where
-\begin{align*}
-\bar{M}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left( \frac{\left(\partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} - \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p))\right) du \right) \\ 
-&\cdot\exp\left(\int_{s}^{t_0} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}}_u \right)
-\end{align*}
-With $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) \partial_x \eta(u,x,y)$. Then, we have that
-\begin{align}\label{approsimation_E_s_x_t}
-\mathbb{E}_s^{t_p}\left(D_s \bar{x}_{t_a}\right) &\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \bar{DM}(s,t_a).
-\end{align}
-where 
-\begin{align*}
-\bar{DM}(s,t_a) &= \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\left(\partial_x \eta(u, \bar{x}_0(t_a), \bar{y}_{u}) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \right. \\
-&+ \left. \left. \left. \eta(u,\bar{x}_0(t_a), \bar{y}_{u})) \partial_x \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right) \right)\right) 
-\end{align*}
-\end{lemma}
-\begin{proof}
-Using the relation 
-\begin{equation*}
-dW^{\mathbb{Q}^{t_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,t_p) dt
-\end{equation*}
-where $\bar{\nu}(t,t_p) = \int_{t}^{t_p} \eta(s,\bar{x}_s,\bar{y}_s) ds$. We must observe, that we can approximate $x_s$ by 
-$$
-\mathbb{E}^{t_p}(x_s) = \bar{x}_0(t_a) + \mathcal{O}\left(\int_{0}^{s}\exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) du \right)
-$$. Let define
-\begin{align*}
-\bar{\nu}(t,t_p, \bar{x}_0(t_a))&:= \int_{t}^{t_p} \eta(s,\bar{x}_0(t_a),\bar{y}_s) ds\\
-\partial_x \bar{\nu}(t,t_p, \bar{x}_0(t_a))&:= \int_{t}^{t_p} \partial_x \eta(s,\bar{x}_0(t_a),\bar{y}_s) ds\\
-\end{align*}
-Then, we have that under the measure $\mathbb{Q}^{t_p}$ 
-\begin{align*}
-\bar{x}_{t_a} = \bar{x}_0(t_a) &+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_s ds - \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\nu}(s, t_p) \eta(s,\bar{x}_s,\bar{y}_s) ds   \\
-&+ \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right)\eta(s,\bar{x}_s,\bar{y}_s) dW_s^{\mathbb{Q}^{t_p}}. 
-\end{align*}
-Now, if we apply $D_s$ in above equality and we use the last approximation we have that
-\begin{align*}
-\mathbb{E}_s(D_s \bar{x}_{t_a}) &\approx \eta(s,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right)\\ &\cdot \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\left(\partial_x (\eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \right. \\
-&+ \left. \left. \left. \eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \partial_x  \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right)\right)\right) 
-\end{align*}
-\end{proof}
 \subsection{Estimation of $\mathbb{E}_s^{\mathbb{Q}}\left((x_t - \bar{x}_{t})^{2}\right)$}\label{estimation_error_l2}
 In order to get the order of the aproximation, we will use the ideas of the paper \cite{B-G-M-2008}. Basically, we will define a parametrization of the process $x_{t,\epsilon}$ e $y_{t,\epsilon}$ with $\epsilon \in [0,1]$. The role of $\epsilon$ is only as interpolator parameter between process. We will suppose the next parametrization of the Cheyette model
 \begin{align}\label{parametric_process}
 y_{\epsilon,t} &= \int_{0}^{t} \exp\left(-2 \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \epsilon^{2} \eta^{2}(u,x_{\epsilon,u},y_{\epsilon,u}) du \\
 x_{\epsilon, t} &= \int_{0}^{t} \exp\left(-\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \bar{y}_{\epsilon,u} du + \int_{0}^{t} \exp\left(-\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \epsilon \eta(u,x_{\epsilon,u},y_{\epsilon,u})  \bar{y}_u du
 \end{align}
-The reason of $\epsilon^{2}$ in $y_{\epsilon,t}$ is because $\mathbb{E}\left(y_t\right)= \mathbb{V}ar(x_t)$. Then, if the scale of $x_{\epsilon,t}$ is $\epsilon$ then the scale of $y_{\epsilon,t}$ must be $\epsilon^{2}$. We will start with the estimation of $\mathbb{E}((y_t - \bar{y}_t)^{2})$. We will define the next parametrization for $\nu in [0,1]$
+The reason of $\epsilon^{2}$ in $y_{\epsilon,t}$ is because $\mathbb{E}^{\mathbb{Q}}\left(y_t\right)= \mathbb{V}ar(x_t)$. Then, if the scale of $x_{\epsilon,t}$ is $\epsilon$ then the scale of $y_{\epsilon,t}$ must be $\epsilon^{2}$. We will start with the estimation of $\mathbb{E}^{\mathbb{Q}}((y_t - \bar{y}_t)^{2})$. We will define the next parametrization for $\nu \in [0,1]$
 \begin{equation*}
 z^{\nu}_{u} = \eta^{2}(u, \nu x_u, \nu y_u).
 \end{equation*}
 Then we have that $z^{1}_{u} = \eta(u,x_u,y_u$ y $z^{0}_{u} = \eta(u,0,0)$. Therefore
 \begin{align*}
-\eta^{2}(u, x_u, y_u) &= \eta^{2}(u, 0, 0) + \int_{0}^{1} \partial_{\nu}z^{nu}_{u} d\nu \\ 
+\eta^{2}(u, x_u, y_u) &= \eta^{2}(u, 0, 0) + \int_{0}^{1} \partial_{\nu}z^{\nu}_{u} d\nu \\ 
 &=  \eta^{2}(u, 0, 0) + 2 \int_{0}^{1} \eta(u, \nu x_u, \nu y_u)   \nabla_{x,y}\eta(u, \nu x_u, \nu y_u) \cdot (x_u, y_u) d\nu.
 \end{align*}
 Then we have that
@@ -713,12 +669,12 @@ E_{y}(t)= 2 \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\rig
 $$
 Now, from Cauchy-Schwarz inequality we have that
 \begin{align} \label{upper_bound_E_y}
-\mathbb{E}((E_{y}(t))^{2}) &\leq 4 \mathbb{E}\left(\int_{0}^{t} \exp\left(-4 \int_{u}^{t} k(u^{\prime}) du^{\prime}\right)  \left(\int_{0}^{1} \eta(u, \nu x_u, \nu y_u)   \|\nabla_{x,y}\eta(u, \nu x_u, \nu y_u)\|^{2} \|(x_u, y_u)\| d\nu \right)^2 du \right) ^{2}\nonumber \\ 
-&\leq 4 \|\eta\|^{2}_{\infty} \max(\|\partial_x\eta\|^{2}_{\infty},\partial_y\|\eta\|^{2}_{\infty} ) \int_{0}^{t} \mathbb{E}\left( \|(x_u, y_u)\|^{2}\right) du = M^{y}_k \int_{0}^{t} \mathbb{E}\left( \|(x_u, y_u)\|^{2}\right) du
+\mathbb{E}^{\mathbb{Q}}((E_{y}(t))^{2}) &\leq 4 \mathbb{E}^{\mathbb{Q}}\left(\int_{0}^{t} \exp\left(-4 \int_{u}^{t} k(u^{\prime}) du^{\prime}\right)  \left(\int_{0}^{1} \eta(u, \nu x_u, \nu y_u)   \|\nabla_{x,y}\eta(u, \nu x_u, \nu y_u)\|^{2} \|(x_u, y_u)\| d\nu \right)^2 du \right) ^{2}\nonumber \\ 
+&\leq 4 \|\eta\|^{2}_{\infty} \max(\|\partial_x\eta\|^{2}_{\infty},\|\partial_y \eta\|^{2}_{\infty} ) \int_{0}^{t} \mathbb{E}^{\mathbb{Q}}\left( \|(x_u, y_u)\|^{2}\right) du = M^{y}_k \int_{0}^{t} \mathbb{E}^{\mathbb{Q}}\left( \|(x_u, y_u)\|^{2}\right) du
 \end{align}
-The next step is to estimate $\mathbb{E}((x_t - \bar{x}_t)^{2})$. From the definition of $x_t$, we have that
+The next step is to estimate $\mathbb{E}^{\mathbb{Q}}((x_t - \bar{x}_t)^{2})$. From the definition of $x_t$, we have that
 \begin{equation*}
-x_t = \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \bar{y}_u du + \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) E{y}(u) du + \int_{0}^{t} \eta(t,x_u,y_u) dW_u. 
+x_t = \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \bar{y}_u du + \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) E_{y}(u) du + \int_{0}^{t} \eta(t,x_u,y_u) dW_u. 
 \end{equation*}
 In order, to find a expansion of $\eta(t,x_u,y_u)$ centrered in $\bar{y}_u$, we will define $z^{\nu}_{u} = (1-\nu)\bar{y}_{u} + \nu y_u$. Then
 \begin{equation*}
@@ -730,52 +686,107 @@ x_t = \bar{x}_t + \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime
 \end{equation*}
 We must note that
 \begin{equation*}
- \mathbb{E}((E_x(u))^{2}) \leq \|\partial_y \eta \|^{2}_{\infty} \mathbb{E}((E_{y}(u))^{2})   
+ \mathbb{E}^{\mathbb{Q}}((E_x(u))^{2}) \leq \|\partial_y \eta \|^{2}_{\infty} \mathbb{E}^{\mathbb{Q}}((E_{y}(u))^{2})   
 \end{equation*}
-Tne using \ref{upper_bound_E_y} we get that
+Then using (\ref{upper_bound_E_y}) we get that
 \begin{equation}\label{upper_bound_E_x}
- \mathbb{E}((E_x(u))^{2}) \leq 4 \|\eta\|^{2}_{\infty} \|\partial_y \eta\|^{2}_{\infty} \max(\|\partial_x\eta\|^{2}_{\infty},\partial_y\|\eta\|^{2}_{\infty} ) \int_{0}^{u} \mathbb{E}\left( \|(x_s, y_s)\|^{2}\right) ds
+ \mathbb{E}^{\mathbb{Q}}((E_x(u))^{2}) \leq 4 \|\eta\|^{2}_{\infty} \|\partial_y \eta\|^{2}_{\infty} \max(\|\partial_x\eta\|^{2}_{\infty},\|\partial_y \eta\|^{2}_{\infty} ) \int_{0}^{u} \mathbb{E}^{\mathbb{Q}}\left( \|(x_s, y_s)\|^{2}\right) ds
 \end{equation}
 Then from (\ref{upper_bound_E_x}) and (\ref{upper_bound_E_y}) we get that 
 \begin{align*}
-\mathbb{E}((x_t - \bar{x}_t)^{2}) & \leq 2 \mathbb{E}\left( \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) E_{y}(u) du    \right)^2 + \mathbb{E}\left( \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) E_{x}(u) dW_u\right)^{2} \\
-&\leq 2 \mathbb{E}\int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \mathbb{E}(E^{2}_{y}(u)) du + \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \mathbb{E}(E^{2}_{x}(u)) du   
+\mathbb{E}^{\mathbb{Q}}((x_t - \bar{x}_t)^{2}) & \leq 2 \mathbb{E}^{\mathbb{Q}}\left( \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) E_{y}(u) du    \right)^2 + \mathbb{E}^{\mathbb{Q}}\left( \int_{0}^{t} \exp\left(- \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) E_{x}(u) dW_u\right)^{2} \\
+&\leq 2 \mathbb{E}^{\mathbb{Q}}\int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \mathbb{E}^{\mathbb{Q}}(E^{2}_{y}(u)) du + \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \mathbb{E}^{\mathbb{Q}}(E^{2}_{x}(u)) du   
 \end{align*}
 Them if we join each part, we have that for an adequate constant $M^{x}_k$ 
 \begin{equation*}
-\mathbb{E}((x_t - \bar{x}_t)^{2}) \leq M^{x}_k \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \mathbb{E}\left( \|(x_u, y_u)\|^{2}\right) du 
+\mathbb{E}^{\mathbb{Q}}((x_t - \bar{x}_t)^{2}) \leq M^{x}_k \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \mathbb{E}^{\mathbb{Q}}\left( \|(x_u, y_u)\|^{2}\right) du 
 \end{equation*}
-To end, only we have to estimate $\mathbb{E}\left( \|(x_s, y_s)\|^{2}\right)$. We will start with $\mathbb{E}(y^{2}_u)$.From the definition of $y_t$ and since $\|\eta\|_{\infty} < \infty$, we have that
+To end, only we have to estimate $\mathbb{E}^{\mathbb{Q}}\left( \|(x_s, y_s)\|^{2}\right)$. From the definition of $y_t$ and since $\|\eta\|_{\infty} < \infty$, we have that
 \begin{equation*}
-\mathbb{E}(y^{2}_u) \leq \|\eta\|^{2}_{\infty} \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds.
+\mathbb{E}^{\mathbb{Q}}(y^{2}_u) \leq \|\eta\|^{2}_{\infty} \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds.
 \end{equation*}
 We must note that at the short term and under asummptions (\ref{boundedness_reversion}) we have that
 \begin{equation*}
-\lim_{t \to 0} \mathbb{E}(y^{2}_u) = \|\eta\|^{2}_{\infty} t
+\lim_{t \to 0} \mathbb{E}^{\mathbb{Q}}(y^{2}_u) = \|\eta\|^{2}_{\infty} t
 \end{equation*}
 and 
 \begin{equation*}
-\lim_{t \to \infty} \mathbb{E}(y^{2}_u) < \infty.
+\lim_{t \to \infty} \mathbb{E}^{\mathbb{Q}}(y^{2}_u) < \infty.
 \end{equation*}
-Now $\mathbb{E}(x^{2}_u)$. From the definition of $x_t$ and using $(a+b)^2 \leq 2(a^{2}+ b^{2})$ we have that
+Now $\mathbb{E}^{\mathbb{Q}}(x^{2}_u)$. From the definition of $x_t$ and using $(a+b)^2 \leq 2(a^{2}+ b^{2})$ we have that
 \begin{align*}
-\mathbb{E}(x^{2}_u) &\leq 2 \mathbb{E}\left(\int_{0}^{u} \exp\left(- \int_{s}^{u} k(u^{\prime}) du^{\prime}\right) y_s  ds \right)^{2} +  2 \mathbb{E}\left(\int_{0}^{u} \exp\left(- \int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \eta(s,x_s,y_s)  dW_s \right)^{2} \nonumber \\
-&\leq 2 \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \mathbb{E}\left(y_s\right)^{2} ds + 2 \int_{0}^{u} \exp\left(- 2 \int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \mathbb{E}\left(\eta^{2}(s,x_s,y_s)\right) ds \\
+\mathbb{E}^{\mathbb{Q}}(x^{2}_u) &\leq 2 \mathbb{E}^{\mathbb{Q}}\left(\int_{0}^{u} \exp\left(- \int_{s}^{u} k(u^{\prime}) du^{\prime}\right) y_s  ds \right)^{2} +  2 \mathbb{E}^{\mathbb{Q}}\left(\int_{0}^{u} \exp\left(- \int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \eta(s,x_s,y_s)  dW_s \right)^{2} \nonumber \\
+&\leq 2 \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \mathbb{E}^{\mathbb{Q}}\left(y_s\right)^{2} ds + 2 \int_{0}^{u} \exp\left(- 2 \int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \mathbb{E}^{\mathbb{Q}}\left(\eta^{2}(s,x_s,y_s)\right) ds \\
 &\leq 2 \|\eta\|_{\infty} \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \int_{0}^{s}  \exp\left(- 2\int_{s_1}^{s} k(u^{\prime}) du^{\prime}\right) ds_1 ds +  2 \|\eta\|_{\infty} \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds
 \end{align*}
 Then as before at the short term
 $$
-\lim_{t \to 0} \mathbb{E}(x^{2}_u) = 2\|\eta\|^{2}_{\infty} t
+\lim_{t \to 0} \mathbb{E}^{\mathbb{Q}}(x^{2}_u) = 2\|\eta\|^{2}_{\infty} t
 $$
-and when ($u \to \infty$) we have that $\mathbb{E}(x^{2}_u)$ remains bounded. Then, if we use the above inequalities 
+and when ($u \to \infty$) we have that $\mathbb{E}^{\mathbb{Q}}(x^{2}_u)$ remains bounded. Then, if we use the above inequalities 
 \begin{align*}
-\mathbb{E}((y_t - \bar{y}_t)^{2}) &\leq M^{y}_k \int_{0}^{t}  \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right)  \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds du
+\mathbb{E}^{\mathbb{Q}}((y_t - \bar{y}_t)^{2}) &\leq M^{y}_k \int_{0}^{t}  \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right)  \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds du
 \end{align*}
 and
 \begin{align*}
-\mathbb{E}((x_t - \bar{x}_t)^{2}) &\leq 2 M^{x}_k \|\eta\|_{\infty} \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right)   \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \int_{0}^{s}  \exp\left(- 2\int_{s_1}^{s} k(u^{\prime}) du^{\prime}\right) ds_1 ds du \\
-&+ (2 M^{x}_K \|\eta\|_{\infty} + 1) \int_{0}^{t}  \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right)  \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds du
+\mathbb{E}^{\mathbb{Q}}((x_t - \bar{x}_t)^{2}) &\leq 2 M^{x}_k \|\eta\|_{\infty} \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right)   \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) \int_{0}^{s}  \exp\left(- 2\int_{s_1}^{s} k(u^{\prime}) du^{\prime}\right) ds_1 ds du \\
+&+ (2 M^{x}_K \|\eta\|_{\infty} + 1) \int_{0}^{t}  \exp\left(- 2\int_{u}^{t} k(u^{\prime}) du^{\prime}\right)  \int_{0}^{u} \exp\left(- 2\int_{s}^{u} k(u^{\prime}) du^{\prime}\right) ds du.
 \end{align*}
+Therefore, we have that
+\begin{align*}
+\mathbb{E}^{\mathbb{Q}}((x_t - \bar{x}_t)^{2}) &\leq \frac{2}{3} M^{x}_k \|\eta\|_{\infty} \left( \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) \right) du  \right)^{3}  \\
+&+ \frac{(2 M^{x}_K \|\eta\|_{\infty} + 1)}{2} \left( \int_{0}^{t}  \exp\left(- 2\int_{u}^{t} k(u^{\prime}) \right) du  \right)^{2}.
+\end{align*}
+
+\begin{lemma}\label{DsX}[Approximation $D_s \bar{x}_{t_a}$]
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, 
+\begin{align}\label{approximation_D_s_x_t}
+D_s \bar{x}_{t_a} &= \beta(s,t_a,\bar{x}_s,\bar{y}_s) \bar{M}(s,t_a,t_p) \quad \text{under the measure $\mathbb{Q}^{t_p}$} \nonumber \\
+D_s \bar{x}_{t_a} &= \beta(s,t_a,\bar{x}_s,\bar{y}_s) \bar{M}(s,t_a)  \quad \text{under the measure $\mathbb{Q}$}
+\end{align}
+where
+\begin{align*}
+\bar{M}(s,t_a,t_p) &= \exp\left(-\int_{s}^{t_a} \left( \frac{\left(\partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} - \exp\left(-\int_{u}^{t_a}k_u du\right) \partial_x (\eta(u, \bar{x}_u, \bar{y}_{u}) \bar{\nu}(u,t_p))\right) du \right) \\ 
+&\cdot\exp\left(\int_{s}^{t_0} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}}_u \right)
+\end{align*}
+and
+\begin{equation*}
+\bar{M}(s,t_a) = \exp\left(-\int_{s}^{t_a} \left( \frac{\left(\partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} - \right) du \right) \exp\left(\int_{s}^{t_0} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}}_u \right)
+\end{equation*} 
+With $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u^{\prime} du^{\prime}\right) \partial_x \eta(u,x,y)$. We have also that
+\begin{align}\label{approsimation_E_s_x_t}
+\mathbb{E}_s^{t_p}\left(D_s \bar{x}_{t_a}\right) &\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \bar{DM}(s,t_a) \nonumber \\
+\mathbb{E}_s^{\mathbb{Q}}\left(D_s \bar{x}_{t_a}\right)&\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s)
+\end{align}
+where 
+\begin{align*}
+\bar{DM}(s,t_a) &= \mathbb{E}^{t_p}_s\left(\exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\left(\partial_x \eta(u, \bar{x}_0(t_a), \bar{y}_{u}) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right. \right. \\
+&+ \left. \left. \left. \eta(u,\bar{x}_0(t_a), \bar{y}_{u})) \partial_x \bar{\nu}(t,t_p, \bar{x}_0(t_a)) \right)  du \right)\right) 
+\end{align*}
+with  
+\begin{align*}
+\bar{\nu}(t,t_p) &= \int_{t}^{t_p} \eta(s,\bar{x}_s,\bar{y}_s) ds \\
+\bar{\nu}(t,t_p, x_0) &= \int_{t}^{t_p} \eta(s,x,\bar{y}_s) ds \\
+\partial_x \bar{\nu}(t,t_p,x_0) &= \int_{t}^{t_p} \eta(s,x_0,\bar{y}_s) ds\\
+\end{align*}
+\end{lemma}
+\begin{proof}
+From 
+\begin{equation*}
+dW^{\mathbb{Q}^{t_p}} = dW^{\mathbb{Q}} + \bar{\nu}(t,t_p) dt
+\end{equation*}
+we have that under the measure $\mathbb{Q}^{t_p}$ 
+\begin{align*}
+\bar{x}_{t_a} = \bar{x}_0(t_a) &+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_s ds - \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\nu}(s, t_p) \eta(s,\bar{x}_s,\bar{y}_s) ds   \\
+&+ \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right)\eta(s,\bar{x}_s,\bar{y}_s) dW_s^{\mathbb{Q}^{t_p}}. 
+\end{align*}
+Now, if we apply $D_s$ in above equality and we use the last approximation we have that
+\begin{align*}
+\mathbb{E}^{t_p}_s(D_s \bar{x}_{t_a}) &\approx \eta(s,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}k_u du \right)\\ &\cdot \exp\left(-\int_{s}^{t_a} \exp\left(-\int_{u}^{t_a}k_u du\right)\left(\partial_x (\eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \bar{\nu}(u,t_p, \bar{x}_0(t_a)) \right. \right.  \\
+&+  \left. \left. \eta(u, \bar{x}_0(t_a), \bar{y}_{u})) \partial_x  \bar{\nu}(t,t_p, \bar{x}_0(t_a)) du \right)\right)
+\end{align*}
+\end{proof}
+
 
 
 \subsection{Approximation of $\mathbb{E}_s^{\mathbb{Q}}\left(D_s \bar{x}_{t_a}\right)$}
@@ -795,7 +806,7 @@ Therefore, we have that
 \begin{equation}\label{approximation_spot_E_s_x_t}
 \mathbb{E}^{\mathbb{Q}}_s\left(D_s \bar{x}_{t_a} \right)= \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0(t_a),\bar{y}_{s}) + E(s)
 \end{equation}
-where $\mathbb{E}(E^{2}(s)) \sim \mathcal{O}(s)$ when $s \to 0$.
+where $\mathbb{E}^{\mathbb{Q}}(E^{2}(s)) \sim \mathcal{O}(s)$ when $s \to 0$.
 
 \subsection{Approximation of $\mathbb{E}^{01}\left(\bar{x}_{t_a}\right)$}
 It is easy to show that the dynamic of the bond under HJM assumption is
