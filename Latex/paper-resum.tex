@@ -138,7 +138,7 @@
 \newcommand{\keywords}[1]{\ccode{Keywords}{#1}}
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
 
-\title{\textcolor{Navy}{\textsc{Convexity adjustments with a bit of Malliavin}}}
+\title{\textcolor{Navy}{\textsc{Convexity adjustments \`a la Malliavin}}}
 
 \author[1,2]{David Garcia-Lorite\thanks{Corresponding author, \email{dddd@caixabank.es}}}
 \author[3]{Ra\'{u}l Merino}
@@ -155,7 +155,7 @@
 
 \maketitle
 \begin{abstract}
-AA
+In this paper, we develop a novel method based on the Malliavin calculus to find an approximation for the convexity adjustment for various classical interest rate products. Malliavin calculus provides a simple way to get a template for the convexity adjustment. We find the approximation for Futures, OIS Futures, FRAs, and CMSs under a general family of the one-factor Cheyette model. We have also seen the excellent quality of the numerical accuracy of the formulas obtained.
 \end{abstract}
 %\keywords{V--}
 %\ccode{MSC classification}{--}
@@ -633,7 +633,7 @@ Therefore, \eqref{cms_first_order_convexity} is equal to
 
 In Figure \ref{fig:CMS}, we observe the CMS convexity adjustment when the tenor of the underlying swap is 5Y. We compare the last approximation and a Monte Carlo for a Hull-White model with parameters $\sigma=0.01$ and $k=0.0007$
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[scale=0.25]{Figures/cms_convexity_order.jpg}
 	\end{center}
@@ -644,7 +644,9 @@ In Figure \ref{fig:CMS}, we observe the CMS convexity adjustment when the tenor 
 
 
 \section{Conclusions}\label{sec:Conclusion}
-In the present paper, we have shown how we can use Malliavin calculus to find the convexity adjustment for several typical interest rate products. We have seen, that Malliavin calculus provides us with a simple way to get a template for the convexity adjustment of several products under a general Cheyette model dynamic with one factor. The method is extrapolated with little effort to a Cheyette model with stochastic volatility, or even a  Cheyette model with several factors. We have also seen, the good accuracy of the formulas that we have got using this method.
+In the present paper, we develop a novel method based on the Malliavin calculus to find an approximation for the convexity adjustment for various classical interest rate products. Although the convexity adjustment could be calculated using other techniques, Malliavin calculus provides a simple way to get a template for the convexity adjustment. We find the approximation for Futures, OIS Futures, FRAs, and CMSs under a general family of the one-factor Cheyette model. We have also seen the excellent quality of the numerical accuracy of the formulas obtained.
+
+In future work, the methodology could be extrapolated to a Cheyette model with stochastic volatility or even to a model with several factors.
 
 
 \section*{Appendix}
