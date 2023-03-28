@@ -8,7 +8,10 @@ Latex/paper.aux
 Latex/paper.log
 Latex/paper.out
 Latex/paper.pdf
-Latex/paper.synctex.gz
+Latex/paper-resum.aux
+Latex/paper-resum.log
+Latex/paper-resum.out
+Latex/paper-resum.pdf
 ConvexityAdjustment-Lib/ConvexityAdjustment-Lib.sln.DotSettings.user
 ConvexityAdjustment-Lib/ConvexityAdjustmentUnitTests/bin/*
 ConvexityAdjustment-Lib/ConvexityAdjustmentUnitTests/obj/*
