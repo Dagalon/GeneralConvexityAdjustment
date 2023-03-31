@@ -268,11 +268,25 @@ Therefore, the zero-coupon bond price is given by
 P(t,T)=\exp\left(-\int^{T}_{t} f(t,u) du\right).
 \end{eqnarray*}
 
-Before the financial crisis, there was a single curve framework based on the same curve for discounting and forecasting. Since then, the market has adopted a multi-curve approach with two different curves: the discount curve and the estimation curve chosen based on the maturity of the underlying rate. The difference between these two curves is known as the basis. In this paper, we will assume that the basis are not stochastic. Therefore, it can be obtained directly from the market at time $t=0$. In other words, the estimation forward curve $f_{E}(t, T)$ is given by
+%Before the financial crisis, there was a single curve framework based on the same curve for discounting and forecasting. Since then, the market has adopted a multi-curve approach with two different curves: the discount curve and the estimation curve chosen based on the maturity of the underlying rate. The difference between these two curves is known as the basis. In this paper, we will assume that the basis are not stochastic. Therefore, it can be obtained directly from the market at time $t=0$. In other words, the estimation forward curve $f_{E}(t, T)$ is given by
+%\begin{equation}\label{estimation_forward_rate_curve}
+%f_{E}(t,T) = f_{ois}(t,T) + s(t,T)
+%\end{equation}
+%where and $f_{ois}$ is the discount curve and $s(t,T)$ are the basis between the two curves, i.e. $s(t,T)= f_{E}(0,T) - f_{ois}(0,T)$.\\
+
+Before the financial crisis, there was a single curve framework based on the same curve for discounting and forecasting. Since then, the market has adopted a multi-curve approach with two different curves: the discount curve and the estimation curve. We will use the following notation:
+\begin{itemize}
+	\item The \textbf{\textit{discount curve}} is built with OIS instruments which are considered the best approximation for the risk-free rate. We will denote the forward discount rate curve by $f_{ois}(t,T)$ and the discount curve by $P_{ois}(t,T)$.
+
+	\item The \textbf{\textit{estimation curve}} is chosen based on the maturity of the underlying rate. Until the crisis, the spread between the OIS and the Ibor was negligible. For example, the OIS 6M and Ibor 6M. Nowadays, due to credit and liquidity reasons, there is a spread between them. As a consequence, the estimation curve is tenor-dependent. We will denote the forward estimation rate curve by $f_{E}(t,T)$ and the estimation discount curve by $P_{E}(t,T)$. 
+	
+	\item The \textbf{\textit{basis curve}} is the difference between the estimation curve and the discount curve, i.e. $s(t,t+T)= f_{E}(0,T) - f_{ois}(0,T)$. In this paper, we will assume that the basis are not stochastic. Therefore, it can be obtained directly from the market at time $t=0$. The basis curve is denoted by $s(t,T)$.
+	\end{itemize}
+
+Consequently, the estimation forward curve $f_{E}(t, T)$ is given by
 \begin{equation}\label{estimation_forward_rate_curve}
-f_{E}(t,T) = f_{ois}(t,T) + s(t,T)
+f_{E}(t,T) = f_{ois}(t,T) + s(t,T).
 \end{equation}
-where and $f_{ois}$ is the discount curve and $s(t,T)$ are the basis between the two curves, i.e. $s(t,T)= f_{E}(0,T) - f_{ois}(0,T)$.\\
 
 Given the discount curve $P_{ois}(t,T)$ and using the representation \eqref{estimation_forward_rate_curve}, it is possible to find the discount curve for the estimation curve using the relation
 \begin{equation}\label{bond_forward}
@@ -281,7 +295,7 @@ P_{E}(t,T)=H(t,T)P_{ois}(t,T)
 where $H(t,T)=\exp\left(-\int_{t}^{T}s(t,u) du \right)$.
 
 \subsection{The model}
-We will assume that the $f_{ois}$ dynamics follows a single factor Heath-Jarrow-Morton model under the $\mathbb{Q}$-measure. Therefore, let $T>0$ a fixed time horizon, $t>0$ the starting time, and $W$ a Brownian motion defined on a complete probability space $(\omega, \mathcal{F}, \mathbb{P})$. Then, the HJM model is defined by
+We will assume that the $f_{ois}$ dynamics follows a single factor Heath-Jarrow-Morton (HJM) model under the $\mathbb{Q}$-measure. Therefore, let $T>0$ a fixed time horizon, $t>0$ the starting time, and $W$ a Brownian motion defined on a complete probability space $(\omega, \mathcal{F}, \mathbb{P})$. Then, the HJM model is defined by
 \begin{align}\label{ois_forward_rate_curve}
 df_{ois}(t,T) &= \sigma(t,T)\nu(t,T)dt + \sigma(t,T)dW^{\mathbb{Q}}_t
 \end{align}
