@@ -335,7 +335,7 @@ In order to have a more manageable model, we will follow the ideas of \cite{Andr
 \end{equation} 
 and
 \begin{eqnarray}
-\bar{x}_{t_a}:= \bar{x}_0(t_a)  &+& \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) \bar{y}_u du \nonumber \\
+\bar{x}_{t_a}:= \bar{x}_0(t_a)&+&\int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) \bar{y}_u du \nonumber \\
 &+& \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k(u) du \right) \eta(u,\bar{x}(u),\bar{y}_u) dW_u^{\mathbb{Q}}   \label{approximation_x_t_a}
 \end{eqnarray}
 with initial condition $\bar{x}_{0}(t_a)$ will be chosen appropriately depending on the case. In the appendix \ref{estimation_error_l2} we can find the estimation for $\mathbb{E}((x_t-\bar{x}_t)^{2})$.
@@ -397,12 +397,13 @@ where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and
 \begin{theorem}\label{Th_CA_futures}[Convexity Adjustment approximation for Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for futures is 
 \begin{equation}\label{ca_approximation_futures}
-CA(t,t_0,t_1) \approx \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds. 
+CA(t,t_0,t_1) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds + E(t_0). 
 \end{equation}
 with 
 \begin{equation*}
 \beta(t,t_0,x,y) = \exp\left(-\int_{s}^{t_0}k_u du \right) \eta(u,x,y).
 \end{equation*}
+And $\|E(t_0)\|^{2}_{2} \sim \mathcal{O}(t_0) \quad \text{when} \quad t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty \quad \text{when} \quad t_0 \to \infty$. 
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_futures}.
@@ -471,14 +472,14 @@ I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois,s} ds.
 \begin{theorem}\label{Th_CA_OIS}[Convexity Adjustment approximation for OIS Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for OIS futures is 
 \begin{equation}\label{convexity_ois_future}
-\bar{R}(t_0,t_1) \approx \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}}
+\bar{R}(t_0,t_1) = \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}} + E(t_0)
 \end{equation}
 and for the average OIS future is
 \begin{equation}\label{convexity_avg_ois_future}
 \bar{R}_{avg}(t_0,t_1) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
 \end{equation}
 \end{theorem}
-with  $\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$
+where  $\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$, and $\|E(t_0)\|^{2}_{2} \sim \mathcal{O}(t_0) \quad \text{when} \quad t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty \quad \text{when} \quad t_0 \to \infty$.
 \begin{proof}
 See appendix \ref{Proof_CA_OIS_futures}.
 \end{proof}
@@ -543,8 +544,9 @@ i.e. the cash flow associated to a FRA in arrears is $L_{E}(t_1,t_1,t_2)$ in $t_
 \begin{theorem}\label{Th_CA_FRAsinArrears}[Convexity Adjustment approximation for FRAs in Arrears]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for FRAs in Arrears is 
 \begin{equation}\label{ca_approximations_fra_arrears}
-CA(t_0,t_1) \approx   \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \bar{DM}(s,t_1) (\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))) ds
+CA(t_0,t_1) =   \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \bar{DM}(s,t_1) (\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))) ds E(t_1)
 \end{equation}
+with $\|E(t_1)\|^{2}_{2} \sim \mathcal{O}(t_1) \quad \text{when} \quad t_1 \to 0$ and $\|E(t_1)\|^{2}_{2} < \infty \quad \text{when} \quad t_1 \to \infty$
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_FRAsinArrears}.
@@ -594,7 +596,7 @@ where
 \alpha(t,t^{E}_{i-1}, t^{E}_{i})  = \frac{1}{\delta_{t^{E}_{i-1}, t^{E}_i}}\left(\frac{H(t,t^{E}_{i-1})}{H(t,t^{E}_{i})} - 1\right)
 \end{equation*}
 
-Under one-factor HJM model, we can suppose that variability of $\alpha(t,t^{E}_{i-1}, t^{E}_{i})$ is low. Therefore, it is reasonable to freeze it at time $t=0$. Having
+We will suppose that variability of spread term structure $\alpha(t,t^{E}_{i-1}, t^{E}_{i})$ is low. Therefore, it is reasonable to freeze it at time $t=0$. Having
 \begin{equation}\label{approximation_basis_swap}
 S_{a,b}(t) \approx S^{ois}_{a,b}(t) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
 \end{equation}
@@ -608,30 +610,34 @@ M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}
 Then, we have the temporal convexity adjusment for a CMS rate is approximated by
 \begin{align} \label{cms_first_order_convexity}
 CA_{CMS}(t_p) &\approx \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)}{M(0,t_p)} \nonumber \\
-&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \exp\left(-2\int_{s}^{t_a}\beta(u,t_a,\bar{x}_{0}(t_a),\bar{y}_u) \mu(u,t_a,t_b) du \right)ds 
+&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \exp\left(-2\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds \nonumber \\
+&+ E(t_a)
 \end{align}
-with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$.
+with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$. And $\|E(t_a)\|^{2}_{2} \sim \mathcal{O}(t_a) \quad \text{when} \quad t_a \to 0$ and $\|E(t_a)\|^{2}_{2} < \infty \quad \text{when} \quad t_a \to \infty$
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_CMS}.
 \end{proof}
 
 \begin{remark}
-The key point is calculate an approximation of $\mathbb{E}_s^{0,1}\left( D_s x_{t_a}\right)$. The simplest cases are on the Hull-White or Ho-Lee model. The general case is treated in (\ref{approximation_under_annuity_measeure_d_s}). 
+The key point is calculate an approximation of $\mathbb{E}_s^{0,1}\left( D_s \bar{x}_{t_a}\right)$. The simplest cases are on the Hull-White or Ho-Lee model. The general case is treated in (\ref{approximation_under_annuity_measeure_d_s}). 
 \end{remark}
 
 \begin{example}[Convexity adjustment for CMS under the Hull-White model]
-To check the accuracy of the last approximation, we compute with a Monte Carlo the exact value of $\mathbb{E}^{t_p}\left(S^{ois}_{a,b}(t_a)\right)$ under spot measure $\mathbb{Q}$, i.e we will compute  $\frac{1}{P(0,t_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(t_a)}{\beta_{t_a}} \right)$.\\
-In the Hull-White model case, we have that
+To check the accuracy of the last approximation, we compute with a Monte Carlo the exact value of $\mathbb{E}^{t_p}\left(S^{ois}_{a,b}(t_a)\right)$ under spot measure $\mathbb{Q}$, i.e we will compute  $\frac{1}{P(0,t_p)}  \mathbb{E}^{\mathbb{Q}}\left(\frac{S_{a,b}(t_a)}{\beta_{t_a}} \right)$. For the Hull-White model case, we have that
 \begin{equation*}
 D_s x_{t_a} = \sigma \exp(-(t_a - s)).
 \end{equation*}
+and the volatility is only time-dependent i.e 
+$$
+\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b)) = 0.
+$$
 Therefore, \eqref{cms_first_order_convexity} is equal to
 \begin{equation*}
 \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) \approx  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(t_a, \bar{x}_0(t_a),\bar{y}(t_a))\partial_x M(t_a,t_p, \bar{x}_0(t_a),\bar{y}(t_a))}{M(0,t_p)} \frac{\sigma^{2}(1-\exp(-2kt_a))}{2k}.
 \end{equation*}
 
-In Figure \ref{fig:CMS}, we observe the CMS convexity adjustment when the tenor of the underlying swap is 5Y. We compare the last approximation and a Monte Carlo for a Hull-White model with parameters $\sigma=0.01$ and $k=0.0007$
+In Figure \ref{fig:CMS}, we can observe the CMS convexity adjustment when the tenor of the underlying swap is 5Y. We have compared the above approximation and a Monte Carlo for a Hull-White model with parameters $\sigma=0.01$ and $k=0.0007$
 
 \begin{figure}[H]
 	\begin{center}
@@ -866,38 +872,38 @@ $$
 $$ 
 
 \subsection{Approximation of $\mathbb{E}^{01}\left(D_s \bar{x}_{t_a} \right)$}\label{approximation_under_annuity_measeure_d_s}
-Let us to remember that $\nu(t,t_i)=h(t,\bar{x}_t,\bar{y}_t) \frac{G(t,t_i)}{\beta_{t,k}}$ with  $\beta_{t,k} = \exp\left(\int_{0}^{t}k(u)\right)$.
+Let us to remember that $\nu(t,t_i)=h(t,\bar{x}_t,\bar{y}_t) \frac{G(t,t_i)}{\beta_{t,k}(t)}$ with  $\beta_{t,k}(t) = \exp\left(\int_{0}^{t}k(u)\right)$.
 Therefore 
 \begin{equation*}
 D_s \nu(t,T_i) = \partial_x \nu(t,T_i, \bar{x}_t, \bar{y}_t) D_s \bar{x}_t  \frac{G(t,t_i)}{\beta_{t,k}}.
 \end{equation*}
 Then we have that
 \begin{equation}
-D_s \sigma_{0,1}(t,t_a,t_b) \approx  D_s \bar{x}_t \mu(t,t_a,t_b)
+D_s \sigma_{0,1}(t,t_a,t_b) =  D_s \bar{x}_t \mu(t,\bar{x}_t, \bar{y}_t, t_a,t_b)
 \end{equation}
 where 
 $$
-\mu(t,T_a,T_b) =  \sum_{i=a+1}^{b} w_i \partial_x \nu(t,t_i, \bar{x}_t, \bar{y}_t) \frac{G(t,t_i)}{\beta_{t,k}}.
+\mu(t,\bar{x}_t, \bar{y}_t, t_a,t_b) =  \sum_{i=a+1}^{b} w_i(t) \partial_x \nu(t,t_i, \bar{x}_t, \bar{y}_t) \frac{G(t,t_i)}{\beta_{t,k}}.
 $$
-Now, if we use the last approximation and (\ref{approximation_o1_vol}) in (\ref{approximation_x_t_a}) together with the Girsanov's theorem, we have that
+and $\frac{\delta_{i-1,i} P(t,t_i)}{01(t,t_a,t_b)}$. Now, from (\ref{approximation_x_t_a}) together with the Girsanov's theorem, we have that
 \begin{align*}
-\bar{x}_{T_a} &\approx  \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_u du + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{\sigma}_{01}(u,t_a,t_b) du \nonumber \\\
+\bar{x}_{T_a} &=  \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_u du + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \sigma_{01}(u,t_a,t_b) \mu(u,\bar{x}_u, \bar{y}_u, t_a,t_b) du \nonumber \\\
 &+  \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}_u,\bar{y}_u) dW_u^{\mathbb{Q}^{01}}.
 \end{align*}
-Therefore
+Then, if we take $D_s$ we get that
 \begin{equation*}
-D_s \bar{x}_{t_a} \approx  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{t_a})\bar{M}^{01}(s,t_a)
+D_s \bar{x}_{t_a} = \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0,\bar{y}_{t_a})\bar{M}^{01}(s,t_a)
 \end{equation*}
 where
 \begin{align*}
-\bar{M}^{01}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left(\frac{\left(\partial_x \beta(u,T_a,\bar{x}_0,\bar{y}_{t_a})\right)^{2}}{2} + \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,\bar{x}_u,\bar{y}_u \mu(u,t_a,t_b) du \right)\right) \\
+\bar{M}^{01}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left(\frac{\left(\partial_x \beta(u,t_a,\bar{x}_u,\bar{y}_{u})\right)^{2}}{2} + \partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_{u}) \mu(u,\bar{x}_u,\bar{y}_u,t_a,t_b)) du \right)\right) \\
 &\exp\left(\int_{s}^{t_a} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}^{01}}_u \right)
 \end{align*}
-and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$. Then
+and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$.
 
 \begin{align}\label{approximation_E_01_Ds_x_t}
-\mathbb{E}^{01}_s\left(D_s \bar{x}_{t_a}\right) &\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s)  \mathbb{E}_s^{01}\left(\exp\left(-\int_{s}^{t_a}\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,t_a,t_b) du \right)\right) \nonumber \\
-&\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}\beta(u,t_a,\bar{x}_{0}(t_a),\bar{y}_u) \mu(u,t_a,t_b) du \right)
+\mathbb{E}^{01}_s\left(D_s \bar{x}_{t_a}\right) &= \beta(s,t_a,\bar{x}_s,\bar{y}_s)  \mathbb{E}_s^{01}\left(\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b)) du \right)\right) \nonumber \\
+&\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)
 \end{align}
 
 \section{Proofs}
@@ -1019,8 +1025,8 @@ From the previous expression, we must note that under assumption of not stochast
 \begin{equation}\label{Exp_M_conditional}
 \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right).
 \end{equation}
-In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. Under this assumption (\ref{Exp_M_conditional}) is trivial to calulate it. The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\
-In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$. If we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
+In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. Under this assumption (\ref{Exp_M_conditional}) is trivial to calulate it. The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\ 
+In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$. Now, if we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
 \begin{equation} \label{clark_ocone_swap_m}
 M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\left(D_s M(t_a,t_p)\right) dW^{01}_s
 \end{equation}
@@ -1029,10 +1035,10 @@ Then, if we substitute the last expressions in (\ref{expected_t_p_cms}) we have 
 \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left( S^{ois}_{a,b}(t_a) \int_{0}^{t_a} \mathbb{E}^{0,1}_s\left(D_s x_{t_a}\partial_x M(t_a,t_p)  \right) dW^{0,1}_s   \right) \nonumber \\
 =&  S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(\int_{0}^{t_a} D_s x_{t_a} \partial_x S_{a,b}(t_a) \mathbb{E}^{0,1}_s\left(D_s x_{t_a}\partial_x M(t_a,t_p)  \right) ds   \right)
 \end{align}
-Now if we use (\ref{approximation_E_01_Ds_x_t}) and choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$, we have that
+Now from (\ref{approximation_E_01_Ds_x_t}) and choosing $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$, we have that
 \begin{align}
 \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  S^{ois}_{a,b}(0) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)} \nonumber \\
-&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \exp\left(-2\int_{s}^{t_a}\beta(u,t_a,\bar{x}_{0}(t_a),\bar{y}_u) \mu(u,t_a,t_b) du \right)ds 
+&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s)\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds 
 \end{align}
 
 
