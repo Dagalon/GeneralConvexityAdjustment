@@ -276,11 +276,11 @@ P(t,T)=\exp\left(-\int^{T}_{t} f(t,u) du\right).
 
 Before the financial crisis, there was a single curve framework based on the same curve for discounting and forecasting. Since then, the market has adopted a multi-curve approach with two different curves: the discount curve and the estimation curve. We will use the following notation:
 \begin{itemize}
-	\item The \textbf{\textit{discount curve}} is built with OIS instruments which are considered the best approximation for the risk-free rate. We will denote the forward discount rate curve by $f_{ois}(t,T)$ and the discount curve by $P_{ois}(t,T)$.
+	\item The \textbf{\textit{discount forward curve}} is built with OIS instruments which are considered the best approximation for the risk-free rate. We will denote the forward discount rate curve by $f_{ois}(t,T)$ and the discount curve by $P_{ois}(t,T)$.
 
-	\item The \textbf{\textit{estimation curve}} is chosen based on the maturity of the underlying rate. Until the crisis, the spread between the OIS and the Ibor was negligible. For example, the OIS 6M and Ibor 6M. Nowadays, due to credit and liquidity reasons, there is a spread between them. As a consequence, the estimation curve is tenor-dependent. We will denote the forward estimation rate curve by $f_{E}(t,T)$ and the estimation discount curve by $P_{E}(t,T)$. 
+	\item The \textbf{\textit{estimation forward curve}} is chosen based on the maturity of the underlying rate. Until the crisis, the spread between the OIS and the Ibor was negligible. For example, the OIS 6M and Ibor 6M. Nowadays, due to credit and liquidity reasons, there is a spread between them. As a consequence, the estimation curve is tenor-dependent. We will denote the forward estimation rate curve by $f_{E}(t,T)$ and the estimation discount curve by $P_{E}(t,T)$. 
 	
-	\item The \textbf{\textit{basis curve}} is the difference between the estimation curve and the discount curve, i.e. $s(t,t+T)= f_{E}(0,T) - f_{ois}(0,T)$. In this paper, we will assume that the basis are not stochastic. Therefore, it can be obtained directly from the market at time $t=0$. The basis curve is denoted by $s(t,T)$.
+	\item The \textbf{\textit{basis forward curve}} is the difference between the estimation forward curve and the discount forward curve, i.e. $s(t,T)= f_{E}(t,T) - f_{ois}(t,T)$. In this paper, we will assume that the basis are not stochastic. Therefore, it can be obtained directly from the market at time $t=0$ i.e $s(t,t + u)= s(0,u)$ for $u \geq 0$.
 	\end{itemize}
 
 Consequently, the estimation forward curve $f_{E}(t, T)$ is given by
@@ -352,14 +352,14 @@ and
 \bar{x}_{t_a}:= \bar{x}_0(t_a)&+&\int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k(u) du\right) \bar{y}_u du \nonumber \\
 &+& \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k(u) du \right) \eta(u,\bar{x}(u),\bar{y}_u) dW_u^{\mathbb{Q}}   \label{approximation_x_t_a}
 \end{eqnarray}
-with initial condition $\bar{x}_{0}(t_a)$ will be chosen appropriately depending on the case. In the appendix \ref{estimation_error_l2} we can find the estimation for $\mathbb{E}((x_t-\bar{x}_t)^{2})$.
+with initial condition $\bar{x}_{0}(t_a)$ will be chosen appropriately depending on the case. In the appendix \ref{estimation_error_l2} we can find the estimation for $\mathbb{E}((x_t-\bar{x}_t)^{2})$ and thr order of this approximation.
 
 \subsection{Model constraints}
 To calculate the convergence order of the convexity adjustment approximation, we use the following hypotheses on $\eta(t,x,y)$.
 \begin{hypothesis}\label{boundedness_volatility} 
 The process $\eta_t$ is global Lipschitz and differentiable a.s. In addition, we will suppose that
 \begin{align*}
-\alpha_1 \leq \eta(t,x,y) \leq \alpha_2 \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+}. \\
+\alpha_1 \leq \eta(t,x,y) \leq \alpha_2 \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+} \quad \text{and} \quad \alpha_1, \alpha_2 > 0. \\
 |\eta(t,x_2,y_2) - \eta(t,x_1,y_1)| \leq C_{x,y} \lVert (x_2-x_1,y_2-y_1)\rVert \quad \forall (t,x,y) \in \mathbb{R}^{+} \times \mathbb{R} \times \mathbb{R}^{+} 
 \end{align*}
 with $\lVert \cdot \rVert$ euclidean norm in $\mathbb{R}^{2}$.
@@ -392,7 +392,7 @@ The hypotheses have been chosen for simplicity, but they can be replaced by suit
 \section{Convexity Adjustment}\label{sec:CA}
 In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus, is that it allows us to derive a general representation formula for the convexity adjustmet Even, how we will see later, it is possible to get closed formulas for the convexity adjusment when the volatility of the Cheyette model is time dependent. 
 
-In order to introduce a general idea of the method. Let define a $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$ and that we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
+To introduce a general idea of the method, let us define the process $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$, but we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure under which $Z_t$ is not martingale and such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
 \begin{equation*}
 f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left(f(x_t)\right) + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) dW^{\mathbb{Q}_1}_s
 \end{equation*}
@@ -970,8 +970,8 @@ D_s I(t_0,t_1) = \int_{\max(s, t_{0})}^{t_1}  D_s x_u du
 Now, if $t < t_0$, then from (\ref{clark-okone}) and (\ref{approximation_spot_E_s_x_t}), we have that 
 \begin{align}\label{apprx_I_t0_t1}
 I(t_0,t_1) &= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left(\beta(s,u,x_s,y_s) \bar{M}(s,u) \right) du dW_s^{\mathbb{Q}} \nonumber \\
-&\approx \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,x_0,\bar{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
-&= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1} g(s)h(s,x_0,\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
+&\approx \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,\bar{x}_0(t_1),\bar{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
+&= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1} g(s)h(s,\bar{x}_0(t_1),\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
 \end{align}
 Then, using the previous approximation, we get that
 \begin{align*}
@@ -1012,7 +1012,7 @@ D_s L(t_1,t_1,t_2) &=& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(t_1,t_2)} D_s x_{
 \end{eqnarray*}
 If we use the above approximation, we get
 \begin{equation*}
-CA(t_0,t_1) = \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \bar{DM}(s,t_1) (\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))) ds
+CA(t_0,t_1) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \bar{DM}(s,t_1) (\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))) ds
 \end{equation*}
 with $\bar{\nu}(t,t_p, \bar{x}_0(t_a))= \int_{t}^{t_p} \eta(s,\bar{x}_0(t_a),\bar{y}_s) ds$.   
 
