@@ -402,13 +402,13 @@ The hypotheses have been chosen for simplicity, but they can be replaced by suit
 \section{Convexity Adjustment}\label{sec:CA}
 In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus, is that it allows us to derive a general representation formula for the convexity adjustmet Even, how we will see later, it is possible to get closed formulas for the convexity adjusment when the volatility of the Cheyette model is time dependent. 
 
-To introduce a general idea of the method, let us define the process $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$, but we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left(Z_T \right)$, where $\mathbb{Q}_2$ is a measure under which $Z_t$ is not martingale and such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
+To introduce a general idea of the method, let us define the process $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$, but we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left[Z_T \right]$, where $\mathbb{Q}_2$ is a measure under which $Z_t$ is not martingale and such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
 \begin{equation*}
-f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left(f(x_t)\right) + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) dW^{\mathbb{Q}_1}_s
+f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left[f(x_t)\right] + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left[ f^{\prime}(x_t) D_s x_t  \right] dW^{\mathbb{Q}_1}_s
 \end{equation*}
 Now, if we take $\mathbb{E}^{\mathbb{Q}_2}\left( \cdot \right)$ in the previous expression and we use the Girsanov's theorem, we get that
 \begin{equation}\label{general_convexity}
-\mathbb{E}^{\mathbb{Q}_2}\left( f(x_t) \right) = f(x_0) + \mathbb{E}^{\mathbb{Q}_1} \left(\int_{0}^{t}  \mathbb{E}^{\mathbb{Q}_1}_s\left( f^{\prime}(x_t) D_s x_t  \right) \lambda_s ds \right). 
+\mathbb{E}^{\mathbb{Q}_2}\left[ f(x_t) \right] = f(x_0) + \mathbb{E}^{\mathbb{Q}_1} \left[\int_{0}^{t}  \mathbb{E}^{\mathbb{Q}_1}_s\left[ f^{\prime}(x_t) D_s x_t  \right] \lambda_s ds \right]. 
 \end{equation}
 The second term, is the convexity adjustment to due to change of measure from $\mathbb{Q}_1$ to $\mathbb{Q}_2$. The differents choice of $f$, $\mathbb{Q}_1$ and $\mathbb{Q}_2$ will allow us to get an approximation of the convexity adjustment for the different case of interest. 
 \subsection{FRAs Vs futures}
@@ -421,13 +421,13 @@ where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and
 \begin{theorem}\label{Th_CA_futures}[Convexity Adjustment approximation for Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for futures is 
 \begin{equation}\label{ca_approximation_futures}
-CA(t,t_0,t_1) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds + E(t_0). 
+CA(t,t_0,t_1) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1) \right) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds + E[t_0]. 
 \end{equation}
 with 
 \begin{equation*}
 \beta(t,t_0,x,y) = \exp\left(-\int_{s}^{t_0}k_u du \right) \eta(u,x,y).
 \end{equation*}
-And $\|E(t_0)\|^{2}_{2} \sim \mathcal{O}(t_0) \quad \text{when} \quad t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty \quad \text{when} \quad t_0 \to \infty$. 
+and $\|E\left[t_0\right]\|^{2}_{2} \sim \mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E\left[t_0\right]\|^{2}_{2} < \infty$ when $t_0 \to \infty$. 
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_futures}.
@@ -473,13 +473,18 @@ R_{avg}(t_0,t_1) := \frac{1}{\delta_{t_0,t_1}}\int_{t_0}^{t_1}r_{ois,u} du.
 We observe that both, $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$  are not predictable and are only observable in $t_1$. However, 
 $R(\cdot,t_0,t_1)$ and $R_{avg}(\cdot,t_0,t_1)$ are flows that will be payed in $t_1$. Therefore, we can consider that the expected value under the measure $\mathbb{Q}$ is observable during entire period $[t_0, t_1]$. Let us define the next $\mathbb{Q}$ martingales:
 \begin{align*} 
-\bar{R}(t,t_0,t_1) &:= \mathbb{E}_t^{\mathbb{Q}}\left( R(t_0,t_1)  \right), \\
-\bar{R}_{avg}(t,t_0,t_1) &:= \mathbb{E}_t^{\mathbb{Q}}\left( R_{avg}(t_0,t_1)  \right).
+\bar{R}(t,t_0,t_1) &:= \mathbb{E}_t^{\mathbb{Q}}\left[ R(t_0,t_1)  \right], \\
+\bar{R}_{avg}(t,t_0,t_1) &:= \mathbb{E}_t^{\mathbb{Q}}\left[ R_{avg}(t_0,t_1)  \right].
 \end{align*}
-Before to continue, we will do several observations. The first observation is that if we define $F(t,t_0,t_1) = \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R(t_0,t_1)\right)$, then we have that
+Before to continue, we will do several observations. The first observation is that if we define $F(t,t_0,t_1) = \mathbb{E}^{\mathbb{Q}^{t_1}}\left( R(t_0,t_1)\right)$, then we have that when $t \in [0,t_0]$
 \begin{align*}
-F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)}  \mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_1} r_{ois,u} du \right) R(t_0,t_1) \right) = \frac{1}{\delta_{t_0,t_1}}\left(\frac{P_{ois}(t,t_0)}{P_{ois}(t,t_1)} - 1\right), \quad t \in [0,t_0] \\
-F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)} \mathbb{E}_{t}^{\mathbb{Q}}\left(\exp\left(-\int_{t}^{t_1} r_{ois,u} du \right) R(t_0,t_1) \right) = \frac{1}{\delta_{t_0,t_1}} \left(\frac{\left( \exp\left(\int_{t}^{t_1}r_{ois,u} du\right)\right)}{P_{ois}(t_0,t)}-1\right), \quad  t \in  [t_0, t_1].
+F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)}  \mathbb{E}_{t}^{\mathbb{Q}}\left[\exp\left(-\int_{t}^{t_1} r_{ois,u} du \right) R(t_0,t_1) \right]\\
+&= \frac{1}{\delta_{t_0,t_1}}\left(\frac{P_{ois}(t,t_0)}{P_{ois}(t,t_1)} - 1\right), %, \quad t \in [0,t_0] \\
+%\end{align*}
+\intertext{and when $t \in  [t_0, t_1]$, we have}
+%\begin{align*}
+F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)} \mathbb{E}_{t}^{\mathbb{Q}}\left[\exp\left(-\int_{t}^{t_1} r_{ois,u} du \right) R(t_0,t_1) \right]\\
+ &= \frac{1}{\delta_{t_0,t_1}} \left(\frac{\exp\left(\int_{t}^{t_1}r_{ois,u} du\right)}{P_{ois}(t_0,t)}-1\right).%, \quad  t \in  [t_0, t_1].
 \end{align*}
 Then the convexity adjustment for $ R(t_0,t_1)$ is
 \begin{equation}\label{R_ois_ca}
@@ -487,7 +492,7 @@ CA_{ois}(t,t_0,t_1) = F(t,t_0,t_1) - \bar{R}(t,t_0,t_1).
 \end{equation}
 The second observation is that we have the following equivalence
 \begin{equation}\label{R_ois_avg}
-\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) = \mathbb{E}^{\mathbb{Q}}\left( \frac{\log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right)}{\delta_{t_0,t_1}} \right)  \end{equation}
+\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) =\frac{1}{\delta_{t_0,t_1}} \mathbb{E}^{\mathbb{Q}}\left[ \log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right) \right]  \end{equation}
 In order, to clarify the convexity expression and the calculations, we will define 
 \begin{equation*}
 I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois,s} ds.
@@ -496,14 +501,18 @@ I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois,s} ds.
 \begin{theorem}\label{Th_CA_OIS}[Convexity Adjustment approximation for OIS Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypothesis \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for OIS futures is 
 \begin{equation}\label{convexity_ois_future}
-\bar{R}(t_0,t_1) = \frac{\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right) - 1}{\delta_{t_0,t_1}} + E(t_0)
+\bar{R}(t_0,t_1) = \frac{1}{\delta_{t_0,t_1}}\left(\exp\left(\mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right]\right)\exp\left(-\frac{1}{2}\int_{t}^{t_1}\Gamma^{2}(s,t_0,t_1) ds\right) - 1\right) + E[t_0],
 \end{equation}
 and for the average OIS future is
 \begin{equation}\label{convexity_avg_ois_future}
-\bar{R}_{avg}(t_0,t_1) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) }{\delta_{t_0,t_1}} \approx \frac{\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) \right)}{\delta_{t_0,t_1}} - \frac{\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds}{2\delta_{t_0,t_1}}
+\bar{R}_{avg}(t_0,t_1) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] }{\delta_{t_0,t_1}} \approx \frac{1}{\delta_{t_0,t_1}}\left(\log\left(1+\delta_{t_0,t_1}  \mathbb{E}_t^{\mathbb{Q}}\left[R(t_0,t_1)\right] \right) - \frac{1}{2}\int_{0}^{t_1}  \Gamma^{2}(s,t_0,t_1) ds\right)
 \end{equation}
+where  
+\begin{equation}
+\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du, 
+\end{equation}
+and $\|E[t_0]\|^{2}_{2} \sim \mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E[t_0]\|^{2}_{2} < \infty$ when $t_0 \to \infty$.
 \end{theorem}
-where  $\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$, and $\|E(t_0)\|^{2}_{2} \sim \mathcal{O}(t_0) \quad \text{when} \quad t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty \quad \text{when} \quad t_0 \to \infty$.
 \begin{proof}
 See appendix \ref{Proof_CA_OIS_futures}.
 \end{proof}
@@ -513,7 +522,7 @@ We must note that (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_futur
 \end{remark}
 
 \begin{remark}
-We can calculate the convexity adjustment for the case $t_0 < t < t_1$ in a similar way to when $t < t_0$, for this we will define
+We can calculate the convexity adjustment for the case $t_0 < t < t_1$ similarly to when $t < t_0$. For this, we will define
 \begin{equation*}
 I(t,t_1):=\int_{t}^{t_1} r_s ds
 \end{equation*}
@@ -527,16 +536,22 @@ R_{avg}(t_0,t_1) &:= \frac{1}{\delta_{t_0,t_1}}\left(\int_{t_0}^{t} r_{ois,s} ds
 \begin{example}[Convexity adjustment for OIS futures under the Hull-White model]\label{example_convexity_hw_ois}
 Similarly to the Example \ref{example_ca_future}, we can find the equivalent parameters for the Hull-White model: 
 \begin{align*}
-\Gamma(s,t_0,t_1) &= \frac{\sigma \exp(-ks)}{k}\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-s))\right)\\
-\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right) + \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  \right).
+\Gamma(s,t_0,t_1) &= \frac{\sigma \exp(-ks)}{k}\biggl(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1-s))\biggr),\\
+\mathbb{E}^{\mathbb{Q}}\left[I(t_0,t_1)\right]&=-\log\left(\frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)}\right)\\
+& \text{ }\text{ }\text{ }+ \frac{\sigma^{2}}{2k^{2}}\left(\delta_{t_0,t_1} - 2 \frac{\exp(-kt_0) - \exp(-kt_1)}{k} + \frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  \right).
 \end{align*}
 Therefore, we have that
+%\begin{align*}
+%\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
+%&= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
+%&+ \frac{\sigma^{2}}{2k^2} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k(t_1 - s))\right)^{2} ds\\
+%&= \frac{\sigma^{2}t_0}{2k^{2}} \left( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \right)\\  
+%&+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  + \exp(-kt0)t0 - 2 \frac{\exp(-2kt_0) - \exp(-k(t_0 + t_1))}{k}  \right)
+%\end{align*}
 \begin{align*}
-\frac{\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds}{2} &= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_1}  \exp(-2ks)\left(\exp(-k(\max(s,t_0) - s)) - \exp(-k(t_1 - s))\right)^{2} ds \\
-&= \frac{\sigma^{2}}{2k^2} \int_{0}^{t_0} \exp(-2ks)\left(\exp(-k(t_0 - s)) - \exp(-k(t_1 - s))\right)^{2} ds\\
-&+ \frac{\sigma^{2}}{2k^2} \int_{t_0}^{t_1} \exp(-2ks)\left(1 - \exp(-k(t_1 - s))\right)^{2} ds\\
-&= \frac{\sigma^{2}t_0}{2k^{2}} \left( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \right)\\  
-&+ \frac{\sigma^{2}}{2k^{2}} \left(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  + \exp(-kt0)t0 - 2 \frac{\exp(-2kt_0) - \exp(-k(t_0 + t_1))}{k}  \right)
+\frac{1}{2}\int_{0}^{t_1} \Gamma^{2}(s,t_0,t_1) ds &= \frac{\sigma^{2}t_0}{2k^{2}} \biggl( \exp(-kt_0) + \exp(-2kt_1) - 2 \exp(-k(t_1+t_0)) \biggr)\\  
+&+ \frac{\sigma^{2}}{2k^{2}} \biggl(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  + \exp(-kt_0)t_0 \\
+&\quad - 2 \frac{\exp(-2kt_0) - \exp(-k(t_0 + t_1))}{k}  \biggr).
 \end{align*}
 Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$.\\
 
