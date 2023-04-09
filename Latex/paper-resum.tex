@@ -138,6 +138,13 @@
 \newcommand{\keywords}[1]{\ccode{Keywords}{#1}}
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
 
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
 \title{\textcolor{Navy}{\textsc{Convexity adjustments \`a la Malliavin}}}
 
 \author[1,2]{David Garcia-Lorite\thanks{Corresponding author, \email{dddd@caixabank.es}}}
@@ -146,6 +153,7 @@
 \affil[1]{CaixaBank, Quantitative Analyst Team, Plaza de Castilla, 3, 28046 Madrid, Spain,}
 \affil[2]{Facultat de Matem\`{a}tiques i Inform\`{a}tica, Universitat de Barcelona, \authorcr Gran Via 585, 08007 Barcelona, Spain,\vspace*{3pt}}
 \affil[3]{VidaCaixa S.A., Market Risk Management Unit, \authorcr C/Juan Gris, 2-8, 08014 Barcelona, Spain.}
+
 
 %\date{Received: date / Accepted: date}
 \date{\normalfont\small\today}
@@ -164,6 +172,7 @@ In this paper, we develop a novel method based on the Malliavin calculus to find
 %\TODO{Remove ToC in final version}
 %\tableofcontents
 %\clearpage
+\blfootnote{The authors would like to thank Elisa Al\`os for helpful discussions.}
 
 \section{Introduction}
 Mathematical finance aims to find a methodology to price consistently all the instruments quoted in the market. When working with fixed income derivatives, a classic research topic is the introduction of a price adjustment to achieve this. This adjustment is called convexity adjustment. It is non-linear and depends on the interest rate model.  
