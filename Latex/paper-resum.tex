@@ -401,17 +401,17 @@ The hypotheses have been chosen for simplicity, but they can be replaced by suit
 
 
 \section{Convexity Adjustment}\label{sec:CA}
-In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus, is that it allows us to derive a general representation formula for the convexity adjustmet Even, how we will see later, it is possible to get closed formulas for the convexity adjusment when the volatility of the Cheyette model is time dependent. 
+In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula for the convexity adjustment. Furthermore, as we will see later, it is possible to obtain closed formulas for the convexity adjustment when the volatility of the Cheyette model is time dependent. 
 
-To introduce a general idea of the method, let us define the process $Z_t = f(x_t)$. Now, we suppose that $Z_t$ is martingale under the measure $\mathbb{Q}_1$, but we want to compute $\mathbb{E}^{\mathbb{Q}_2}\left[Z_T \right]$, where $\mathbb{Q}_2$ is a measure under which $Z_t$ is not martingale and such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
+We are going to introduce a general idea of the method. Let us define the process $Z_t = f(x_t)$. Suppose that $Z_t$ is a martingale under the measure $\mathbb{Q}_1$. However, we are interested in calculate $\mathbb{E}^{\mathbb{Q}_2}\left[Z_T \right]$ where $\mathbb{Q}_2$ is a measure under which $Z_t$ is not martingale and such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
 \begin{equation*}
 f(x_t) = \mathbb{E}^{\mathbb{Q}_1}\left[f(x_t)\right] + \int_{0}^{t} \mathbb{E}^{\mathbb{Q}_1}_s\left[ f^{\prime}(x_t) D_s x_t  \right] dW^{\mathbb{Q}_1}_s
 \end{equation*}
-Now, if we take $\mathbb{E}^{\mathbb{Q}_2}\left( \cdot \right)$ in the previous expression and we use the Girsanov's theorem, we get that
+Now, taking $\mathbb{E}^{\mathbb{Q}_2}\left( \cdot \right)$ in the previous expression and using Girsanov's theorem, we get that
 \begin{equation}\label{general_convexity}
 \mathbb{E}^{\mathbb{Q}_2}\left[ f(x_t) \right] = f(x_0) + \mathbb{E}^{\mathbb{Q}_1} \left[\int_{0}^{t}  \mathbb{E}^{\mathbb{Q}_1}_s\left[ f^{\prime}(x_t) D_s x_t  \right] \lambda_s ds \right]. 
 \end{equation}
-The second term, is the convexity adjustment to due to change of measure from $\mathbb{Q}_1$ to $\mathbb{Q}_2$. The differents choice of $f$, $\mathbb{Q}_1$ and $\mathbb{Q}_2$ will allow us to get an approximation of the convexity adjustment for the different case of interest. 
+The second term is the convexity adjustment due to the change of measure from $\mathbb{Q}_1$ to $\mathbb{Q}_2$. The different choices of $f$, $\mathbb{Q}_1$, and $\mathbb{Q}_2$ will allow us to obtain a convexity adjustment approximation for the different cases of interest. 
 \subsection{FRAs Vs futures}
  The cash flows in FRAs and futures are computed under different measures. Consequently, we need to adjust the futures price quote to transform them into FRAs price quotes. As usual, we will define the forward rate at time $t_0$ between $t_1$ and $t_2$ under the forward curve $E$ as:
 \begin{equation}\label{forward_rate}
@@ -914,7 +914,7 @@ $$
 \nu(t,t_i,\bar{x}_0(t_a)) = \int_{t}^{t_i} \sigma(t,u,\bar{x}_0(t_a),\bar{y}_u) du.
 $$ 
 
-\subsection{Approximation of $\mathbb{E}^{01}\left(D_s \bar{x}_{t_a} \right)$}\label{approximation_under_annuity_measeure_d_s}
+\subsection{Approximation of $\mathbb{E}^{01}\left[D_s \bar{x}_{t_a} \right]$}\label{approximation_under_annuity_measeure_d_s}
 Let us to remember that $\nu(t,t_i)=h(t,\bar{x}_t,\bar{y}_t) \frac{G(t,t_i)}{\beta_{t,k}(t)}$ with  $\beta_{t,k}(t) = \exp\left(\int_{0}^{t}k(u)\right)$.
 Therefore 
 \begin{equation*}
@@ -930,7 +930,8 @@ $$
 $$
 and $\frac{\delta_{i-1,i} P(t,t_i)}{01(t,t_a,t_b)}$. Now, from (\ref{approximation_x_t_a}) together with the Girsanov's theorem, we have that
 \begin{align*}
-\bar{x}_{T_a} &=  \bar{x}_0(t_a)  + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_u du + \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \sigma_{01}(u,t_a,t_b) \mu(u,\bar{x}_u, \bar{y}_u, t_a,t_b) du \nonumber \\\
+\bar{x}_{T_a} =  \bar{x}_0(t_a)  &+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \bar{y}_u du \nonumber \\\ 
+&+ \int_{0}^{t_a} \exp\left(-\int_{s}^{t_a}k_u du\right) \sigma_{01}(u,t_a,t_b) \mu(u,\bar{x}_u, \bar{y}_u, t_a,t_b) du \nonumber \\\
 &+  \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(u,\bar{x}_u,\bar{y}_u) dW_u^{\mathbb{Q}^{01}}.
 \end{align*}
 Then, if we take $D_s$ we get that
@@ -939,13 +940,13 @@ D_s \bar{x}_{t_a} = \exp\left(-\int_{s}^{t_a}k_u du \right) \eta(s,\bar{x}_0,\ba
 \end{equation*}
 where
 \begin{align*}
-\bar{M}^{01}(s,t_a) &= \exp\left(-\int_{s}^{t_a} \left(\frac{\left(\partial_x \beta(u,t_a,\bar{x}_u,\bar{y}_{u})\right)^{2}}{2} + \partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_{u}) \mu(u,\bar{x}_u,\bar{y}_u,t_a,t_b)) du \right)\right) \\
+\bar{M}^{01}(s,t_a) = &\exp\left(-\int_{s}^{t_a} \left(\frac{\left(\partial_x \beta(u,t_a,\bar{x}_u,\bar{y}_{u})\right)^{2}}{2} + \partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_{u}) \mu(u,\bar{x}_u,\bar{y}_u,t_a,t_b)) du \right)\right) \\
 &\exp\left(\int_{s}^{t_a} \partial_x \beta(u,t_a,\bar{x}_0,\bar{y}_{t_a}) dW^{\mathbb{Q}^{01}}_u \right)
 \end{align*}
 and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$.
 
 \begin{align}\label{approximation_E_01_Ds_x_t}
-\mathbb{E}^{01}_s\left(D_s \bar{x}_{t_a}\right) &= \beta(s,t_a,\bar{x}_s,\bar{y}_s)  \mathbb{E}_s^{01}\left(\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b)) du \right)\right) \nonumber \\
+\mathbb{E}^{01}_s\left[D_s \bar{x}_{t_a}\right] &= \beta(s,t_a,\bar{x}_s,\bar{y}_s)  \mathbb{E}_s^{01}\left(\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b)) du \right)\right) \nonumber \\
 &\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)
 \end{align}
 
@@ -953,12 +954,12 @@ and $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$.
 \subsection{Proof Theorem \ref{Th_CA_futures}}\label{Proof_CA_futures}
 Observe that $L_{E}(t, t_1, t_2)$ is a martingale under the forward measure $\mathbb{Q}^{t_2}$. Let us define the future rate as:    
 \begin{equation}\label{future}
-\hat{L}_{E}(t,t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left(L_{E}(t_0, t_1, t_2) \right), 
+\hat{L}_{E}(t,t_0, t_1, t_2) = \mathbb{E}_t^{\mathbb{Q}}\left[L_{E}(t_0, t_1, t_2) \right], 
 \end{equation}
 where $\mathbb{Q}$ is the measure associated to the numeraire $B_t=\exp\left(\int_{0}^{t} r_{ois, s} ds \right)$ with $ r_{ois, t}$ the risk free short rate. Using
 \eqref{forward_rate} and \eqref{future}, then the convexity adjustment definition is:
 \begin{equation*}
-CA(t, t_0, t_1, t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left(L_{E}(t_0, t_1, t_2) \right).
+CA(t, t_0, t_1, t_2) = \hat{L}_{E}(t,t_0, t_1, t_2) - \mathbb{E}_t^{\mathbb{Q}^{t_2}}\left[L_{E}(t_0, t_1, t_2) \right].
 \end{equation*}
 From (\ref{ois_forward_rate_curve}) and since $f_{ois}(t,T)$ is a $\mathbb{Q}^{T}$ martingale, we have that
 \begin{equation}\label{girsanov_spot_forward}
@@ -966,7 +967,7 @@ dW^{\mathbb{Q}^{t_2}} = dW^{\mathbb{Q}} + \nu(t,t_2) dt.
 \end{equation}
 Applying (\ref{general_convexity}) with $f(x_t)=L_{E}(t,t_0, t_1, t_2)$, $\mathbb{Q}_1=\mathbb{Q}$, $\mathbb{Q}_1=\mathbb{Q}^{t_2}$ and $\lambda_t = \nu(t,t_2)$,  we get that
 \begin{equation}\label{ca_general_future}
-CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left(\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\left(D_s L_{E}(t_0,t_1,t_2) \right) \nu(s,t_2) ds \right)
+CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left[\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\Bigl[D_s L_{E}(t_0,t_1,t_2) \Bigr] \nu(s,t_2) ds \right]
 \end{equation}
 where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Calculating the malliavin derive of $L_{E}(t_0,t_1,t_2)$ we have that
 \begin{equation*}
@@ -974,113 +975,120 @@ D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)} D_s \left
 \end{equation*}
 Now from the zero coupon representation formula (\ref{bond_ois}), we get that
 \begin{equation*}
-D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) = \frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}.
+D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right) = \frac{\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}.
 \end{equation*}
 Therefore
 \begin{equation}\label{malliavin_derive_L}
-D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}.
+D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) }{P^{2}_{ois}(t_0,t_2)} D_s x_{t_0}.
 \end{equation}
 If we use (\ref{approsimation_E_s_x_t}) with $T_a=t_0$ and $\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k_u du \right) \eta(u,x,y)$, we have that
 \begin{align*}
-D_s L_{E}(t_0,t_1,t_2) &\approx \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\left(\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1) \right)}{P^{2}_{ois}(t_0,t_2)} \beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0) \nonumber \\
+D_s L_{E}(t_0,t_1,t_2) &\approx \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1)}{P^{2}_{ois}(t_0,t_2)} \beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0) \nonumber \\
 \approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)} \right)\beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0).
 \end{align*}
 Therefore
 \begin{equation}\label{approximation_clarkocone}
-\mathbb{E}_s\left( D_s L_{E}(t_0,t_1,t_2) \right) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1)\right)\beta(t,t_0,x_0,\bar{y}_s).
+\mathbb{E}_s\left[ D_s L_{E}(t_0,t_1,t_2) \right] = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2)  - G(t_0,t_1)\right)\beta(t,t_0,x_0,\bar{y}_s).
 \end{equation}
 Then from (\ref{ca_general_future}) and (\ref{approximation_clarkocone}) we find the approximation for the convexity adjustment for futures.
 
 \subsection{Proof Theorem \ref{Th_CA_OIS}}\label{Proof_CA_OIS_futures}
-To compute $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right)$ we will use (\ref{general_convexity}), with $\mathbb{Q}_2 = \mathbb{Q}$, $\mathbb{Q}_1 = \mathbb{Q}^{t_1}$ and $x_{t_1}=R(t_0,t_1)$. If we apply $D_s$ on $I(t_0,t_1)$ we obtain that
+To compute $\mathbb{E}^{\mathbb{Q}}\left[R(t_0,t_1)\right]$ we will use (\ref{general_convexity}), with $\mathbb{Q}_2 = \mathbb{Q}$, $\mathbb{Q}_1 = \mathbb{Q}^{t_1}$ and $x_{t_1}=R(t_0,t_1)$. If we apply $D_s$ on $I(t_0,t_1)$ we obtain that
 \begin{equation*}
 D_s I(t_0,t_1) = \int_{\max(s, t_{0})}^{t_1}  D_s x_u du 
 \end{equation*}
 Now, if $t < t_0$, then from (\ref{clark-okone}) and (\ref{approximation_spot_E_s_x_t}), we have that 
 \begin{align}\label{apprx_I_t0_t1}
-I(t_0,t_1) &= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left(\beta(s,u,x_s,y_s) \bar{M}(s,u) \right) du dW_s^{\mathbb{Q}} \nonumber \\
-&\approx \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,\bar{x}_0(t_1),\bar{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
-&= \mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right) + \int_{t}^{t_1} g(s)h(s,\bar{x}_0(t_1),\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
+I(t_0,t_1) &= \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left[\beta(s,u,x_s,y_s) \bar{M}(s,u) \right] du dW_s^{\mathbb{Q}} \nonumber \\
+&\approx \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,\bar{x}_0(t_1),\bar{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
+&= \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1} g(s)h(s,\bar{x}_0(t_1),\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
 \end{align}
 Then, using the previous approximation, we get that
 \begin{align*}
-1 + \delta_{t_0,t_1}\mathbb{E}_t^{\mathbb{Q}}\left(R(t_0,t_1)\right) &= \mathbb{E}_t^{\mathbb{Q}}\left( \exp(I(t_0,t_1)) \right)\\
-&\approx \exp\left(\mathbb{E}_t^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)  \mathbb{E}^{\mathbb{Q}}\left(\exp\left(\int_{t}^{t_1} \Gamma(s,t_0,t_1)dW_s^{\mathbb{Q}}\right)\right)
+1 + \delta_{t_0,t_1}\mathbb{E}_t^{\mathbb{Q}}\left[R(t_0,t_1)\right] &= \mathbb{E}_t^{\mathbb{Q}}\left[ \exp(I(t_0,t_1)) \right]\\
+&\approx \exp\left(\mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right]\right)  \mathbb{E}^{\mathbb{Q}}\left[\exp\left(\int_{t}^{t_1} \Gamma(s,t_0,t_1)dW_s^{\mathbb{Q}}\right)\right]
 \end{align*}
-where $\Gamma(s,t_0,t_1)= g(s)h(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du$.\\
+where 
+\begin{align*}
+\Gamma(s,t_0,t_1)= g(s)h(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du.
+\end{align*}
 Therefore, we have that
 \begin{equation}\label{representation_i_0_t}
-1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right) \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left(I(t_0,t_1)\right)\right)\exp\left(-\int_{t}^{t_1}\frac{\Gamma^{2}(s,t_0,t_1)}{2} ds\right).
+1 + \delta_{t_0,t_1}\mathbb{E}^{\mathbb{Q}}\left[R(t_0,t_1)\right] \approx \exp\left(\mathbb{E}^{\mathbb{Q}}\left[I(t_0,t_1)\right]\right)\exp\left(-\frac{1}{2}\int_{t}^{t_1}\Gamma^{2}(s,t_0,t_1) ds\right).
 \end{equation}
 Then, we obtain \eqref{convexity_ois_future}.
 
-In order to get an approximation of $\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right)$ with base $\mathbb{E}^{\mathbb{Q}}\left(R(t_0,t_1)\right)$, we must note that 
+In order to get an approximation of $\mathbb{E}^{\mathbb{Q}}\left[R_{avg}(t_0,t_1)\right]$ with base $\mathbb{E}^{\mathbb{Q}}\left[R(t_0,t_1)\right]$, we must note that 
 \begin{equation*}
-\mathbb{E}_t^{\mathbb{Q}}\left(R_{avg}(t_0,t_1)\right) = \frac{\mathbb{E}_t^{\mathbb{Q}}\left( \log(1+ \delta_{t_0,t_1} R(t_0,t_1))\right)}{ \delta_{t_0,t_1}}.
+\mathbb{E}_t^{\mathbb{Q}}\left[R_{avg}(t_0,t_1)\right] = \frac{\mathbb{E}_t^{\mathbb{Q}}\biggl[ \log\Bigl(1+ \delta_{t_0,t_1} R(t_0,t_1)\Bigr)\biggr]}{ \delta_{t_0,t_1}}.
 \end{equation*}
 Then from (\ref{representation_i_0_t}), we get \eqref{convexity_avg_ois_future}.
 
 \subsection{Proof Theorem \ref{Th_CA_FRAsinArrears}}\label{Proof_CA_FRAsinArrears}
 $L_{E}(t,t_1,t_2)$ is martingale under the measure $\mathbb{Q}^{t_2}$, therefore the expected value of \eqref{FRAinArrear} is taken with respect to the wrong martingale. To calculate the convexity adjustment we use the Clark-Ocone to get a representation for $L_{E}(t_1,t_1,t_2)$ i.e
 \begin{equation}\label{general_convexity_fras}
-L_{E}(t_1,t_1,t_2) = \mathbb{E}^{t_2}\left(L_{E}(t_1,t_1,t_2) \right) + \int_{0}^{t_1} \mathbb{E}^{t_2}\left(D_s L_{E}(t_1,t_1,t_2) \right) dW^{\mathbb{Q}^{t_2}}_{s}
+L_{E}(t_1,t_1,t_2) = \mathbb{E}^{t_2}\Bigl[L_{E}(t_1,t_1,t_2) \Bigr] + \int_{0}^{t_1} \mathbb{E}^{t_2}\Bigl[D_s L_{E}(t_1,t_1,t_2) \Bigr] dW^{\mathbb{Q}^{t_2}}_{s}
 \end{equation}
 Under the HJM dynamics, we have the relation
 \begin{equation*}
-dW^{\mathbb{Q}^{t_2}}_s = dW^{\mathbb{Q}^{t_1}}_s + (\nu(s,t_2) - \nu(s,t_1)) ds. 
+dW^{\mathbb{Q}^{t_2}}_s = dW^{\mathbb{Q}^{t_1}}_s + \Bigl(\nu(s,t_2) - \nu(s,t_1)\Bigr) ds. 
 \end{equation*}
 Taking $\mathbb{E}^{^{t_1}}(\cdot)$, we get that
 \begin{align*}
-\mathbb{E}^{t_1}\left(L_{E}(t_1,t_1,t_2) \right) &= L_{E}(0,t_1,t_2) + \mathbb{E}^{t_1}\left( \int_{0}^{t_1} \mathbb{E}_s^{t_2}\left(D_s L_{E}(t_1,t_1,t_2) \right) dW^{t_2}_{s}\right)\\
-&= L_{E}(0,t_1,t_2) + \mathbb{E}^{t_1}\left( \int_{0}^{t_1} \mathbb{E}_s^{t_2}\left(D_s L_{E}(t_1,t_1,t_2) \right) (\nu(s,t_2)-\nu(s,t_1)) ds \right).
+\mathbb{E}^{t_1}\left[L_{E}(t_1,t_1,t_2) \right] &= L_{E}(0,t_1,t_2) + \mathbb{E}^{t_1}\left[ \int_{0}^{t_1} \mathbb{E}_s^{t_2}\Bigl[D_s L_{E}(t_1,t_1,t_2)\Bigr] dW^{t_2}_{s}\right]\\
+&= L_{E}(0,t_1,t_2) + \mathbb{E}^{t_1}\left[ \int_{0}^{t_1} \mathbb{E}_s^{t_2}\Bigl[D_s L_{E}(t_1,t_1,t_2) \Bigr] \Bigl(\nu(s,t_2)-\nu(s,t_1)\Bigr) ds \right].
 \end{align*}
 Now from (\ref{approximation_D_s_x_t}) we have that 
 \begin{eqnarray*}
 D_s L(t_1,t_1,t_2) &=& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(t_1,t_2)} D_s x_{t_1}\\
-&\approx& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s)\bar{DM}(s,t_1)
+&\approx& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s)\overline{DM}(s,t_1)
 \end{eqnarray*}
 If we use the above approximation, we get
 \begin{equation*}
-CA(t_0,t_1) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \bar{DM}(s,t_1) (\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))) ds
+CA(t_0,t_1) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds
 \end{equation*}
-with $\bar{\nu}(t,t_p, \bar{x}_0(t_a))= \int_{t}^{t_p} \eta(s,\bar{x}_0(t_a),\bar{y}_s) ds$.   
-
+with 
+\begin{equation*}
+\bar{\nu}(t,t_p, \bar{x}_0(t_a))= \int_{t}^{t_p} \eta(s,\bar{x}_0(t_a),\bar{y}_s) ds.   
+\end{equation*}
 
 \subsection{Proof Theorem \ref{Th_CA_CMS}}\label{Proof_CA_CMS}
 Assume we have a cash flow in $t_a < t_p < t_b$ with value $S_{a,b}(t_a)$. $S_{a,b}(t_a)$ is a martingale under the measure $\mathbb{Q}^{01}$, but not under the measure $\mathbb{Q}^{t_p}$. Therefore, we take into consideration the effect to compute the expected value of $S_{a,b}(t_a)$ in a measure which is not its natural measure. Then, the convexity adjustment for a CMS is
 \begin{equation}
-CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) - S_{a,b}(0).
+CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left[S_{a,b}(t_a)\right] - S_{a,b}(0).
 \end{equation} 
 After some changes of measure, we can see that
 \begin{align}
-\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S_{a,b}(t_a) M(t_a,t_p)\right) \nonumber \\
-&= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S_{a,b}(t_a) \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right) \right) \nonumber
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left[S_{a,b}(t_a) M(t_a,t_p)\right] \nonumber \\
+&= \frac{1}{M(0,t_p)} \mathbb{E}^{01}\biggl[S_{a,b}(t_a) \mathbb{E}^{01}\Bigl[ M(t_a,t_p)|S_{a,b}(t_a)\Bigr] \biggr] \nonumber
 \end{align}
-with $M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}$.\\
-
+with 
+\begin{align*}
+M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}.
+\end{align*}
 Then, we can approximate it by
 \begin{align}\label{expected_t_p_cms}
-\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(S^{ois}_{a,b}(t_a) \mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right) \right) \\
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  \frac{1}{M(0,t_p)} \mathbb{E}^{01}\biggl[S^{ois}_{a,b}(t_a) \mathbb{E}^{01}\Bigl[ M(t_a,t_p)|S_{a,b}(t_a)\Bigr] \biggr] \\
 \qquad\qquad &+ \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
 \end{align}
 
 From the previous expression, we must note that under assumption of not stochastic basis, we must to compute the convexity adjustment for the OIS swap rate. But a complicated point is calculate the expected value 
 \begin{equation}\label{Exp_M_conditional}
-\mathbb{E}^{01}\left( M(t_a,t_p)|S_{a,b}(t_a)\right).
+\mathbb{E}^{01}\Bigl[ M(t_a,t_p)|S_{a,b}(t_a)\Bigr].
 \end{equation}
-In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. Under this assumption (\ref{Exp_M_conditional}) is trivial to calulate it. The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\ 
+In order to reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. Under this assumption (\ref{Exp_M_conditional}) is trivial to calculate it. The function $f(\cdot)$ is known as mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\ 
 In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$. Now, if we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
 \begin{equation} \label{clark_ocone_swap_m}
-M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\left(D_s M(t_a,t_p)\right) dW^{01}_s
+M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\Bigl[D_s M(t_a,t_p)\Bigr] dW^{01}_s
 \end{equation}
 Then, if we substitute the last expressions in (\ref{expected_t_p_cms}) we have that
 \begin{align}\label{cms_first_order_convexity_prev}
-\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left( S^{ois}_{a,b}(t_a) \int_{0}^{t_a} \mathbb{E}^{0,1}_s\left(D_s x_{t_a}\partial_x M(t_a,t_p)  \right) dW^{0,1}_s   \right) \nonumber \\
-=&  S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left(\int_{0}^{t_a} D_s x_{t_a} \partial_x S_{a,b}(t_a) \mathbb{E}^{0,1}_s\left(D_s x_{t_a}\partial_x M(t_a,t_p)  \right) ds   \right)
+\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) =& S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left[ S^{ois}_{a,b}(t_a) \int_{0}^{t_a} \mathbb{E}^{0,1}_s\Bigl[D_s x_{t_a}\partial_x M(t_a,t_p)  \Bigr] dW^{0,1}_s   \right] \nonumber \\
+=&  S^{ois}_{a,b}(0) + \frac{1}{M(0,t_p)} \mathbb{E}^{01}\left[\int_{0}^{t_a} D_s x_{t_a} \partial_x S_{a,b}(t_a) \mathbb{E}^{0,1}_s\Bigl[D_s x_{t_a}\partial_x M(t_a,t_p)  \Bigr] ds   \right]
 \end{align}
 Now from (\ref{approximation_E_01_Ds_x_t}) and choosing $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$, we have that
 \begin{align}
-\mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) &\approx  S^{ois}_{a,b}(0) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)} \nonumber \\
+\mathbb{E}^{t_p}\left[S_{a,b}(t_a)\right] &\approx  S^{ois}_{a,b}(0) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)} {M(0,t_p)}\nonumber \\
 &\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s)\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds 
 \end{align}
 
