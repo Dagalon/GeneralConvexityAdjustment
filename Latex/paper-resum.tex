@@ -401,7 +401,7 @@ The hypotheses have been chosen for simplicity, but they can be replaced by suit
 
 
 \section{Convexity Adjustment}\label{sec:CA}
-In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula for the convexity adjustment. Furthermore, as we will see later, it is possible to obtain closed formulas for the convexity adjustment when the volatility of the Cheyette model is time dependent. 
+In this section, we derive the convexity adjustment for different products. The advantage of using the Malliavin calculus is that it allows us to derive a general representation formula for the convexity adjustment. Furthermore, as we will see later, it is possible to obtain closed formulas for the convexity adjustment when the volatility of the Cheyette model is time-dependent. 
 
 We are going to introduce a general idea of the method. Let us define the process $Z_t = f(x_t)$. Suppose that $Z_t$ is a martingale under the measure $\mathbb{Q}_1$. However, we are interested in calculate $\mathbb{E}^{\mathbb{Q}_2}\left[Z_T \right]$ where $\mathbb{Q}_2$ is a measure under which $Z_t$ is not martingale and such that $dW^{\mathbb{Q}_1}_t = dW^{\mathbb{Q}_2}_t +\lambda_t dt$. Then, if we use the Clark-Ocone representation, we have that
 \begin{equation*}
@@ -519,7 +519,7 @@ See appendix \ref{Proof_CA_OIS_futures}.
 \end{proof}
 
 \begin{remark}
-We must note that (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) are exact when $\eta(t,x_t, y_t)$ is only a time dependent function, how is the case of a Hull-White model.
+We must note that (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}) are exact when $\eta(t,x_t, y_t)$ is only a time-dependent function, how is the case of a Hull-White model.
 \end{remark}
 
 \begin{remark}
