@@ -352,7 +352,7 @@ The whole interest rate curve can be reduced to the evolution of the two-state v
 
 We can see from \eqref{short_rate_cheyette} that
 \begin{equation*}
-x(t_a) = \int_{0}^{t_a} \exp\left(-\int_{u}^{t_a}k(w) dw\right) y(u) du + \int_{0}^{t_a}  \exp\left(-\int_{s}^{t_a}k(u) du \right) \eta(u,x(u),y(u)) dW_u^{\mathbb{Q}}. 
+x(t_a) = \int_{0}^{t_a} \exp\left(-\int_{u}^{t_a}k(w) dw\right) y(u) du + \int_{0}^{t_a}  \exp\left(-\int_{u}^{t_a}k(w) dw \right) \eta(u,x(u),y(u)) dW_u^{\mathbb{Q}}. 
 \end{equation*}
 
 In order to have a more manageable model, we will follow the ideas of \cite{AndreasenPiterbarg} where the state variables are approximated. So, we can approximate $y(t)$ as
@@ -423,13 +423,13 @@ where $P_{E}(t,T)$ is the discount factor for the curve $E$ from $t$ to $T$, and
 \begin{theorem}\label{Th_CA_futures}[Convexity Adjustment approximation for Futures]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypotheses \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for futures is 
 \begin{equation}\label{ca_approximation_futures}
-CA(t,t_0,t_1) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \biggl(G(t_0,t_2)  - G(t_0,t_1) \biggr) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds + E(t_0). 
+CA(t,t_0,t_1) = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \biggl(G(t_0,t_2)  - G(t_0,t_1) \biggr) \int_{0}^{t_0} \beta(s,t_0,\bar{x}_0(t_0),\bar{y}_s) \nu(s,t_2) ds + E(t_0)
 \end{equation}
 with 
 \begin{equation*}
-\beta(t,t_0,x,y) = \exp\left(-\int_{u}^{t_0}k(w) dw \right) \eta(u,x,y).
+\beta(u,t_0,x,y) = \exp\left(-\int_{u}^{t_0}k(w) dw \right) \eta(u,x,y).
 \end{equation*}
-and $\|E\left(t_0\right)\|^{2}_{2} \sim \mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E\left(t_0\right)\|^{2}_{2} < \infty$ when $t_0 \to \infty$. 
+The error in the approximation model behaves as $\|E\left(t_0\right)\|^{2}_{2} \sim \mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E\left(t_0\right)\|^{2}_{2} < \infty$ when $t_0 \to \infty$. 
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_futures}.
@@ -458,7 +458,7 @@ In the Figure \ref{fig:Futures}, we can check the accuracy of the last formula v
 	\begin{center}
 		\includegraphics[scale=0.3]{Figures/future_convexity.jpg}
 	\end{center}
-	\caption{MonteCarlo Simulation vs Malliavin}
+	\caption{Futures: MonteCarlo Simulation vs Malliavin}
 	\label{fig:Futures}
 \end{figure} 
 \end{example}
@@ -494,10 +494,10 @@ CA_{ois}(t,t_0,t_1) = F(t,t_0,t_1) - \bar{R}(t,t_0,t_1).
 \end{equation}
 The second observation is that we have the following equivalence
 \begin{equation}\label{R_ois_avg}
-\mathbb{E}^{\mathbb{Q}}\left(R_{avg}(t_0,t_1) \right) =\frac{1}{\delta_{t_0,t_1}} \mathbb{E}^{\mathbb{Q}}\left[ \log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right) \right]  \end{equation}
+\mathbb{E}^{\mathbb{Q}}\left[R_{avg}(t_0,t_1) \right] =\frac{1}{\delta_{t_0,t_1}} \mathbb{E}^{\mathbb{Q}}\left[ \log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right) \right]  \end{equation}
 To clarify the convexity expression and the calculations, we define 
 \begin{equation*}
-I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois,s} ds.
+I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois}(s) ds.
 \end{equation*}
 
 \begin{theorem}\label{Th_CA_OIS}[Convexity Adjustment approximation for OIS Futures]
@@ -511,9 +511,9 @@ and for the average OIS future is
 \end{equation}
 where 
 \begin{equation}
-\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du, 
+\Gamma(s,t_0,t_1)= \eta(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k(w) dw\right)du.
 \end{equation}
-and $\|E(t_0)\|^{2}_{2} \sim \mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty$ when $t_0 \to \infty$.
+The error in the approximation model behaves as $\|E(t_0)\|^{2}_{2} \sim \mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty$ when $t_0 \to \infty$.
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_OIS_futures}.
@@ -553,19 +553,19 @@ Therefore, we have that
 &+ \frac{\sigma^{2}}{2k^{2}} \biggl(\frac{\exp(-2kt_0) - \exp(-2kt_1)}{2k}  + \exp(-kt_0)t_0 \\
 &\quad - 2 \frac{\exp(-2kt_0) - \exp(-k(t_0 + t_1))}{k}  \biggr).
 \end{align*}
-Then, if we substitute the last equalities in (\ref{convexity_ois_future}) we get an approximation for OIS future at $t=0$.\\
+Then, if we substitute the last equalities in (\ref{convexity_ois_future}), we get an approximation for OIS future at $t=0$.\\
 
-The following figure shows the accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}). The parameters used to run the Monte Carlo have been $k=0.003$, a volatility $\sigma=0.01$, and flat curve $r=0.01$. 
+The following figure shows the accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}). The parameters used to run the Monte Carlo have been $k=0.003$, $\sigma=0.01$, and flat curve $r=0.01$. 
 \begin{figure}[H]
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[scale=0.2]{Figures/convexity_ois.jpg}
-		\caption{Convexity Mc Vs Convexity Malliavin}
+		\caption{OIS Future: MonteCarlo Simulation vs Malliavin}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
   \centering
   \includegraphics[scale=0.2]{Figures/convexity_avg_ois.jpg}
-		\caption{Convexity Avg Mc Vs Convexity Avg Malliavin}
+		\caption{Average OIS Future: MonteCarlo Simulation vs Malliavin}
 \end{subfigure}
 \caption{Convexity adjustment for compounding and average OIS}
 \end{figure} 
@@ -583,10 +583,10 @@ i.e. the cash flow associated with a FRA in arrears is $L_{E}(t_1,t_1,t_2)$ in $
 \begin{theorem}\label{Th_CA_FRAsinArrears}[Convexity Adjustment approximation for FRAs in Arrears]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypotheses \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for FRAs in Arrears is 
 \begin{align}\label{ca_approximations_fra_arrears}
-CA(t_0,t_1) =   &\frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) E(t_1) \nonumber \\
-&\cdot \int_{0}^{t_1} \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds 
+CA(t_0,t_1) =   &\frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \nonumber \\
+&\cdot \int_{0}^{t_1} \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds  + E(t_1).
 \end{align}
-with $\|E(t_1)\|^{2}_{2} \sim \mathcal{O}(t_1) \quad \text{when} \quad t_1 \to 0$ and $\|E(t_1)\|^{2}_{2} < \infty \quad \text{when} \quad t_1 \to \infty$
+The error in the approximation model behaves as $\|E(t_1)\|^{2}_{2} \sim \mathcal{O}(t_1) \quad \text{when} \quad t_1 \to 0$ and $\|E(t_1)\|^{2}_{2} < \infty \quad \text{when} \quad t_1 \to \infty$
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_FRAsinArrears}.
@@ -603,7 +603,7 @@ In Figure \ref{fig:FRA_HW}, we compare the approximation with a Monte Carlo meth
 		\begin{center}
 		\includegraphics[scale=0.3]{Figures/fra_convexity.jpg}
 		\end{center}
-		\caption{Convexity Mc Vs Convexity Malliavin}
+		\caption{FRA in Arrears: MonteCarlo Simulation vs Malliavin}
 		\label{fig:FRA_HW}
 \end{figure}
 \end{example}
@@ -636,36 +636,36 @@ where
 \alpha(t,t^{E}_{i-1}, t^{E}_{i})  = \frac{1}{\delta_{t^{E}_{i-1}, t^{E}_i}}\left(\frac{H(t,t^{E}_{i-1})}{H(t,t^{E}_{i})} - 1\right).
 \end{equation*}
 
-We will suppose that variability of spread term structure $\alpha(t,t^{E}_{i-1}, t^{E}_{i})$ is low. Therefore, it is reasonable to freeze it at time $t=0$. Having
+We will suppose that variability of spread term structure $\alpha(t,t^{E}_{i-1}, t^{E}_{i})$ is low. Therefore, it is reasonable to freeze it at time $t=0$. Then, we have that
 \begin{equation}\label{approximation_basis_swap}
 S_{a,b}(t) \approx S^{ois}_{a,b}(t) + \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
 \end{equation}
 \end{remark}
 
 \begin{theorem}\label{Th_CA_CMS}[Convexity Adjustment approximation for CMS]
-Given the Cheyette model in \eqref{short_rate_cheyette}, the hypotheses \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Given
+Given the Cheyette model in \eqref{short_rate_cheyette}, the hypotheses \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}, and
 \begin{equation}
-M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}
+M(t,t_p)= \frac{P_{ois}(t,t_p)}{01(t,t_a,t_p)}.
 \end{equation}
 Then, we have the temporal convexity adjustment for a CMS rate is approximated by
 \begin{align} \label{cms_first_order_convexity}
-CA(t_p) &\approx  E(t_a) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)}{M(0,t_p)}  \\
-&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \exp\left(-2\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds \nonumber 
+CA(t_p) &\approx  \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)}{M(0,t_p)} \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \\
+&\cdot  \exp\left(-2\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds + E(t_a)\nonumber 
 \end{align}
-with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_u du\right)\eta(u,x,y)$. And $\|E(t_a)\|^{2}_{2} \sim \mathcal{O}(t_a) \quad \text{when} \quad t_a \to 0$ and $\|E(t_a)\|^{2}_{2} < \infty \quad \text{when} \quad t_a \to \infty$
+with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_w dw\right)\eta(u,x,y)$. And $\|E(t_a)\|^{2}_{2} \sim \mathcal{O}(t_a) \quad \text{when} \quad t_a \to 0$ and $\|E(t_a)\|^{2}_{2} < \infty \quad \text{when} \quad t_a \to \infty$
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_CMS}.
 \end{proof}
 
 \begin{remark}
-The key point is calculate an approximation of $\mathbb{E}_s^{0,1}\left[ D_s \bar{x}_{t_a}\right]$. The simplest cases are on the Hull-White or Ho-Lee model. The general case is treated in (\ref{approximation_under_annuity_measeure_d_s}). 
+The key point is to calculate an approximation of $\mathbb{E}_s^{0,1}\left[ D_s \bar{x}_{t_a}\right]$. The simplest cases are on the Hull-White or Ho-Lee model. The general case is treated in (\ref{approximation_under_annuity_measeure_d_s}). 
 \end{remark}
 
 \begin{example}[Convexity adjustment for CMS under the Hull-White model]
-To check the accuracy of the last approximation, we compute with a Monte Carlo the exact value of $\mathbb{E}^{t_p}\left[S^{ois}_{a,b}(t_a)\right]$ under spot measure $\mathbb{Q}$, i.e we will compute  $\frac{1}{P(0,t_p)}  \mathbb{E}^{\mathbb{Q}}\left[\frac{S_{a,b}(t_a)}{\beta_{t_a}} \right]$. For the Hull-White model case, we have that
+To check the accuracy of the last approximation, we compute with a Monte Carlo simulation the exact value of $\mathbb{E}^{t_p}\left[S^{ois}_{a,b}(t_a)\right]$ under spot measure $\mathbb{Q}$, i.e we will compute  $\frac{1}{P(0,t_p)}  \mathbb{E}^{\mathbb{Q}}\left[\frac{S_{a,b}(t_a)}{\beta_{t_a}} \right]$. For the Hull-White model case, we have that
 \begin{equation*}
-D_s x_{t_a} = \sigma \exp(-(t_a - s)).
+D_s x_{t_a} = \sigma \exp(-(t_a - s)),
 \end{equation*}
 and the volatility is only time-dependent i.e 
 $$
@@ -676,7 +676,7 @@ Therefore, \eqref{cms_first_order_convexity} is equal to
 \mathbb{E}^{t_p}\left(S_{a,b}(t_a)\right) \approx  S^{ois}_{a,b}(0) + \frac{\partial_x S^{ois}_{a,b}(t_a, \bar{x}_0(t_a),\bar{y}(t_a))\partial_x M(t_a,t_p, \bar{x}_0(t_a),\bar{y}(t_a))}{M(0,t_p)} \frac{\sigma^{2}(1-\exp(-2kt_a))}{2k}.
 \end{equation*}
 
-In Figure \ref{fig:CMS}, we can observe the CMS convexity adjustment when the tenor of the underlying swap is 5Y. We have compared the above approximation and a Monte Carlo for a Hull-White model with parameters $\sigma=0.01$ and $k=0.0007$
+In Figure \ref{fig:CMS}, we can observe the CMS convexity adjustment when the tenor of the underlying swap is 5Y. We have compared the above approximation and a Monte Carlo simulation for a Hull-White model with parameters $\sigma=0.01$ and $k=0.0007$
 
 \begin{figure}[H]
 	\begin{center}
@@ -703,7 +703,7 @@ In future work, the methodology could be extrapolated to a Cheyette model with s
 
 \section{Auxiliary lemmas}
 \subsection{Estimation of $\mathbb{E}_s^{\mathbb{Q}}\left[(x_t - \bar{x}_{t})^{2}\right]$}\label{estimation_error_l2}
-To obtain the order of the approximation, we will use the ideas of the paper \cite{B-G-M-2008}. Basically, we will define a parametrization of the process $x_{t,\epsilon}$ and $y_{t,\epsilon}$ with $\epsilon \in [0,1]$. The role of $\epsilon$ is only as an interpolation parameter between the process. We will suppose the next Cheyette model parametrization
+To obtain the order of the approximation, we will use the ideas of the paper \cite{BGM}. Basically, we will define a parametrization of the process $x_{t,\epsilon}$ and $y_{t,\epsilon}$ with $\epsilon \in [0,1]$. The role of $\epsilon$ is only as an interpolation parameter between the process. We will suppose the next Cheyette model parametrization
 \begin{align}\label{parametric_process}
 y_{\epsilon,t} &= \int_{0}^{t} \exp\left(-2 \int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \epsilon^{2} \eta^{2}(u,x_{\epsilon,u},y_{\epsilon,u}) du \\
 x_{\epsilon, t} &= \int_{0}^{t} \exp\left(-\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \bar{y}_{\epsilon,u} du + \int_{0}^{t} \exp\left(-\int_{u}^{t} k(u^{\prime}) du^{\prime}\right) \epsilon \eta(u,x_{\epsilon,u},y_{\epsilon,u})  \bar{y}_u du
@@ -977,7 +977,7 @@ Applying (\ref{general_convexity}) with $f(x_t)=L_{E}(t,t_0, t_1, t_2)$, $\mathb
 \begin{equation}\label{ca_general_future}
 CA(t, t_0, t_1, t_2) = \mathbb{E}^{\mathbb{Q}^{t2}}\left[\int_{0}^{t_0} \mathbb{E}^{\mathbb{Q}}_{s}\Bigl[D_s L_{E}(t_0,t_1,t_2) \Bigr] \nu(s,t_2) ds \right]
 \end{equation}
-where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Calculating the malliavin derive of $L_{E}(t_0,t_1,t_2)$ we have that
+where $\nu(t,T)$ has been defined in (\ref{ois_forward_rate_curve}). Calculating the Malliavin derivative of $L_{E}(t_0,t_1,t_2)$ we have that
 \begin{equation*}
 D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)} D_s \left(\frac{P_{ois}(t_0,t_1)}{P_{ois}(t_0,t_2)}\right).
 \end{equation*}
