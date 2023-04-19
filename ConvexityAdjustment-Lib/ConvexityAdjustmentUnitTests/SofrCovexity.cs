@@ -77,8 +77,6 @@ namespace ConvexityAdjustmentUnitTests
                 var dfTb = curve.link.discount(delta02);
                 var forward = ((dfTa / dfTb) - 1.0) / (delta02 - delta01);
                 
-                // var forward =  curve.currentLink().
-                //     forwardRate(delta01, delta02, ql.Compounding.Compounded).rate();
 
                 var convexityMc = mcFuturePrice - forward;
                 var convexityAvgMc = avgMean - forward;

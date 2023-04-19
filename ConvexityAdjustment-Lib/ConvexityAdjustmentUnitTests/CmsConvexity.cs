@@ -72,8 +72,6 @@ namespace ConvexityAdjustmentUnitTests
             var std = new List<double>();
             var momentOrderTwo = new Dictionary<int, double>();
             var rateCmsForward = new List<double>();
-            // var annuityTa = new List<Tuple<double, double, double>>();
-            // var annuityT0 = new List<Tuple<double, double, double>>();
             
             // swap derivatives, rates ans ratio
             var partialOisSwap = new List<double>();
@@ -100,13 +98,6 @@ namespace ConvexityAdjustmentUnitTests
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward)
                     .value();
                 
-           
-                // annuityTa.Add(model.GetAnnuity(startDate, datesToCompute[j], f0ts[j], staticSwap.fixedSchedule(),
-                //     discountCurve.link.dayCounter(), staticSwap.fixedDayCount()));
-                //
-                // annuityT0.Add(model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
-                //     discountCurve.link.dayCounter(), staticSwap.fixedDayCount()));
-
                 var swapOisDerivative = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
                     staticSwap.floatingSchedule(), staticSwap.fixedSchedule(), discountCurve.link.dayCounter(),  staticSwap.floatingDayCount(),
                     staticSwap.fixedDayCount());
@@ -185,8 +176,6 @@ namespace ConvexityAdjustmentUnitTests
                 // variables to check od the simulation
                 var dfMC = -0.5;
                 var meanI0t = 0.0;
-                // var varNoise = 0.0;
-                // var meanNoise = 0.0;
 
                 var ratioDf = 1.0 / discountCurve.link.discount(tP);
                 
@@ -227,18 +216,15 @@ namespace ConvexityAdjustmentUnitTests
                     double annuity = Math.Abs(swap.fixedLegNPV());
                     double mTa = pTaTp / annuity;
                     
-                    // double payoffMc =  ratioDf * swapRate * pTaTp / bt;
                     double payoffMc =  ratioDf * pTaTp * swapRate / bt;
 
                     rateCmsMc[datesToCompute[j].serialNumber()] += payoffMc / numberOfSimulations;
                     momentOrderTwo[datesToCompute[j].serialNumber()] += (payoffMc * payoffMc / numberOfSimulations);
                     dfMC += (ratioDf * pTaTp / bt) / numberOfSimulations;
                     meanI0t += (i0Tp + r0t) / numberOfSimulations;
-                    // varNoise += noiseI01 * noiseI01 / numberOfSimulations;
-                    // meanNoise += noiseI01 / numberOfSimulations;
                 }
 
-                double ca = HullWhite.convexityCmsNewApproach(model,
+                double ca = HullWhite.convexityCms(model,
                     startDate,
                     datesToCompute[j],
                     swap.maturityDate(),

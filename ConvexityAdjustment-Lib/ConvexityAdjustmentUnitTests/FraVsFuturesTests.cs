@@ -33,9 +33,6 @@ namespace ConvexityAdjustmentUnitTests
             // MC
             int numberOfSimulations = 2000000;
             ulong seed = 123545;
-            // double deltaTime = 0.01;
-            // int timeSteps = (int)(length / deltaTime);
-            int timeSteps = 1;
             var numberOfMonths = 240;
 
             List<double> t0s = new List<double>();
@@ -56,18 +53,6 @@ namespace ConvexityAdjustmentUnitTests
 
                 var libors = Sampling.getLiborPaths(model, t0, t1, t2, dc, seed, numberOfSimulations);
                 
-                // List<double> mandatoryPoints = new List<double> { delta00};
-                // double length = dc.yearFraction(startDate, t2);
-                
-                // var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
-                //         ql.InverseCumulativeNormal>)
-                //     new ql.PseudoRandom().make_sequence_generator(timeSteps, seed);
-
-                // ql.PathGenerator<ql.IRNG> generator = new ql.PathGenerator<ql.IRNG>(process, length, timeSteps, rsg, true, mandatoryPoints);
-                // double f0t = curve.currentLink().forwardRate(delta00, delta00, ql.Compounding.Simple, ql.Frequency.NoFrequency).rate();
-                // double expat = (1.0 - Math.Exp(-k * delta00)) / k ;
-                // double mt = (sigma * sigma) / (2.0 * k) * (expat - Math.Exp(-k * delta00) * expat); 
-                
                 // Path generator
                 var mean = 0.0;
                 // var meanXt0 = 0.0;
@@ -76,15 +61,7 @@ namespace ConvexityAdjustmentUnitTests
                 
                 for (var i = 0; i < numberOfSimulations; i++)
                 {
-                    // ql.Sample<ql.IPath> sample = generator.next();
-                    // var path = (ql.Path)sample.value;
-                    // var rt0 = path[path.length() - 1] + mt + f0t;
-                    // var df01 = model.discountBond(delta00, delta01, rt0) * Math.Exp(- spreadBasis * (delta01 - delta00));
-                    // var df02 = model.discountBond(delta00, delta02, rt0) *  Math.Exp(- spreadBasis * (delta02 - delta00));
-                    // var libor = ((df01 / df02) - 1.0) / (delta02 - delta01);
                     mean += (libors[i] / numberOfSimulations);
-                    // meanXt0 += path[path.length() - 1] / numberOfSimulations;
-                    // varXt0 += (path[path.length() - 1] * path[path.length() - 1]) / numberOfSimulations;
                     momentOrderTwoMean += (libors[i] * libors[i]) / numberOfSimulations;
                 }
                 
