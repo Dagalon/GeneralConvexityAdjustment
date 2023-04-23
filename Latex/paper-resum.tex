@@ -806,6 +806,22 @@ Therefore, we have that
 \mathbb{E}^{\mathbb{Q}}[(x_t - \bar{x}_t)^{2}] &\leq \frac{2}{3} M^{x}_k \|\eta\|_{\infty} \left( \int_{0}^{t} \exp\left(- 2\int_{u}^{t} k(u^{\prime}) \right) du  \right)^{3}  \\
 &+ \frac{(2 M^{x}_K \|\eta\|_{\infty} + 1)}{2} \left( \int_{0}^{t}  \exp\left(- 2\int_{u}^{t} k(u^{\prime}) \right) du  \right)^{2}.
 \end{align*}
+\begin{lemma}\label{f_x_y}[Estimation $f(x_t,y_t)$] Given $f$ continuous and derivable, with $\|\partial_x f\|_{\infty} <\infty$ and $\|\partial_y f\|_{\infty}<\infty$. Then
+\begin{equation*}
+f(x_t,y_t)=f(\bar{x}_t,\bar{y}_t) + E(t)
+\end{equation*}
+where $E(t)=\int_{0}^{1} \nabla_{x,y}\eta (u, x_{\epsilon,t}, y_{\epsilon,t}) d\epsilon$ and
+\begin{align*}
+x_{\epsilon,t} &= \epsilon x_t + (1-\epsilon) \bar{x}_t \\
+y_{\epsilon,t} &= \epsilon y_t + (1-\epsilon) \bar{y}_t.
+\end{align*}
+In addition, we have that 
+\begin{equation*}
+\mathbb{E}[E^{2}(t)] \leq \max(\|\partial_x f\|_{\infty}, \|\partial_x f\|_{\infty}) \mathbb{E}^{\mathbb{Q}}[(x_t - \bar{x}_t)^{2}].
+\end{equation*}
+\end{lemma}
+\begin{proof}
+\end{proof}
 
 \begin{lemma}\label{DsX}[Approximation $D_s \bar{x}_{t_a}$]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypotheses \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, 
