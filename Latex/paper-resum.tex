@@ -429,7 +429,7 @@ with
 \begin{equation*}
 \beta(u,t_0,x,y) = \exp\left(-\int_{u}^{t_0}k(w) dw \right) \eta(u,x,y).
 \end{equation*}
-The error $E(t_0)$ is given by (\ref{f_x_y}) with $f(x,y)=\frac{1}{\delta_{t_1,t_2}}\left(\frac{P_{E}(t_0,t_1,x,y)}{P_{E}(t_0,t_2,x,y)} - 1 \right)$ and behaves as $\mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty$ when $t_0 \to \infty$. 
+The error $E(t_0)$ is given by (\ref{f_x_y}) with $f(x,y)=\frac{\frac{P_{ois}(t_0,t_1,x,y)}{P_{ois}(t_0,t_2,x,y)} -1}{\delta_{t_0,t_1}}$ and behaves as $\mathcal{O}(t_0)$ when $t_0 \to 0$ and $\|E(t_0)\|^{2}_{2} < \infty$ when $t_0 \to \infty$. 
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_futures}.
@@ -652,7 +652,7 @@ Then, we have the temporal convexity adjustment for a CMS rate is approximated b
 CA(t_p) &\approx  \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)}{M(0,t_p)} \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s) \\
 &\cdot  \exp\left(-2\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds + E(t_a)\nonumber 
 \end{align}
-with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_w dw\right)\eta(u,x,y)$ and the error $E(t_a)$ is given by (\ref{f_x_y}) with $f(x,y)=\frac{1}{\delta_{t_1,t_2}}\left(\frac{P_{E}(t_0,t_1,x,y)}{P_{E}(t_0,t_2,x,y)} - 1 \right)$ and behaves as $\mathcal{O}(t_a)$ when $t_a \to 0$ and $\|E(t_a)\|^{2}_{2} < \infty$ when $t_a \to \infty$.
+with  $\beta(u,t_a,x,y) = \exp\left(-\int_{u}^{t_a}k_w dw\right)\eta(u,x,y)$ and the error $E(t_a)$ is given by (\ref{f_x_y}) with $f(x,y)=M(t_a,t_p,x,y)S_{a,b}(t_a,x,y)$ and behaves as $\mathcal{O}(t_a)$ when $t_a \to 0$ and $\|E(t_a)\|^{2}_{2} < \infty$ when $t_a \to \infty$.
 \end{theorem}
 \begin{proof}
 See appendix \ref{Proof_CA_CMS}.
