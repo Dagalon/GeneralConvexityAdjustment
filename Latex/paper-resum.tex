@@ -555,23 +555,25 @@ Therefore, we have that
 \end{align*}
 Then, if we substitute the last equalities in (\ref{convexity_ois_future}), we get an approximation for OIS future at $t=0$.\\
 
-The following figure shows the accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}). The parameters used to run the Monte Carlo have been $k=0.003$, $\sigma=0.01$, and flat curve $r=0.01$. 
+The following figures show the accuracy of (\ref{convexity_ois_future}) and (\ref{convexity_avg_ois_future}). The parameters used to run the Monte Carlo have been $k=0.003$, $\sigma=0.01$, and flat curve $r=0.01$.
+
 \begin{figure}[H]
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[scale=0.2]{Figures/convexity_ois.jpg}
-		\caption{OIS Future: MonteCarlo Simulation vs Malliavin}
-\end{subfigure}
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[scale=0.2]{Figures/convexity_avg_ois.jpg}
-		\caption{Average OIS Future: MonteCarlo Simulation vs Malliavin}
-\end{subfigure}
-\caption{Convexity adjustment for compounding and average OIS}
+	\begin{center}
+		\includegraphics[scale=0.3]{Figures/convexity_ois.jpg}
+	\end{center}
+	\caption{OIS Future: MonteCarlo Simulation vs Malliavin}
+	\label{fig:Futures}
+\end{figure} 
+
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[scale=0.3]{Figures/convexity_avg_ois.jpg}
+	\end{center}
+	\caption{Average OIS Future: MonteCarlo Simulation vs Malliavin}
+	\label{fig:Futures}
 \end{figure} 
 \end{example}
-
-
 
 \subsection{FRAs in arrears}
 A FRA in arrears is the most classic example among convexity adjustment products. The price is given by
