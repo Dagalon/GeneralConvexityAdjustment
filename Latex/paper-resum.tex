@@ -994,7 +994,7 @@ and
 Then, 
 \begin{align}\label{approximation_E_01_Ds_x_t}
 \mathbb{E}^{01}_s\left[D_s \bar{x}_{t_a}\right] &= \beta(s,t_a,\bar{x}_s,\bar{y}_s)  \mathbb{E}_s^{01}\left(\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b)) du \right)\right) \nonumber \\
-&\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)
+&\approx \beta(s,t_a,\bar{x}_s,\bar{y}_s) \exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right).
 \end{align}
 
 \section{Proofs}
@@ -1049,7 +1049,7 @@ Now, if $t < t_0$, then from (\ref{clark-okone}) and (\ref{approximation_spot_E_
 \begin{align}\label{apprx_I_t0_t1}
 I(t_0,t_1) &= \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1}  \mathbb{E}_s^{\mathbb{Q}}\left[\beta(s,u,x_s,y_s) \bar{M}(s,u) \right] du dW_s^{\mathbb{Q}} \nonumber \\
 &\approx \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1}\int_{\max(s, t_{0})}^{t_1} \beta(s,u,\bar{x}_0(t_1),\bar{y}_s) du dW_s^{\mathbb{Q}}\nonumber \\
-&= \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1} g(s)h(s,\bar{x}_0(t_1),\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right) du dW_s^{\mathbb{Q}}.
+&= \mathbb{E}_t^{\mathbb{Q}}\left[I(t_0,t_1)\right] + \int_{t}^{t_1} g(s)h(s,\bar{x}_0(t_1),\bar{y}_s)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k(w) dw\right) du dW_s^{\mathbb{Q}}.
 \end{align}
 Then, using the previous approximation, we get that
 \begin{align*}
@@ -1058,7 +1058,7 @@ Then, using the previous approximation, we get that
 \end{align*}
 where 
 \begin{align*}
-\Gamma(s,t_0,t_1)= g(s)h(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k_{s^{\prime}} ds^{\prime}\right)du.
+\Gamma(s,t_0,t_1)= g(s)h(s,x_0,y_0)\int_{\max(s, t_{0})}^{t_1} \exp\left( -\int_{s}^{u} k(w) dw\right)du.
 \end{align*}
 Therefore, we have that
 \begin{equation}\label{representation_i_0_t}
@@ -1101,7 +1101,7 @@ with
 \end{equation*}
 
 \subsection{Proof Theorem \ref{Th_CA_CMS}}\label{Proof_CA_CMS}
-Assume we have a cash flow in $t_a < t_p < t_b$ with value $S_{a,b}(t_a)$. $S_{a,b}(t_a)$ is a martingale under the measure $\mathbb{Q}^{01}$, but not under the measure $\mathbb{Q}^{t_p}$. Therefore, we take into consideration the effect to compute the expected value of $S_{a,b}(t_a)$ in a measure that is not its natural measure. Then, the convexity adjustment for a CMS is
+Assume we have a cash flow in $t_a < t_p < t_b$ with value $S_{a,b}(t_a)$. Recall that $S_{a,b}(t_a)$ is a martingale under the measure $\mathbb{Q}^{01}$, but not under the measure $\mathbb{Q}^{t_p}$. Therefore, we take into consideration the effect to compute the expected value of $S_{a,b}(t_a)$ in a measure that is not its natural measure. Then, the convexity adjustment for a CMS is
 \begin{equation}
 CA_{CMS}(t_p) = \mathbb{E}^{t_p}\left[S_{a,b}(t_a)\right] - S_{a,b}(0).
 \end{equation} 
@@ -1120,12 +1120,12 @@ Then, we can approximate it by
 \qquad\qquad &+ \frac{\sum_{i=1}^{n_E}\delta_{t^{E}_{i-1}, t^{E}_i} \alpha(0,t^{E}_{i-1}, t^{E}_{i}) P_{ois}(0,t^{E}_{i})} {01(0,t_a,t_b)}.
 \end{align}
 
-From the previous expression, we must note that under the assumption that there are not stochastic basis, we must compute the convexity adjustment for the OIS swap rate. But a complicated point is calculating the expected value 
+From the previous expression, we must note that under the assumption that there are not stochastic basis, we must compute the convexity adjustment for the OIS swap rate. But a complicated point is to calculating the expected value 
 \begin{equation}\label{Exp_M_conditional}
 \mathbb{E}^{01}\Bigl[ M(t_a,t_p)|S_{a,b}(t_a)\Bigr].
 \end{equation}
 To reduce this complexity, it is a common practice to assume that $M(t_a,t_p)$ is a function of the swap rate $S_{a,b}(t_a)$, i.e   $M(t_a,t_p)=f(S_{a,b}(t_a))$. Under this assumption (\ref{Exp_M_conditional}) is trivial to calculate it. The function $f(\cdot)$ is known as the mapping function. There is a vast literature about how to choose it (see \cite{AndreasenPiterbargIII} or \cite{Hagan20}). \\ 
-In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$. Now, if we apply Clark-Ocone formula to $M(t_a,t_p)$ we get that
+In this case, we will choose $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$. Now, if we apply the Clark-Ocone formula to $M(t_a,t_p)$ we get that
 \begin{equation} \label{clark_ocone_swap_m}
 M(t_a,t_p) = M(0,t_p)+ \int_{0}^{t_a} \mathbb{E}_s^{01}\Bigl[D_s M(t_a,t_p)\Bigr] dW^{01}_s.
 \end{equation}
@@ -1137,7 +1137,7 @@ Then, if we substitute the last expressions in (\ref{expected_t_p_cms}), we obta
 Now from (\ref{approximation_E_01_Ds_x_t}) and choosing $\bar{x}_0(t_a)$ such that $S_{a,b}(t_a,\bar{x}_0(t_a),\bar{y}_{t_a})=S_{a,b}(0)$, we have that
 \begin{align}
 \mathbb{E}^{t_p}\left[S_{a,b}(t_a)\right] &\approx  S^{ois}_{a,b}(0) + \frac{\partial_x S_{a,b}(t_a,\bar{x}_0(t_a), \bar{y}_0) \partial_x M(t_a,t_p,\bar{x}_0(t_a), \bar{y}_0)} {M(0,t_p)}\nonumber \\
-&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s)\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds 
+&\cdot \int_{0}^{t_a}  \beta^2(s,t_a,\bar{x}_0(t_a),\bar{y}_s)\exp\left(-\int_{s}^{t_a}\partial_x (\beta(u,t_a,\bar{x}_u,\bar{y}_u) \mu(u,\bar{x}_u, \bar{y}_u,t_a,t_b))|_{\bar{x}_u=\bar{x}_{0}(t_a)}  du \right)ds.
 \end{align}
 
 
