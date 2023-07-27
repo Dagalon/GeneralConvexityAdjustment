@@ -51,7 +51,7 @@ namespace ConvexityAdjustmentUnitTests
                 
                 
                 // path simulation
-                var libors = Sampling.getLiborPathsSpotMeasure(model, startDate, t1, t2, dc, seed, numberOfSimulations);
+                var libors = Sampling.getLiborPathsForwardMeasure(model, startDate, t1, t2, dc, seed, numberOfSimulations);
                 
                 for (var i = 0; i < numberOfSimulations; i++)
                 {
