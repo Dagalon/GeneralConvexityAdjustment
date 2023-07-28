@@ -36,7 +36,7 @@ namespace ConvexityAdjustmentUnitTests
             List<double> caMc = new List<double>();
             List<double> caMalliavin = new List<double>();
 
-            for (var j = 1; j < numberOfMonths + 1; j++)
+            for (var j = numberOfMonths; j < numberOfMonths + 1; j++)
             {
                 // Product
                 var t1 = calendar.advance(startDate, j, ql.TimeUnit.Months);
@@ -51,7 +51,7 @@ namespace ConvexityAdjustmentUnitTests
                 
                 
                 // path simulation
-                var libors = Sampling.getLiborPathsForwardMeasure(model, startDate, t1, t2, dc, seed, numberOfSimulations);
+                var libors = Sampling.getLiborForwardMeasurePaths(model, t1, t2, t1, dc, seed, numberOfSimulations);
                 
                 for (var i = 0; i < numberOfSimulations; i++)
                 {

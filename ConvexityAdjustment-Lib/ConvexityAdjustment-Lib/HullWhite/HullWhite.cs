@@ -62,9 +62,9 @@ namespace ConvexityAdjustment_Lib.HullWhite
             double h02 = Math.Exp(-basisSpread * t2);
             double df12 = (df02 * h02) / (df01 * h01);
 
-            double m = sigma * sigma / (delta12 * df12 * k);
-            double integral = beta(t1, 2.0 * t1, k) - beta(t2, t1 + t2, k);
-
+            double m = beta(0.0, t2 - t1, k) * sigma * sigma / (delta12 * df12 * k);
+            // double integral = beta(t1, 2.0 * t1, k) - beta(t2, t1 + t2, k);
+            double integral = beta(0.0, t1, 2.0 * k) - 0.5 * beta(t2-t1, t1 + t2, k);
             return m * integral;
 
         }
@@ -284,9 +284,10 @@ namespace ConvexityAdjustment_Lib.HullWhite
             return m * (beta(0, t, k) - beta(t, 2.0 * t, k));
         }
 
-        public static double forwardMeasureAdjustment(double dtP, double k, double sigma)
+        public static double forwardMeasureAdjustment(double dt, double dtP, double k, double sigma)
         {
-            return (sigma * sigma / k) * (dtP * Math.Exp(-k * dtP) - beta(dtP, 2.0 * dtP, k));
+            return (sigma * sigma / k) * (beta(0.0, dt, k) - 0.5 * beta(dtP - dt, dt + dtP, k));
+            // return (sigma * sigma / k) * (dtP * Math.Exp(-k * dtP) - beta(dtP, 2.0 * dtP, k));
         }
 
         public static double getDriftIt(double t, double k, double sigma)

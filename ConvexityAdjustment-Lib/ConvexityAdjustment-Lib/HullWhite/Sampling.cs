@@ -7,10 +7,10 @@ namespace ConvexityAdjustment_Lib.HullWhite;
 public static class Sampling
 {
 
-    public static double[] getLiborPathsForwardMeasure(ql.HullWhite model, 
-        ql.Date t0, 
+    public static double[] getLiborForwardMeasurePaths(ql.HullWhite model, 
         ql.Date ta, 
-        ql.Date tb, 
+        ql.Date tb,
+        ql.Date tp,
         ql.DayCounter dc, 
         ulong seed, 
         int numberOfPaths)
@@ -23,10 +23,8 @@ public static class Sampling
         // yearfracs
         double dTa = dc.yearFraction(valueDate, ta);
         double dTb = dc.yearFraction(valueDate, tb);
-        double dT0 = dc.yearFraction(valueDate, t0);
+        double dTp = dc.yearFraction(valueDate, tp);
         
-        double dT0Ta = dc.yearFraction(t0, ta);
-        double dT0Tb = dc.yearFraction(t0, tb);
         double dTaTb = dc.yearFraction(ta, tb);
 
         var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
@@ -34,20 +32,21 @@ public static class Sampling
         
         // mean, variance, ...
         var stdXt0 = model.sigma() * Math.Sqrt(HullWhite.beta(0.0, dTa, 2.0 * model.a()));
-        var driftXt0 = HullWhite.hjmAdjustment(dT0Ta, model.a(), model.sigma());
+        var driftXta = HullWhite.hjmAdjustment(dTa, model.a(), model.sigma());
+        var driftGirsanov = - HullWhite.forwardMeasureAdjustment(dTa, dTp, model.a(), model.sigma());
         
         var sample = rsg.nextSequence();
         var zSampleValue = sample.value;
         
-        double f0T = model.termStructure().currentLink().forwardRate(dTa, dTb, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
+        double f0Ta = model.termStructure().currentLink().forwardRate(dTa, dTa, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
 
         for (int i = 0; i < numberOfPaths; i++)
         {
-            var rT0 = driftXt0 + f0T + stdXt0 * zSampleValue[i];
-            var dfT0Ta = model.discountBond(dT0Ta, dT0Ta, rT0);
-            var dfT0Tb = model.discountBond(dT0Ta, dT0Tb, rT0);
+            var rTa = driftXta + driftGirsanov + stdXt0 * zSampleValue[i] + f0Ta;
+            // var dfT0Ta = model.discountBond(dTa, dT0Ta, rT0);
+            var dfTaTb = model.discountBond(dTa, dTb, rTa);
 
-            paths[i] = (dfT0Ta / dfT0Tb - 1.0) / dTaTb;
+            paths[i] = - Math.Log(dfTaTb) / dTaTb;
         }
 
         return paths;
