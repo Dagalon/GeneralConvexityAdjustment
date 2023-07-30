@@ -31,7 +31,7 @@ namespace ConvexityAdjustmentUnitTests
             ql.HullWhite model = new ql.HullWhite(curve, k, sigma);
             
             // MC
-            int numberOfSimulations = 500000;
+            int numberOfSimulations = 1000000;
             ulong seed = 123545;
             var numberOfMonths = 240;
 
@@ -39,7 +39,7 @@ namespace ConvexityAdjustmentUnitTests
             List<double> caMc = new List<double>();
             List<double> caMalliavin = new List<double>();
 
-            for (var j = numberOfMonths; j < numberOfMonths + 1; j++)
+            for (var j = 1; j < numberOfMonths + 1; j++)
             {
                 // Product
                 var t0 = calendar.advance(startDate, j, ql.TimeUnit.Months);
@@ -51,7 +51,7 @@ namespace ConvexityAdjustmentUnitTests
                 double delta01 = dc.yearFraction(startDate, t1);
                 double delta02 = dc.yearFraction(startDate, t2);
 
-                var libors = Sampling.getLiborPaths(model, t0, t1, t2, dc, seed, numberOfSimulations);
+                var libors = Sampling.getLiborPathsSpotMeasure(model, t0, t1, t2, dc, seed, numberOfSimulations);
                 
                 // Path generator
                 var mean = 0.0;

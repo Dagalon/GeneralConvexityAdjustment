@@ -1,4 +1,5 @@
-﻿using ql = QLNet;
+﻿using System.Runtime.InteropServices.ComTypes;
+using ql = QLNet;
 using LA = MathNet.Numerics.LinearAlgebra;    
 
 namespace ConvexityAdjustment_Lib.HullWhite
@@ -61,11 +62,20 @@ namespace ConvexityAdjustment_Lib.HullWhite
             double h01 = Math.Exp(-basisSpread * t1);
             double h02 = Math.Exp(-basisSpread * t2);
             double df12 = (df02 * h02) / (df01 * h01);
+            // double df2 = (df02 * h02);
 
             double m = beta(0.0, t2 - t1, k) * sigma * sigma / (delta12 * df12 * k);
+            // double m = 1.0 / (delta12 * df12);
             // double integral = beta(t1, 2.0 * t1, k) - beta(t2, t1 + t2, k);
             double integral = beta(0.0, t1, 2.0 * k) - 0.5 * beta(t2-t1, t1 + t2, k);
+            // double integral = HullWhite.liborVariance(t1, t1, t2, sigma, k);
             return m * integral;
+
+            // double m = 1.0 / (delta12 * df12);
+            // double f0T = curve.link.forwardRate(t1, t2, ql.Compounding.Continuous, ql.Frequency.NoFrequency, true).rate();
+            // double variance = HullWhite.liborVariance(t1, t1, t2, sigma, k);
+            // double integral = Math.Exp(variance);
+            // return m * integral - 1.0 / delta12 - f0T;
 
         }
 
@@ -199,13 +209,21 @@ namespace ConvexityAdjustment_Lib.HullWhite
         
         #region Process tools
 
-        public static double liborVariance(double t, double t1, double t2, double sigma, double k)
+        public static double liborVariance(double t,double t1, double t2, double sigma, double k)
         {
-            double gamma1 = getGammaVariance(t1, t2, t2, k, k);
-            double gamma2 = getGammaVariance(t1, t1, t1, k, k);
-            double gamma12 = getGammaVariance(t1, t1, t2, k, k);
+            double gamma1 = getGammaVariance(t, t2, t2, k, k);
+            double gamma2 = getGammaVariance(t, t1, t1, k, k);
+            double gamma12 = getGammaVariance(t, t1, t2, k, k);
 
             return sigma * sigma * (gamma1 + gamma2 - 2.0 * gamma12);
+        }
+
+        public static double liborSpotDrift(double t, double t1, double t2, double sigma, double k)
+        {
+            double gamma22 = getGammaVariance(t, t2, t2, k, k);
+            double gamma12 = getGammaVariance(t, t1, t2, k, k);
+
+            return sigma * sigma * (gamma22 - gamma12);
         }
 
         #endregion
@@ -233,9 +251,11 @@ namespace ConvexityAdjustment_Lib.HullWhite
         {
             double m = 1.0 / (k1 * k2);
             double part1 = t - beta(t1 - t, t1, k1) - beta(t2 - t, t2, k2);
-            double part2 = t2 > t1
-                ? Math.Exp(-k2 * (t2 - t1)) * beta(t1 - t, t1, k1 + k2)
-                : Math.Exp(-k1 * (t1 - t2)) * beta(t2 - t, t2, k1 + k2);
+            // double part2 = t2 > t1
+            //     ? Math.Exp(-k2 * (t2 - t1)) * beta(t1 - t, t1, k1 + k2)
+            //     : Math.Exp(-k1 * (t1 - t2)) * beta(t2 - t, t2, k1 + k2);
+            double alpha = ql.Utils.close( (k1 + k2) * t,0.0)? t : (Math.Exp((k1 + k2) * t) - 1.0) / (k1 + k2);
+            double part2 = Math.Exp(-k1 * t1 - k2 * t2) * alpha;
 
             return m * (part1 + part2);
         }

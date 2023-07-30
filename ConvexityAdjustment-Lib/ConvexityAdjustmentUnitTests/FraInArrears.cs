@@ -49,15 +49,12 @@ namespace ConvexityAdjustmentUnitTests
                 var meanPayOff = 0.0;
                 var momentOrderTwoMean = 0.0;
                 
-                
                 // path simulation
-                var libors = Sampling.getLiborForwardMeasurePaths(model, t1, t2, t1, dc, seed, numberOfSimulations);
+                var libors = Sampling.getLiborForwardMeasurePaths(model, t1, t1, t2, dc, seed, numberOfSimulations);
                 
                 for (var i = 0; i < numberOfSimulations; i++)
                 {
-                    var ratio = curve.link.discount(delta02) / curve.link.discount(delta01);
-                    var payOff = ratio * libors[i] * (1.0 + (delta02 - delta01) * libors[i]);
-                    meanPayOff += payOff / numberOfSimulations;
+                    meanPayOff += libors[i] / numberOfSimulations;
                 }
                 
                 // Statistics

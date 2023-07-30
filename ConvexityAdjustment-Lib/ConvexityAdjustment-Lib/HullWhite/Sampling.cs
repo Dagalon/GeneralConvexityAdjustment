@@ -8,53 +8,6 @@ public static class Sampling
 {
 
     public static double[] getLiborForwardMeasurePaths(ql.HullWhite model, 
-        ql.Date ta, 
-        ql.Date tb,
-        ql.Date tp,
-        ql.DayCounter dc, 
-        ulong seed, 
-        int numberOfPaths)
-    {
-        // path vector
-        double[] paths = new double[numberOfPaths];
-        
-        var valueDate = model.termStructure_.link.referenceDate();
-        
-        // yearfracs
-        double dTa = dc.yearFraction(valueDate, ta);
-        double dTb = dc.yearFraction(valueDate, tb);
-        double dTp = dc.yearFraction(valueDate, tp);
-        
-        double dTaTb = dc.yearFraction(ta, tb);
-
-        var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
-            ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
-        
-        // mean, variance, ...
-        var stdXt0 = model.sigma() * Math.Sqrt(HullWhite.beta(0.0, dTa, 2.0 * model.a()));
-        var driftXta = HullWhite.hjmAdjustment(dTa, model.a(), model.sigma());
-        var driftGirsanov = - HullWhite.forwardMeasureAdjustment(dTa, dTp, model.a(), model.sigma());
-        
-        var sample = rsg.nextSequence();
-        var zSampleValue = sample.value;
-        
-        double f0Ta = model.termStructure().currentLink().forwardRate(dTa, dTa, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
-
-        for (int i = 0; i < numberOfPaths; i++)
-        {
-            var rTa = driftXta + driftGirsanov + stdXt0 * zSampleValue[i] + f0Ta;
-            // var dfT0Ta = model.discountBond(dTa, dT0Ta, rT0);
-            var dfTaTb = model.discountBond(dTa, dTb, rTa);
-
-            paths[i] = - Math.Log(dfTaTb) / dTaTb;
-        }
-
-        return paths;
-        
-    }
-
-
-    public static double[] getLiborPaths(ql.HullWhite model, 
         ql.Date t0, 
         ql.Date ta, 
         ql.Date tb, 
@@ -71,34 +24,71 @@ public static class Sampling
         double dTa = dc.yearFraction(valueDate, ta);
         double dTb = dc.yearFraction(valueDate, tb);
         double dT0 = dc.yearFraction(valueDate, t0);
-        
         double dTaTb = dc.yearFraction(ta, tb);
 
         var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
-                ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
+            ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
         
-        // mean, variance, ...
-        var driftXt0 = HullWhite.hjmAdjustment(dT0, model.a(), model.sigma()); 
-        var stdXt0 = model.sigma() * Math.Sqrt(HullWhite.beta(0.0, dT0, 2.0 * model.a()));
-        
+        // drift, variance, ...
+        var varianceLibor = HullWhite.liborVariance(dT0, dTa, dTb, model.sigma(), model.a());
+        var stdLibor = Math.Sqrt(varianceLibor);
+        // var driftGirsanov = HullWhite.liborSpotDrift(dT0, dTa, dTb, model.sigma(), model.a()); 
         var sample = rsg.nextSequence();
         var zSampleValue = sample.value;
         
         // Initial z0
         double f0T = model.termStructure().currentLink().forwardRate(dTa, dTb, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
-        // var z0Delta = 1.0 + dTaTb * f0T;
+        var z0Delta = 1.0 + dTaTb * f0T;
 
-        for (int i = 0; i < numberOfPaths; i++)
+        for (var i = 0; i < numberOfPaths; i++)
         {
-            
-            var rT0 = f0T + driftXt0 + stdXt0 * zSampleValue[i];
-            var dfT0Ta = model.discountBond(dT0, dTa, rT0);
-            var dfT0Tb = model.discountBond(dT0, dTb, rT0);
-            
-            // var ztDelta = z0Delta * Math.Exp(-0.5 * stdLibor * stdLibor * dT0Ta + stdLibor * sqrtdT0Ta * zSampleValue[i]);
-            var ztDelta = dfT0Ta / dfT0Tb;
-            // paths[i] = (ztDelta - 1.0) / dTaTb;
-            paths[i] = Math.Log(ztDelta) / dTaTb;
+            var ztDelta = z0Delta * Math.Exp(0.5 * varianceLibor + stdLibor  * zSampleValue[i]);
+            paths[i] = (ztDelta - 1.0) / dTaTb;
+        }
+
+        return paths;
+    }
+
+
+    public static double[] getLiborPathsSpotMeasure(ql.HullWhite model, 
+        ql.Date t0, 
+        ql.Date ta, 
+        ql.Date tb, 
+        ql.DayCounter dc, 
+        ulong seed, 
+        int numberOfPaths)
+    {
+        // path vector
+        double[] paths = new double[numberOfPaths];
+        
+        var valueDate = model.termStructure_.link.referenceDate();
+        
+        // yearfracs
+        double dTa = dc.yearFraction(valueDate, ta);
+        double dTb = dc.yearFraction(valueDate, tb);
+        double dT0 = dc.yearFraction(valueDate, t0);
+        // double sqrtdTa = Math.Sqrt(dTa); 
+        double dTaTb = dc.yearFraction(ta, tb);
+
+        var rsg = (ql.InverseCumulativeRsg<ql.RandomSequenceGenerator<ql.MersenneTwisterUniformRng>, 
+                ql.InverseCumulativeNormal>) new ql.PseudoRandom().make_sequence_generator(numberOfPaths, seed);
+        
+        // drift, variance, ...
+        var varianceLibor = HullWhite.liborVariance(dT0, dTa, dTb, model.sigma(), model.a());
+        var stdLibor = Math.Sqrt(varianceLibor);
+        var driftGirsanov = HullWhite.liborSpotDrift(dT0, dTa, dTb, model.sigma(), model.a()); 
+        // var driftGirsanov = 0.0;
+        var sample = rsg.nextSequence();
+        var zSampleValue = sample.value;
+        
+        // Initial z0
+        double f0T = model.termStructure().currentLink().forwardRate(dTa, dTb, ql.Compounding.Continuous, ql.Frequency.NoFrequency).rate();
+        var z0Delta = 1.0 + dTaTb * f0T;
+
+        for (var i = 0; i < numberOfPaths; i++)
+        {
+            var ztDelta = z0Delta * Math.Exp(-0.5 * varianceLibor + driftGirsanov + stdLibor  * zSampleValue[i]);
+            paths[i] = (ztDelta - 1.0) / dTaTb;
         }
 
         return paths;
