@@ -451,13 +451,13 @@ See appendix \ref{Proof_CA_futures}.
 The Cheyette model can be reduced to Hull-White model using the following parameters
 \begin{align*}
 g(T) &= \exp(-kT), \\
-h(t) &= \sigma.
+h(t) &= \exp(k t) \sigma.
 \end{align*}
 Moreover, from the definition of $g(\cdot)$ and $h(\cdot)$, we have that
 \begin{align*}
-\eta_s &= \sigma \exp(-ks),\\
-\beta(s,u, x_0, \bar{y}_s) &= \sigma \exp(-ku),\\
-\nu(s,t_2) &= \sigma \frac{\exp(-ks) - \exp(-kt_2)}{k}.
+\eta_s &= \sigma ,\\
+\beta(s,u, x_0, \bar{y}_s) &= \sigma \exp(-k(u-s)),\\
+\nu(s,t_2) &= \sigma \frac{1 - \exp(-k(t_2-s))}{k}.
 \end{align*}
 Then the convexity adjustment \eqref{ca_approximation_futures} is
 \begin{align*}
@@ -597,8 +597,8 @@ i.e. the cash flow associated with a FRA in arrears is $L_{E}(t_1,t_1,t_2)$ in $
 \begin{theorem}\label{Th_CA_FRAsinArrears}[Convexity Adjustment approximation for FRAs in Arrears]
 Given the Cheyette model in \eqref{short_rate_cheyette}, the hypotheses \ref{boundedness_volatility} and \ref{boundedness_reversion}, and considering the approximations in \eqref{approximation_y_t} and \eqref{approximation_x_t_a}. Then, the convexity adjustment approximation for FRAs in Arrears is 
 \begin{align}\label{ca_approximations_fra_arrears}
-CA(t_0,t_1) =   &\frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \nonumber \\
-&\cdot \int_{0}^{t_1} \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds  + E(t_1).
+CA(t_0,t_1) =   &\frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)}  \nonumber \\
+&\cdot \int_{0}^{t_1} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds  + E(t_1).
 \end{align}
 The error $E(t_1)$ is given by (\ref{f_x_y}) with $f(x,y)=\frac{1}{\delta_{t_1,t_2}}\left(\frac{1}{P_{E}(t_1,t_2,x,y)} - 1 \right)$ and behaves as $\mathcal{O}(t_1)$ when $t_1 \to 0$ and $\|E(t_1)\|^{2}_{2} < \infty$ when $t_1 \to \infty$. 
 \end{theorem}
@@ -610,7 +610,7 @@ See appendix \ref{Proof_CA_FRAsinArrears}.
 \begin{example}[Convexity adjustment for FRAs in Arrears under the Hull-White model]\label{example_convexity_hw_FRAsinArrears}
 The model can be restricted to a Hull-White model with constant parameters. The analytical approximation obtained from \eqref{ca_approximations_fra_arrears} is
 \begin{equation*}
-CA(t_0,t_1) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)}  \frac{\sigma^{2}}{k} \int_{0}^{t_1} \Bigl(\exp(- k(t_1 + u)) -   \exp(- k(t_2 + u))\Bigr) du 
+CA(t_0,t_1) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)}  \frac{\sigma^{2}}{k} \int_{0}^{t_1} \Bigl(\exp(- k(t_1 - u)) -   \exp(- k(t_2 - u))\Bigr) \exp(- k(t_1 - u)) du 
 \end{equation*}
 In Figure \ref{fig:FRA_HW}, we compare the approximation with a Monte Carlo method when the parameters are $\sigma=0.1$ and $k=0.007$.
 \begin{figure}[H]
@@ -1036,11 +1036,11 @@ D_s L_{E}(t_0,t_1,t_2) = \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\par
 If we use (\ref{approsimation_E_s_x_t}) with $T_a=t_0$ and $\beta(t,t_0,x,y) = \exp\left(-\int_{s}^{T_a}k(w)dw \right) \eta(u,x,y)$, we have that
 \begin{align*}
 D_s L_{E}(t_0,t_1,t_2) &\approx \frac{H(t_0,t_1)}{\delta_{t_1,t_2}H(t_0,t_2)}\frac{\partial_{x}P_{ois}(t_0,t_1)P_{ois}(t_0,t_2) - \partial_{x}P_{ois}(t_0,t_2) P_{ois}(t_0,t_1)}{P^{2}_{ois}(t_0,t_2)} \beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0) \nonumber \\
-\approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) \frac{P_{ois}(0,t_2)}{P_{ois}(0,t_0)} - G(t_0,t_1) \frac{P_{ois}(0,t_1)}{P_{ois}(0,t_0)} \right)\beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0).
+\approx& \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \left(G(t_0,t_2) - G(t_0,t_1) \right)\beta(t,t_0,\bar{x}_s,\bar{y}_s)\bar{M}(s,t_0).
 \end{align*}
 Therefore
 \begin{equation}\label{approximation_clarkocone}
-\mathbb{E}_s\left[ D_s L_{E}(t_0,t_1,t_2) \right] = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \Bigl(G(t_0,t_2)  - G(t_0,t_1)\Bigr)\beta(t,t_0,x_0,\bar{y}_s).
+\mathbb{E}_s\left[ D_s L_{E}(t_0,t_1,t_2) \right] = \frac{P_{E}(0,t_1)}{\delta_{t_1,t_2} P_{E}(0,t_2)} \Bigl(G(t_0,t_2)  - G(t_0,t_1)\Bigr)\beta(s,t_0,x_0,\bar{y}_s).
 \end{equation}
 Then from (\ref{ca_general_future}) and (\ref{approximation_clarkocone}) we find the approximation for the convexity adjustment for futures.
 
@@ -1097,7 +1097,7 @@ D_s L(t_1,t_1,t_2) &=& \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(t_1,t_2)} D_s x_{
 \end{eqnarray*}
 Using the above approximation, we get
 \begin{equation*}
-CA(t_0,t_1,t_2) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \int_{0}^{t_1} \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds
+CA(t_0,t_1,t_2) \approx \frac{G(t_1,t_2)}{\delta_{t_1,t_2}P_{E}(0,t_1,t_2)} \int_{0}^{t_1} \beta(s,t_1, \bar{x}_0(t_1), \bar{y}_s) \overline{DM}(s,t_1) \Bigl(\bar{\nu}(s,t_2,\bar{x}_{0}(t_1))-\bar{\nu}(s,t_1,\bar{x}_{0}(t_1))\Bigr) ds
 \end{equation*}
 with 
 \begin{equation*}
