@@ -502,12 +502,12 @@ F(t,t_0,t_1)&= \frac{1}{P_{ois}(t,t_1)} \mathbb{E}_{t}^{\mathbb{Q}}\left[\exp\le
 \end{align*}
 Then, the convexity adjustment for $ R(t_0,t_1)$ is
 \begin{equation}\label{R_ois_ca}
-CA_{ois}(t,t_0,t_1) = F(t,t_0,t_1) - \bar{R}(t,t_0,t_1).
+CA_{ois}(t,t_0,t_1) = \bar{R}(t,t_0,t_1) - F(t,t_0,t_1).
 \end{equation}
-The second observation is that we have the following equivalence
+The second observation, is that we have the following equality
 \begin{equation}\label{R_ois_avg}
 \mathbb{E}^{\mathbb{Q}}\left[R_{avg}(t_0,t_1) \right] =\frac{1}{\delta_{t_0,t_1}} \mathbb{E}^{\mathbb{Q}}\left[ \log\left(1+ \delta_{t_0,t_1} R(t_0,t_1) \right) \right]  \end{equation}
-To clarify the convexity expression and the calculations, we define 
+To avoid complexity with the notation, we will define 
 \begin{equation*}
 I(t_0,t_1) := \int_{t_0}^{t_1} r_{ois}(s) ds.
 \end{equation*}
