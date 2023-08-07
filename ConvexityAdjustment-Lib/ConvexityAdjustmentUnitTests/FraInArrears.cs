@@ -28,7 +28,7 @@ namespace ConvexityAdjustmentUnitTests
             ql.HullWhite model = new ql.HullWhite(curve, k, sigma);
             
             // MC
-            int numberOfSimulations = 500000;
+            int numberOfSimulations = 1000000;
             ulong seed = 123545;
             var numberOfMonths = 240;
 
@@ -36,7 +36,7 @@ namespace ConvexityAdjustmentUnitTests
             List<double> caMc = new List<double>();
             List<double> caMalliavin = new List<double>();
 
-            for (var j = numberOfMonths; j < numberOfMonths + 1; j++)
+            for (var j = 1; j < numberOfMonths + 1; j++)
             {
                 // Product
                 var t1 = calendar.advance(startDate, j, ql.TimeUnit.Months);
