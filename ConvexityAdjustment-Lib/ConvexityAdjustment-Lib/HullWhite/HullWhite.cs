@@ -35,6 +35,7 @@ namespace ConvexityAdjustment_Lib.HullWhite
             double deltaTime = _dcCurve.yearFraction(_valueDate, _schedule.dates()[0]);
             double f0T = _model.termStructure().link.forwardRate(deltaTime, deltaTime, ql.Compounding.Continuous,
                 ql.Frequency.NoFrequency, true).rate();
+            // var annuity = _model.GetAnnuity(_schedule.dates()[0], _schedule.dates()[0], v + f0T, _schedule, _dcCurve, _dcSwap);
             var annuity = _model.GetAnnuity(_schedule.dates()[0], _schedule.dates()[0], v + f0T, _schedule, _dcCurve, _dcSwap);
             
             // times
@@ -283,7 +284,8 @@ namespace ConvexityAdjustment_Lib.HullWhite
         {
             double m = Math.Pow(sigma / k, 2.0);
             return m * (beta(0, t, 2.0 * k) + Math.Exp(-2.0 * k * t) * t -
-                                    2.0 * Math.Exp(-k * t) * beta(0.0, t, k));
+                                2.0 * Math.Exp(-k * t) * beta(0.0, t, k));
+            // return m * (t + beta(0.0, t, 2.0 * k) - 2.0 * beta(0.0, t,  k));
         }
 
 
@@ -313,7 +315,10 @@ namespace ConvexityAdjustment_Lib.HullWhite
         public static double getDriftIt(double t, double k, double sigma)
         {
             var m = 0.5 * Math.Pow(sigma / k, 2.0);
-            return m * (t + beta(t, 2.0 * t, k) - beta(0.0, t, k)- beta(0.0, t, 2.0 * k));
+            // return m * (t + beta(t, 2.0 * t, k) - beta(0.0, t, k)- beta(0.0, t, 2.0 * k));
+            // var m = 0.5 * Math.Pow(sigma / k, 2.0);
+            // return m * (t + beta(0.0,  t, 2.0 * k) - 2.0 * beta(0.0, t, k));
+            return m * (t + beta(0.0, t, 2.0 * k) - 2.0 * beta(0.0, t, k));
         }
 
         public static double getCovarianceRtIt(double t1, double t2, double k, double sigma)

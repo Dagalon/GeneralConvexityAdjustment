@@ -16,7 +16,7 @@ namespace ConvexityAdjustmentUnitTests
 
             // Hull-White parameters
             double k = 0.0007;
-            double sigma = 0.007;
+            double sigma = 0.01;
 
             // Curves
             double discountFlatRate = 0.015;
@@ -96,6 +96,7 @@ namespace ConvexityAdjustmentUnitTests
                     .withPricingEngine(discountEngine)
                     .withFixedLegRule(ql.DateGeneration.Rule.Forward)
                     .withFloatingLegRule(ql.DateGeneration.Rule.Forward)
+                    .withFloatingLegDayCount(discountCurve.link.dayCounter())
                     .value();
                 
                 var swapOisDerivative = model.GetPartialDerivativeSwapRate(startDate, startDate, f0ts[j],
@@ -103,28 +104,16 @@ namespace ConvexityAdjustmentUnitTests
                     staticSwap.fixedDayCount());
 
 
-                var annuityT0 = model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
+                var annuity = model.GetAnnuity(startDate, startDate, f0ts[j], staticSwap.fixedSchedule(),
                     discountCurve.link.dayCounter(), staticSwap.fixedDayCount());
          
                 partialOisSwap.Add(swapOisDerivative);
-                var swapOisFairRate =
-                    (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(staticSwap.maturityDate())) /
-                    annuityT0.Item1;
+                
+                var swapOisFairRate = (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(staticSwap.maturityDate())) / annuity.Item1;
                 swapRates.Add(swapOisFairRate);
-
-                // ois swap rate
-                var tb = staticSwap.maturityDate();
                 
-                var oisSwapRate =
-                    (discountCurve.link.discount(datesToCompute[j]) - discountCurve.link.discount(tb)) /
-                    annuityT0.Item1;
-                swapOisRates.Add(oisSwapRate);
-                
-                // ratio swaps
-                double c = swapRates[j] / swapOisRates[j];
-                ratioSwaps.Add(c);
-                
-                rateCmsForward.Add(staticSwap.fairRate());
+                // rateCmsForward.Add(staticSwap.fairRate());
+                rateCmsForward.Add(swapOisFairRate);
             }
 
             for (int j = 0; j < numberOfTimes; j++)
@@ -164,7 +153,7 @@ namespace ConvexityAdjustmentUnitTests
                 var X0Root = HullWhite.getX0(model, startDate, swap.floatingSchedule(),
                     discountCurve.link.dayCounter(), swap.fixedDayCount(), swapRates[j]);
 
-                var annuityTa = model.GetAnnuity(startDate, datesToCompute[j], X0Root + f0ts[j], swap.fixedSchedule(),
+                var annuityTa = model.GetAnnuity(datesToCompute[j], datesToCompute[j], X0Root + f0ts[j], swap.fixedSchedule(),
                     discountCurve.link.dayCounter(), swap.fixedDayCount());
                 
                 var annuityT0 = model.GetAnnuity(startDate, startDate, f0ts[j], swap.fixedSchedule(),
@@ -174,11 +163,9 @@ namespace ConvexityAdjustmentUnitTests
                 momentOrderTwo[datesToCompute[j].serialNumber()] = 0.0;
 
                 // variables to check od the simulation
-                var dfMC = -0.5;
+                var dfMC = 0.0;
                 var meanI0t = 0.0;
 
-                var ratioDf = 1.0 / discountCurve.link.discount(tP);
-                
                 // Moments to simulate
                 var varRt = HullWhite.getVarianceRt(deltaTimes[j], k, sigma);
                 var varIt = HullWhite.getVarianceIt(deltaTimes[j], k, sigma);
@@ -201,10 +188,10 @@ namespace ConvexityAdjustmentUnitTests
                     var noiseI01 = w1 * path[0] + w2 * path[1];
                     var i0Tp = driftIt + noiseI01 * Math.Sqrt(varIt);
                     var df = discountCurve.link.discount(deltaTimes[j]);
-                    var dfTp = discountCurve.link.discount(deltaTimes[j]);
+                    var dfTp = discountCurve.link.discount(tP);
                     var r0t = -Math.Log(df);
-                    var r0Tp = -Math.Log(dfTp);
-                    var bt = Math.Exp(i0Tp + r0Tp);
+                    // var r0Tp = -Math.Log(dfTp);
+                    var bt = Math.Exp(i0Tp + r0t);
                     
                     ((ql.ShortRate1FYieldStructure<ql.HullWhite>) hullWhiteDiscountCurve.link).updateState(
                         deltaTimes[j], ri);
@@ -213,14 +200,20 @@ namespace ConvexityAdjustmentUnitTests
                     swap.recalculate();
                     var swapRate = swap.fairRate();
 
-                    double annuity = Math.Abs(swap.fixedLegNPV());
-                    double mTa = pTaTp / annuity;
+                    // double annuity = Math.Abs(swap.fixedLegNPV());
+                    // double mTa = pTaTp / annuity;
+
+                    var annuityInfo = model.GetAnnuity(datesToCompute[j], datesToCompute[j], ri, 
+                        swap.fixedSchedule(), discountCurve.link.dayCounter(), swap.fixedDayCount());
+
+                    var dfEnd = hullWhiteDiscountCurve.link.discount(swap.maturityDate());
+                    var swapRatePath = (1.0 - dfEnd) / annuityInfo.Item1;
                     
-                    double payoffMc =  ratioDf * pTaTp * swapRate / bt;
+                    double payoffMc = pTaTp * swapRatePath / (bt * dfTp);
 
                     rateCmsMc[datesToCompute[j].serialNumber()] += payoffMc / numberOfSimulations;
                     momentOrderTwo[datesToCompute[j].serialNumber()] += (payoffMc * payoffMc / numberOfSimulations);
-                    dfMC += (ratioDf * pTaTp / bt) / numberOfSimulations;
+                    dfMC += (pTaTp / bt) / numberOfSimulations;
                     meanI0t += (i0Tp + r0t) / numberOfSimulations;
                 }
 
@@ -229,7 +222,7 @@ namespace ConvexityAdjustmentUnitTests
                     datesToCompute[j],
                     swap.maturityDate(),
                     tP,
-                    ratioSwaps[j],
+                    1.0,
                     annuityT0.Item1,
                     annuityTa.Item1,
                     annuityTa.Item2,
