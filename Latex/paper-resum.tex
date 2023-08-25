@@ -173,7 +173,7 @@ In this paper, we develop a novel method based on Malliavin calculus to find an 
 %\TODO{Remove ToC in final version}
 %\tableofcontents
 %\clearpage
-\blfootnote{The authors would like to thank Elisa Al\`os and Josep Vives for helpful discussions.}
+\blfootnote{The authors would like to thank Elisa Al\`os, Dariusz Gatarek, and Josep Vives for helpful discussions.}
 
 \section{Introduction}
 Mathematical finance aims to find a methodology to price consistently all the instruments quoted in the market. When working with fixed income derivatives, a classic research topic is the introduction of a price adjustment to achieve this. This adjustment is called convexity adjustment. It is non-linear and depends on the interest rate model.  
@@ -355,7 +355,7 @@ We can see from \eqref{short_rate_cheyette} that
 x(t_a) = \int_{0}^{t_a} \exp\left(-\int_{u}^{t_a}k(w) dw\right) y(u) du + \int_{0}^{t_a}  \exp\left(-\int_{u}^{t_a}k(w) dw \right) \eta(u,x(u),y(u)) dW_u^{\mathbb{Q}}. 
 \end{equation*}
 
-In order to have a more manageable model, we will follow the ideas of \cite{AndreasenPiterbarg} where the state variables are approximated. So, we can approximate $y(t)$ as
+In order to have a more manageable model, we will follow the ideas of \cite{AndreasenPiterbarg} where the state variables are approximated. Although it is possible to use other methodologies, for example \cite{Gatarek2019TowardsAG}. So, we can approximate $y(t)$ as
 \begin{equation}\label{approximation_y_t}
 \bar{y}(t):=\int_{0}^{t} \exp\left(-2\int_{u}^{t} k(w) dw \right) \eta^{2}(u,x(0),y(0)) du
 \end{equation} 
