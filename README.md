@@ -4,11 +4,11 @@ https://arxiv.org/abs/2304.13402
 
 We have organized the project into three parts:
 
-- ConvexityAdjustment-Lib: Here, the user can find all the necessary tools to sample the distinct processes such as SOFR, LIBOR, etc.
+· ConvexityAdjustment-Lib: Here, the user can find all the necessary tools to sample the distinct processes such as SOFR, LIBOR, etc.
 
-- ConvexityAdjustmentUnitTest: We have implemented each paper example in a unit test. The file's name explains what each unit test does.
+· ConvexityAdjustmentUnitTest: We have implemented each paper example in a unit test. The file's name explains what each unit test does.
 
-- QLNet: This is Andrea Maggiulli's amazing library (https://github.com/amaggiulli/QLNet). Basically, this library is a reimplemented version of QuantLib. 
+· QLNet: This is Andrea Maggiulli's amazing library (https://github.com/amaggiulli/QLNet). Basically, this library is a reimplemented version of QuantLib. 
   We have created a branch (https://github.com/Dagalon/QLNet.git)  to use the basic functionalities such as interest rate curves, calendars,.. all the necessary pieces to obtain the price of some interest rate derivatives.
 
 To run the unit tests, you must follow the next steps:
